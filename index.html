@@ -1,639 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Naap Schedule</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
-    rel="stylesheet">
-  <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Naap Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #050a15;
-      --header: #0f1d38;
-      --accent: #f0a500;
-      --text: #e8f0ff;
-      --muted: #8099cc;
-      --grid: #374d86;
-      --cell: #0a1428;
-      --card: #0f1e42;
-      --radius: 16px;
-    }
+  :root {
+    --bg:     #050a15;
+    --header: #0f1d38;
+    --accent: #f0a500;
+    --text:   #e8f0ff;
+    --muted:  #8099cc;
+    --grid:   #374d86;
+    --cell:   #0a1428;
+    --card:   #0f1e42;
+    --radius: 16px;
+  }
 
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: transparent;
-    }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      gap: 8px;
-      background: transparent;
-    }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 8px;
+    background: transparent;
+  }
 
-    .widget {
-      background: var(--bg);
-      border-radius: var(--radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
-    }
+  .widget {
+    background: var(--bg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.07);
+  }
 
-    .widget-header {
-      background: var(--header);
-      padding: 10px 14px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid var(--accent);
-      flex-shrink: 0;
-    }
+  .widget-header {
+    background: var(--header);
+    padding: 10px 14px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--accent);
+    flex-shrink: 0;
+  }
 
-    .header-left {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
+  .header-left { display: flex; flex-direction: column; gap: 1px; }
 
-    .day-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
+  .day-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
 
-    .date-label {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.3px;
-      line-height: 1.1;
-    }
+  .date-label {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
 
-    .time-now {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
-      text-align: right;
-    }
+  .time-now {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: right;
+  }
 
-    .next-badge {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      background: rgba(240, 165, 0, 0.15);
-      color: var(--accent);
-      border: 1px solid rgba(240, 165, 0, 0.3);
-      border-radius: 4px;
-      padding: 2px 5px;
-      margin-top: 3px;
-      display: inline-block;
-    }
+  .time-now .time-main {
+    font-size: 15px;
+    color: var(--text);
+    display: block;
+  }
 
-    .current-banner {
-      margin: 10px 10px 0;
-      border-radius: 10px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
+  .time-now .time-secs {
+    font-size: 11px;
+    color: var(--muted);
+    display: block;
+    margin-top: 1px;
+  }
 
-    .current-banner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: currentColor;
-      opacity: 0.12;
-    }
+  .next-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    background: rgba(240,165,0,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(240,165,0,0.3);
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    display: inline-block;
+  }
 
-    .current-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      animation: pulse 1.8s ease-in-out infinite;
-    }
+  .current-banner {
+    margin: 10px 10px 0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
 
-    @keyframes pulse {
+  .current-banner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: currentColor;
+    opacity: 0.12;
+  }
 
-      0%,
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+  .current-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
 
-      50% {
-        opacity: 0.5;
-        transform: scale(0.75);
-      }
-    }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.75); }
+  }
 
-    .current-info {
-      flex: 1;
-      min-width: 0;
-    }
+  .current-info { flex: 1; min-width: 0; }
 
-    .current-tag {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      opacity: 0.7;
-      margin-bottom: 2px;
-    }
+  .current-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 2px;
+  }
 
-    .current-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 15px;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  .current-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    .current-desc {
-      font-size: 11px;
-      font-weight: 500;
-      opacity: 0.75;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  .current-desc {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.75;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    .current-time {
-      font-size: 10px;
-      font-weight: 600;
-      opacity: 0.6;
-      text-align: right;
-      flex-shrink: 0;
-      line-height: 1.5;
-    }
+  .current-time {
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0.6;
+    text-align: right;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
 
-    .progress-bar-wrap {
-      margin: 6px 10px 0;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 3px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
+  .progress-bar-wrap {
+    margin: 6px 10px 0;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
 
-    .progress-bar {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.5s ease;
-    }
+  .progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
 
-    .classes-label {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 8px 12px 4px;
-      flex-shrink: 0;
-    }
+  .classes-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px 4px;
+    flex-shrink: 0;
+  }
 
-    .classes-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0 10px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+  .classes-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-    .classes-list::-webkit-scrollbar {
-      display: none;
-    }
+  .classes-list::-webkit-scrollbar { display: none; }
 
-    .class-card {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--card);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-      transition: opacity 0.2s;
-    }
+  .class-card {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
 
-    .class-card.past {
-      opacity: 0.38;
-    }
+  .class-card.past { opacity: 0.38; }
+  .class-card.now  { border-color: rgba(255,255,255,0.15); box-shadow: 0 0 0 1px var(--color) inset; }
 
-    .class-card.now {
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 0 1px var(--color) inset;
-    }
+  .card-bar {
+    width: 4px;
+    flex-shrink: 0;
+  }
 
-    .card-bar {
-      width: 4px;
-      flex-shrink: 0;
-    }
+  .card-body {
+    flex: 1;
+    padding: 8px 10px;
+    min-width: 0;
+  }
 
-    .card-body {
-      flex: 1;
-      padding: 8px 10px;
-      min-width: 0;
-    }
+  .card-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
 
-    .card-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 6px;
-      margin-bottom: 2px;
-    }
+  .card-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
-    .card-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
+  .card-time {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 
-    .card-time {
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--muted);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+  .card-desc {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    opacity: 0.75;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    .card-desc {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text);
-      opacity: 0.75;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 3px;
+  }
 
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 3px;
-    }
+  .card-room {
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    .card-room {
-      font-size: 10px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  .card-dur {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    opacity: 0.5;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
 
-    .card-dur {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      opacity: 0.5;
-      flex-shrink: 0;
-      margin-left: auto;
-    }
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--muted);
+    padding: 20px;
+    text-align: center;
+  }
 
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      color: var(--muted);
-      padding: 20px;
-      text-align: center;
-    }
+  .empty-state .icon { font-size: 28px; opacity: 0.4; }
+  .empty-state .msg  { font-size: 12px; font-weight: 500; opacity: 0.6; }
+  .empty-state .sub  { font-size: 10px; opacity: 0.35; }
 
-    .empty-state .icon {
-      font-size: 28px;
-      opacity: 0.4;
-    }
+  .widget-footer {
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
 
-    .empty-state .msg {
-      font-size: 12px;
-      font-weight: 500;
-      opacity: 0.6;
-    }
+  .footer-title {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--muted);
+    opacity: 0.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
+  }
 
-    .empty-state .sub {
-      font-size: 10px;
-      opacity: 0.35;
-    }
+  .reload-btn {
+    background: none; border: none;
+    font-size: 10px; color: var(--muted);
+    opacity: 0.4; cursor: pointer;
+    padding: 2px 4px;
+    font-family: 'Inter', sans-serif;
+  }
 
-    .load-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      z-index: 100;
-      padding: 20px;
-    }
-
-    .load-screen.hidden {
-      display: none;
-    }
-
-    .load-logo {
-      width: 44px;
-      height: 44px;
-      background: var(--accent);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--bg);
-    }
-
-    .load-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      text-align: center;
-    }
-
-    .load-sub {
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.5;
-      max-width: 240px;
-    }
-
-    .load-btn {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 10px 18px;
-      background: var(--accent);
-      border: none;
-      border-radius: 9px;
-      color: var(--bg);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-
-    .load-btn:active {
-      opacity: 0.85;
-    }
-
-    .demo-btn {
-      background: none;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 8px 16px;
-      cursor: pointer;
-    }
-
-    .demo-btn:active {
-      opacity: 0.7;
-    }
-
-    .widget-footer {
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      flex-shrink: 0;
-    }
-
-    .footer-title {
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--muted);
-      opacity: 0.5;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 60%;
-    }
-
-    .reload-btn {
-      background: none;
-      border: none;
-      font-size: 10px;
-      color: var(--muted);
-      opacity: 0.4;
-      cursor: pointer;
-      padding: 2px 4px;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .reload-btn:active {
-      opacity: 0.8;
-    }
-
-    #fileInput {
-      display: none;
-    }
-  </style>
+  .reload-btn:active { opacity: 0.8; }
+</style>
 </head>
-
 <body>
 
-  <div class="load-screen" id="loadScreen">
-    <div class="load-logo">S</div>
-    <div class="load-title">Schedule Widget</div>
-    <div class="load-sub">Load your <strong>schedule.json</strong> file exported from the Schedule Wallpaper Maker to
-      get started.</div>
-    <label class="load-btn" for="fileInput">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-      Load schedule.json
-    </label>
-    <button class="demo-btn" onclick="loadDemo()">Use demo data</button>
+<div class="widget" id="widget">
+
+  <div class="widget-header">
+    <div class="header-left">
+      <div class="day-label" id="hdrDay"></div>
+      <div class="date-label" id="hdrDate"></div>
+      <div id="hdrBadge"></div>
+    </div>
+    <div class="time-now" id="hdrTime">
+      <span class="time-main" id="timeMain"></span>
+      <span class="time-secs" id="timeSecs"></span>
+    </div>
   </div>
 
-  <div class="widget" id="widget" style="display:none">
+  <div id="currentWrap"></div>
 
-    <div class="widget-header">
-      <div class="header-left">
-        <div class="day-label" id="hdrDay"></div>
-        <div class="date-label" id="hdrDate"></div>
-        <div id="hdrBadge"></div>
+  <div class="classes-label" id="listLabel">Today's Classes</div>
+  <div class="classes-list" id="classesList"></div>
+
+  <div class="widget-footer">
+    <div class="footer-title" id="footerTitle"></div>
+    <button class="reload-btn" onclick="refresh()">↻ refresh</button>
+  </div>
+
+</div>
+
+<script>
+const scheduleData = {
+  "title": "AAMT 1-3 Schedule",
+  "subtitle": "A.Y. 2025 – 2026",
+  "courses": [
+    { "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Simulation Lab", "color": "#3a7bd5", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 16, "endM": 0 },
+    { "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Mon"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
+    { "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Wed"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
+    { "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
+    { "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Tue"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
+    { "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Wed"], "startH": 14, "startM": 0, "endH": 17, "endM": 0 },
+    { "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Thu"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
+    { "id": "DRAW1101", "desc": "Aircraft Drawing", "room": "DR1", "color": "#2ec27e", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 12, "endM": 0 },
+    { "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Aero Room", "color": "#e8702a", "days": ["Tue"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
+    { "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Fabrication Lab", "color": "#e8702a", "days": ["Thu"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
+    { "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Tue"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
+    { "id": "AMT1103", "desc": "Aircraft Propeller", "room": "Aero Room", "color": "#9c6ade", "days": ["Thu"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
+    { "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Thu"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
+    { "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
+    { "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
+    { "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Tue"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
+    { "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Thu"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
+    { "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Aero Room", "color": "#ff5722", "days": ["Fri"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
+    { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
+    { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
+    { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
+    { "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "TBA", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 }
+  ]
+}
+
+const DAY_MAP  = { 0:'Sun', 1:'Mon', 2:'Tue', 3:'Wed', 4:'Thu', 5:'Fri', 6:'Sat' }
+const DAY_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+const MONTH    = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+function toMins(h, m) { return h * 60 + m }
+
+function fmt12(h, m) {
+  const ampm = h < 12 ? 'AM' : 'PM'
+  const h12  = h % 12 === 0 ? 12 : h % 12
+  return `${h12}:${String(m).padStart(2,'0')} ${ampm}`
+}
+
+function durStr(startH, startM, endH, endM) {
+  const mins = toMins(endH, endM) - toMins(startH, startM)
+  const h = Math.floor(mins / 60), m = mins % 60
+  return h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  const s = now.getSeconds();
+
+  const ampm = h < 12 ? "AM" : "PM";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+
+  document.getElementById("timeMain").textContent =
+    `${h12}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")} ${ampm}`;
+}
+
+function refresh() {
+  const now   = new Date()
+  const dow   = now.getDay()
+  const today = DAY_MAP[dow]
+  const nowM  = toMins(now.getHours(), now.getMinutes())
+
+  document.getElementById('hdrDay').textContent  = DAY_FULL[dow].toUpperCase()
+  document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`
+
+  const courses = (scheduleData.courses || [])
+    .filter(c => c.days && c.days.includes(today))
+    .sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM))
+
+  const current  = courses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM))
+  const upcoming = courses.find(c => toMins(c.startH, c.startM) > nowM)
+
+  const badge = document.getElementById('hdrBadge')
+  if (current) {
+    badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`
+  } else if (upcoming) {
+    const minsUntil = toMins(upcoming.startH, upcoming.startM) - nowM
+    const h2 = Math.floor(minsUntil / 60), m2 = minsUntil % 60
+    const untilStr = h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`
+    badge.innerHTML = `<span class="next-badge">Next in ${untilStr}</span>`
+  } else {
+    badge.innerHTML = ''
+  }
+
+  const wrap = document.getElementById('currentWrap')
+  if (current) {
+    const startM2  = toMins(current.startH, current.startM)
+    const endM2    = toMins(current.endH, current.endM)
+    const totalDur = endM2 - startM2
+    const elapsed  = nowM - startM2
+    const pct      = Math.min(100, Math.max(0, (elapsed / totalDur) * 100))
+    const minsLeft = endM2 - nowM
+
+    wrap.innerHTML = `
+      <div class="current-banner" style="color:${current.color};margin:10px 10px 0">
+        <div class="current-dot" style="background:${current.color}"></div>
+        <div class="current-info">
+          <div class="current-tag" style="color:${current.color}">NOW · ${minsLeft}m left</div>
+          <div class="current-id" style="color:${current.color}">${esc(current.id)}</div>
+          <div class="current-desc">${esc(current.desc)}</div>
+        </div>
+        <div class="current-time" style="color:${current.color}">
+          ${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}
+        </div>
       </div>
-      <div class="time-now" id="hdrTime"></div>
-    </div>
+      <div class="progress-bar-wrap" style="margin:5px 10px 0">
+        <div class="progress-bar" style="width:${pct}%;background:${current.color}"></div>
+      </div>
+    `
+  } else {
+    wrap.innerHTML = ''
+  }
 
-    <div id="currentWrap"></div>
+  const listLabel = document.getElementById('listLabel')
+  const list      = document.getElementById('classesList')
 
-    <div class="classes-label" id="listLabel">Today's Classes</div>
-    <div class="classes-list" id="classesList"></div>
+  if (courses.length === 0) {
+    listLabel.style.display = 'none'
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🎉</div>
+        <div class="msg">No classes today!</div>
+        <div class="sub">Enjoy your ${DAY_FULL[dow]}</div>
+      </div>`
+    return
+  }
 
-    <div class="widget-footer">
-      <div class="footer-title" id="footerTitle"></div>
-      <button class="reload-btn" onclick="refresh()">↻ refresh</button>
-    </div>
+  listLabel.style.display = 'block'
+  const remaining = courses.filter(c => toMins(c.endH, c.endM) > nowM)
+  const past      = courses.filter(c => toMins(c.endH, c.endM) <= nowM)
+  const ordered   = [...remaining, ...past]
 
-  </div>
+  listLabel.textContent = remaining.length > 0
+    ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining`
+    : 'All done for today ✓'
 
-  <input type="file" id="fileInput" accept=".json">
+  list.innerHTML = ordered.map(c => {
+    const isNow  = current && c === current
+    const isPast = toMins(c.endH, c.endM) <= nowM
+    return `
+      <div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}">
+        <div class="card-bar" style="background:${c.color}"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-id" style="color:${c.color}">${esc(c.id)}</div>
+            <div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div>
+          </div>
+          <div class="card-desc">${esc(c.desc)}</div>
+          <div class="card-meta">
+            <div class="card-room">📍 ${esc(c.room)}</div>
+            <div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div>
+          </div>
+        </div>
+      </div>`
+  }).join('')
 
-  <script>
-    let scheduleData = null
-    let refreshTimer = null
+  document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
+}
 
-    const DEMO = {
-      title: 'My Class Schedule',
-      subtitle: 'A.Y. 2025–2026',
-      courses: [
-        { id: 'AMT1106', desc: 'Maintenance Forms & Publications', room: 'Simulation Lab', color: '#3a7bd5', days: ['Mon', 'Wed'], startH: 13, startM: 0, endH: 16, endM: 0 },
-        { id: 'AMT1105', desc: 'Aircraft Powerplant 1', room: 'PP Lab', color: '#e05a9a', days: ['Mon', 'Thu'], startH: 10, startM: 0, endH: 13, endM: 0 },
-        { id: 'AMT1104', desc: 'Aircraft Structures', room: 'Aero Room', color: '#2ec27e', days: ['Tue', 'Fri'], startH: 8, startM: 0, endH: 11, endM: 0 },
-        { id: 'PE 101', desc: 'Physical Education', room: 'Gym', color: '#e8702a', days: ['Wed'], startH: 7, startM: 0, endH: 8, endM: 30 },
-        { id: 'AMT1103', desc: 'Avionics Fundamentals', room: 'Avionics Lab', color: '#a78bfa', days: ['Tue', 'Thu'], startH: 13, startM: 0, endH: 16, endM: 0 },
-        { id: 'MATH2', desc: 'Engineering Mathematics', room: 'SCI 302', color: '#60a5fa', days: ['Mon', 'Wed', 'Fri'], startH: 18, startM: 30, endH: 20, endM: 0 },
-      ]
-    }
+// Clock ticks every second
+updateClock()
+setInterval(updateClock, 1000)
 
-    /* ---------------- FILE UPLOAD ---------------- */
-    function setupFileUpload() {
-      const fileInput = document.getElementById('fileInput')
-
-      if (!fileInput) return
-
-      fileInput.addEventListener('change', e => {
-        const file = e.target.files?.[0]
-        if (!file) return
-
-        const reader = new FileReader()
-
-        reader.onload = () => {
-          try {
-            const json = JSON.parse(reader.result)
-
-            scheduleData = json
-
-            localStorage.setItem(
-              'widgetSchedule',
-              JSON.stringify(json)
-            )
-
-            console.log('JSON uploaded')
-
-            showWidget()
-          } catch (err) {
-            console.error(err)
-            alert('Invalid JSON file')
-          }
-        }
-
-        reader.readAsText(file)
-      })
-    }
-
-    /* ---------------- LOAD SAVED ---------------- */
-    function loadSavedSchedule() {
-      const saved = localStorage.getItem('widgetSchedule')
-      if (!saved) return false
-
-      try {
-        scheduleData = JSON.parse(saved)
-        return true
-      } catch {
-        localStorage.removeItem('widgetSchedule')
-        return false
-      }
-    }
-
-    /* ---------------- DEMO ---------------- */
-    function loadDemo() {
-      scheduleData = DEMO
-
-      localStorage.setItem(
-        'widgetSchedule',
-        JSON.stringify(DEMO)
-      )
-
-      showWidget()
-    }
-
-    /* ---------------- SHOW ---------------- */
-    function showWidget() {
-      document.getElementById('loadScreen')?.classList.add('hidden')
-      document.getElementById('widget')?.style.setProperty('display', 'flex')
-
-      refresh()
-
-      if (!refreshTimer) {
-        refreshTimer = setInterval(refresh, 30000)
-      }
-    }
-
-    /* ---------------- AUTO UPDATE ---------------- */
-    window.addEventListener('focus', () => {
-      if (loadSavedSchedule()) refresh()
-    })
-
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && loadSavedSchedule()) refresh()
-    })
-
-    window.addEventListener('storage', e => {
-      if (e.key !== 'widgetSchedule' || !e.newValue) return
-
-      try {
-        scheduleData = JSON.parse(e.newValue)
-        refresh()
-      } catch { }
-    })
-
-    /* ---------------- INIT ---------------- */
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('INIT')
-
-      setupFileUpload()
-
-      if (loadSavedSchedule()) {
-        showWidget()
-      }
-    })
-
-  </script>
+// Schedule data refreshes every 30 seconds
+refresh()
+setInterval(refresh, 30000)
+</script>
 </body>
-
 </html>
