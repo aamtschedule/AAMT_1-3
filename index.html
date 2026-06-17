@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AAMT 1-3 Schedule</title>
+    <title>Naap Schedule</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
         rel="stylesheet">
@@ -423,15 +423,34 @@
             margin-bottom: 6px;
         }
 
+        .week-grid-scroll {
+            position: relative;
+            max-height: 190px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 8px;
+            scroll-behavior: smooth;
+        }
+
+        .week-grid-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .week-grid-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
         .week-grid {
+            position: relative;
             display: grid;
-            grid-template-columns: 65px repeat(5, 1fr);
+            grid-template-columns: 60px repeat(5, 1fr);
+            grid-template-rows: 20px repeat(24, 16px);
             gap: 2px;
             font-size: 8px;
         }
 
         .grid-cell {
-            min-height: 16px;
             border-radius: 3px;
             background: rgba(255, 255, 255, 0.04);
             display: flex;
@@ -450,19 +469,66 @@
             justify-content: flex-start;
             padding-left: 4px;
             white-space: nowrap;
+            transition: color 0.2s;
+        }
+
+        .grid-time.now-time {
+            color: var(--accent);
+            font-weight: 700;
         }
 
         .grid-class {
             color: white;
             font-size: 7px;
             font-weight: 700;
+            line-height: 1.25;
+            text-align: center;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            padding: 1px 2px;
         }
 
-        .grid-today {
+        .grid-today.grid-head {
+            background: rgba(240, 165, 0, 0.2);
+            color: var(--accent);
             outline: 1px solid var(--accent);
+        }
+
+        .grid-cell.grid-today:not(.grid-class):not(.grid-head) {
+            background: rgba(240, 165, 0, 0.07);
+        }
+
+        .grid-class.grid-today {
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
+            filter: saturate(1.15);
+        }
+
+        .grid-class.now-block {
+            box-shadow: 0 0 0 1.5px #fff inset, 0 0 6px rgba(255, 255, 255, 0.55);
+            animation: nowPulse 1.6s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes nowPulse {
+
+            0%,
+            100% {
+                filter: brightness(1) saturate(1.15);
+            }
+
+            50% {
+                filter: brightness(1.3) saturate(1.3);
+            }
+        }
+
+        .now-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 0;
+            border-top: 1.5px dashed var(--accent);
+            z-index: 5;
+            pointer-events: none;
+            display: none;
         }
     </style>
 </head>
@@ -493,12 +559,14 @@
 
         <div class="week-grid-wrap">
             <div class="week-grid-title">Weekly Timetable</div>
-            <div id="weekGrid" class="week-grid"></div>
+            <div class="week-grid-scroll" id="weekGridScroll">
+                <div id="weekGrid" class="week-grid"></div>
+            </div>
         </div>
 
         <div class="widget-footer">
             <div class="footer-title" id="footerTitle"></div>
-            <button class="reload-btn" onclick="refresh()">↻ refresh</button>
+            <button class="reload-btn" onclick="manualRefresh()">↻ refresh</button>
         </div>
 
     </div>
@@ -551,6 +619,17 @@
             return h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`
         }
 
+        function minsToWords(totalMins) {
+            totalMins = Math.max(0, Math.round(totalMins))
+            const h = Math.floor(totalMins / 60)
+            const m = totalMins % 60
+            const hPart = h > 0 ? `${h} hour${h !== 1 ? 's' : ''}` : ''
+            const mPart = m > 0 ? `${m} minute${m !== 1 ? 's' : ''}` : ''
+            if (h > 0 && m > 0) return `${hPart} and ${mPart}`
+            if (h > 0) return hPart
+            return mPart || '0 minutes'
+        }
+
         function esc(str) {
             return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         }
@@ -572,9 +651,9 @@
             const grid = document.getElementById('weekGrid');
 
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+            const today = DAY_MAP[new Date().getDay()];
 
             const slots = [];
-
             for (let h = 9; h <= 20; h++) {
                 slots.push({ h, m: 0 });
                 slots.push({ h, m: 30 });
@@ -582,50 +661,123 @@
 
             let html = '';
 
-            html += `<div class="grid-cell grid-head"></div>`;
-
-            days.forEach(day => {
-                html += `<div class="grid-cell grid-head">${day}</div>`;
+            html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
+            days.forEach((day, dIdx) => {
+                const isToday = day === today;
+                html += `<div class="grid-cell grid-head ${isToday ? 'grid-today' : ''}" style="grid-row:1;grid-column:${dIdx + 2}">${day}</div>`;
             });
 
-            slots.forEach(slot => {
+            slots.forEach((slot, sIdx) => {
+                html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`;
+            });
 
-                const slotMins = slot.h * 60 + slot.m;
+            days.forEach((day, dIdx) => {
+                const isToday = day === today;
+                const covered = new Array(slots.length).fill(false);
 
-                html += `
-            <div class="grid-cell grid-time">
-                ${fmt12(slot.h, slot.m)}
-            </div>
-        `;
+                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day));
 
-                days.forEach(day => {
+                dayCourses.forEach(c => {
+                    const startMin = toMins(c.startH, c.startM);
+                    const endMin = toMins(c.endH, c.endM);
+                    const startSlot = Math.round((startMin - 540) / 30);
+                    const span = Math.round((endMin - startMin) / 30);
+                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) return;
 
-                    const cls = scheduleData.courses.find(c => {
+                    const rowStart = startSlot + 2;
+                    const rowEnd = Math.min(rowStart + span, slots.length + 2);
+                    for (let i = startSlot; i < startSlot + span && i < slots.length; i++) covered[i] = true;
 
-                        const start = c.startH * 60 + c.startM;
-                        const end = c.endH * 60 + c.endM;
-
-                        return c.days.includes(day) &&
-                            slotMins >= start &&
-                            slotMins < end;
-                    });
-
-                    if (cls) {
-                        html += `
+                    html += `
                     <div
-                        class="grid-cell grid-class"
-                        style="background:${cls.color}"
-                        title="${cls.id} - ${cls.desc}">
-                        ${cls.id}
-                    </div>
-                `;
-                    } else {
-                        html += `<div class="grid-cell"></div>`;
-                    }
+                        class="grid-cell grid-class ${isToday ? 'grid-today' : ''}"
+                        data-day="${day}"
+                        data-start="${startMin}"
+                        data-end="${endMin}"
+                        style="grid-row:${rowStart} / ${rowEnd};grid-column:${dIdx + 2};background:${c.color}"
+                        title="${esc(c.id)} - ${esc(c.desc)}">
+                        ${esc(c.id)}
+                    </div>`;
+                });
+
+                slots.forEach((slot, sIdx) => {
+                    if (covered[sIdx]) return;
+                    html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`;
                 });
             });
 
             grid.innerHTML = html;
+
+            const line = document.createElement('div');
+            line.id = 'nowLine';
+            line.className = 'now-line';
+            line.innerHTML = '<span class="now-dot"></span>';
+            grid.appendChild(line);
+
+            updateNowLine();
+        }
+
+        function updateNowLine() {
+            const grid = document.getElementById('weekGrid');
+            const line = document.getElementById('nowLine');
+            if (!grid || !line) return;
+
+            const now = new Date();
+            const today = DAY_MAP[now.getDay()];
+            const nowM = toMins(now.getHours(), now.getMinutes());
+
+            grid.querySelectorAll('.grid-class').forEach(el => {
+                const isNow = el.dataset.day === today &&
+                    nowM >= parseInt(el.dataset.start, 10) &&
+                    nowM < parseInt(el.dataset.end, 10);
+                el.classList.toggle('now-block', isNow);
+            });
+
+            grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'));
+
+            const inRange = nowM >= 540 && nowM < 1260;
+            if (!inRange) {
+                line.style.display = 'none';
+                return;
+            }
+
+            const slotFloat = (nowM - 540) / 30;
+            const flooredIdx = Math.max(0, Math.min(23, Math.floor(slotFloat)));
+            const frac = slotFloat - Math.floor(slotFloat);
+
+            const cellEl = grid.querySelector(`.grid-time[data-slot="${flooredIdx}"]`);
+            if (!cellEl) {
+                line.style.display = 'none';
+                return;
+            }
+            cellEl.classList.add('now-time');
+
+            const top = cellEl.offsetTop + frac * cellEl.offsetHeight;
+            line.style.top = `${top}px`;
+            line.style.display = 'block';
+        }
+
+        function scrollToNow(instant) {
+            const wrap = document.getElementById('weekGridScroll');
+            const grid = document.getElementById('weekGrid');
+            if (!wrap || !grid) return;
+
+            const now = new Date();
+            const nowM = toMins(now.getHours(), now.getMinutes());
+            const clamped = Math.min(1259, Math.max(540, nowM));
+            const slotIdx = Math.max(0, Math.min(23, Math.floor((clamped - 540) / 30)));
+
+            const cellEl = grid.querySelector(`.grid-time[data-slot="${slotIdx}"]`);
+            if (!cellEl) return;
+
+            const target = cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2);
+            wrap.scrollTo({ top: Math.max(0, target), behavior: instant ? 'auto' : 'smooth' });
+        }
+
+        function manualRefresh() {
+            refresh();
+            renderWeekGrid();
+            requestAnimationFrame(() => scrollToNow(false));
         }
 
         function refresh() {
@@ -675,12 +827,12 @@
       <div class="current-banner" style="color:${current.color};margin:10px 10px 0">
         <div class="current-dot" style="background:${current.color}"></div>
         <div class="current-info">
-          <div class="current-tag" style="color:${current.color}">NOW · ${minsLeft}m left</div>
-          <div class="current-id" style="color:${current.color}">${esc(current.id)}</div>
+          <div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(minsLeft)} left</div>
+          <div class="current-id" style="color:${current.color}">${esc(current.id)} - ${esc(current.room)}</div>
           <div class="current-desc">${esc(current.desc)}</div>
         </div>
         <div class="current-time" style="color:${current.color}">
-          ${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}
+          ${fmt12(current.startH, current.startM)}<br>${fmt12(current.endH, current.endM)}
         </div>
       </div>
       <div class="progress-bar-wrap" style="margin:5px 10px 0">
@@ -737,14 +889,35 @@
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
         }
 
-        // Clock ticks every second
         updateClock()
         setInterval(updateClock, 1000)
 
-        // Schedule data refreshes every 30 seconds
+        let lastRenderedDay = null
+
+        function tick() {
+            refresh()
+
+            const today = DAY_MAP[new Date().getDay()]
+            if (today !== lastRenderedDay) {
+                lastRenderedDay = today
+                renderWeekGrid()
+                requestAnimationFrame(() => scrollToNow(true))
+            } else {
+                updateNowLine()
+            }
+        }
+
         refresh()
         renderWeekGrid()
-        setInterval(refresh, 30000)
+        lastRenderedDay = DAY_MAP[new Date().getDay()]
+        requestAnimationFrame(() => scrollToNow(true))
+
+        setInterval(tick, 1000)
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') tick()
+        })
+        window.addEventListener('focus', () => tick())
     </script>
 </body>
 
