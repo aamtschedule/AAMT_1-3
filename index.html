@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Naap Schedule</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Schedule">
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
         rel="stylesheet">
@@ -153,6 +162,10 @@
             inset: 0;
             background: currentColor;
             opacity: 0.12;
+        }
+
+        .current-banner.vacant-banner {
+            border: 1px dashed var(--muted);
         }
 
         .current-dot {
@@ -345,6 +358,24 @@
             margin-left: auto;
         }
 
+        .class-card.vacant-card {
+            background: repeating-linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.035) 0px,
+                    rgba(255, 255, 255, 0.035) 4px,
+                    transparent 4px,
+                    transparent 8px), var(--card);
+            border-style: dashed;
+        }
+
+        .vacant-bar {
+            background: var(--muted);
+        }
+
+        .vacant-id {
+            color: var(--muted);
+            font-style: italic;
+        }
+
         .empty-state {
             flex: 1;
             display: flex;
@@ -508,6 +539,20 @@
             z-index: 2;
         }
 
+        .grid-vacant {
+            background: repeating-linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.035) 0px,
+                    rgba(255, 255, 255, 0.035) 4px,
+                    transparent 4px,
+                    transparent 8px);
+            color: var(--muted);
+            font-size: 6px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
         @keyframes nowPulse {
 
             0%,
@@ -529,6 +574,17 @@
             z-index: 5;
             pointer-events: none;
             display: none;
+        }
+
+        .now-dot {
+            position: absolute;
+            left: 1px;
+            top: -4px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 4px var(--accent);
         }
     </style>
 </head>
@@ -661,21 +717,26 @@
 
             let html = '';
 
+            // header row
             html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
             days.forEach((day, dIdx) => {
                 const isToday = day === today;
                 html += `<div class="grid-cell grid-head ${isToday ? 'grid-today' : ''}" style="grid-row:1;grid-column:${dIdx + 2}">${day}</div>`;
             });
 
+            // time label column
             slots.forEach((slot, sIdx) => {
                 html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`;
             });
 
+            // day columns - merged class blocks + filler cells
             days.forEach((day, dIdx) => {
                 const isToday = day === today;
                 const covered = new Array(slots.length).fill(false);
 
-                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day));
+                const dayCourses = scheduleData.courses
+                    .filter(c => c.days.includes(day))
+                    .sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
 
                 dayCourses.forEach(c => {
                     const startMin = toMins(c.startH, c.startM);
@@ -700,6 +761,30 @@
                     </div>`;
                 });
 
+                // mark only the gaps *between* classes as vacant - never before the
+                // first class or after the last one for that day
+                for (let i = 0; i < dayCourses.length - 1; i++) {
+                    const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM);
+                    const gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM);
+                    if (gapEnd <= gapStart) continue;
+
+                    const startSlot = Math.round((gapStart - 540) / 30);
+                    const span = Math.round((gapEnd - gapStart) / 30);
+                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue;
+
+                    const rowStart = startSlot + 2;
+                    const rowEnd = Math.min(rowStart + span, slots.length + 2);
+                    for (let s = startSlot; s < startSlot + span && s < slots.length; s++) covered[s] = true;
+
+                    html += `
+                    <div
+                        class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}"
+                        style="grid-row:${rowStart} / ${rowEnd};grid-column:${dIdx + 2}"
+                        title="Vacant - no class scheduled">
+                        Vacant
+                    </div>`;
+                }
+
                 slots.forEach((slot, sIdx) => {
                     if (covered[sIdx]) return;
                     html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`;
@@ -708,6 +793,7 @@
 
             grid.innerHTML = html;
 
+            // now-line element lives inside the grid so it scrolls with content
             const line = document.createElement('div');
             line.id = 'nowLine';
             line.className = 'now-line';
@@ -726,6 +812,7 @@
             const today = DAY_MAP[now.getDay()];
             const nowM = toMins(now.getHours(), now.getMinutes());
 
+            // toggle live highlight on the currently running class block
             grid.querySelectorAll('.grid-class').forEach(el => {
                 const isNow = el.dataset.day === today &&
                     nowM >= parseInt(el.dataset.start, 10) &&
@@ -733,6 +820,7 @@
                 el.classList.toggle('now-block', isNow);
             });
 
+            // highlight the time label for the current slot
             grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'));
 
             const inRange = nowM >= 540 && nowM < 1260;
@@ -802,6 +890,16 @@
             const current = courses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM))
             const upcoming = courses.find(c => toMins(c.startH, c.startM) > nowM)
 
+            let vacantNow = null
+            for (let i = 0; i < courses.length - 1; i++) {
+                const gapStart = toMins(courses[i].endH, courses[i].endM)
+                const gapEnd = toMins(courses[i + 1].startH, courses[i + 1].startM)
+                if (gapEnd > gapStart && nowM >= gapStart && nowM < gapEnd) {
+                    vacantNow = { startMin: gapStart, endMin: gapEnd }
+                    break
+                }
+            }
+
             const badge = document.getElementById('hdrBadge')
             if (current) {
                 badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`
@@ -828,15 +926,37 @@
         <div class="current-dot" style="background:${current.color}"></div>
         <div class="current-info">
           <div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(minsLeft)} left</div>
-          <div class="current-id" style="color:${current.color}">${esc(current.id)} - ${esc(current.room)}</div>
+          <div class="current-id" style="color:${current.color}">${esc(current.id)}</div>
           <div class="current-desc">${esc(current.desc)}</div>
         </div>
         <div class="current-time" style="color:${current.color}">
-          ${fmt12(current.startH, current.startM)}<br>${fmt12(current.endH, current.endM)}
+          ${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}
         </div>
       </div>
       <div class="progress-bar-wrap" style="margin:5px 10px 0">
         <div class="progress-bar" style="width:${pct}%;background:${current.color}"></div>
+      </div>
+    `
+            } else if (vacantNow) {
+                const totalDur = vacantNow.endMin - vacantNow.startMin
+                const elapsed = nowM - vacantNow.startMin
+                const pct = Math.min(100, Math.max(0, (elapsed / totalDur) * 100))
+                const minsLeft = vacantNow.endMin - nowM
+
+                wrap.innerHTML = `
+      <div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0">
+        <div class="current-dot" style="background:var(--muted)"></div>
+        <div class="current-info">
+          <div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(minsLeft)} left</div>
+          <div class="current-id" style="color:var(--muted)">VACANT</div>
+          <div class="current-desc">No class scheduled</div>
+        </div>
+        <div class="current-time" style="color:var(--muted)">
+          ${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}
+        </div>
+      </div>
+      <div class="progress-bar-wrap" style="margin:5px 10px 0">
+        <div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div>
       </div>
     `
             } else {
@@ -879,7 +999,7 @@
           </div>
           <div class="card-desc">${esc(c.desc)}</div>
           <div class="card-meta">
-            <div class="card-room">📍 ${esc(c.room)}</div>
+            <div class="card-room"><span style="font-weight: bold;">Room: </span>${esc(c.room)}</div>
             <div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div>
           </div>
         </div>
@@ -889,6 +1009,7 @@
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
         }
 
+        // Clock ticks every second
         updateClock()
         setInterval(updateClock, 1000)
 
@@ -907,17 +1028,35 @@
             }
         }
 
+        // Initial render
         refresh()
         renderWeekGrid()
         lastRenderedDay = DAY_MAP[new Date().getDay()]
         requestAnimationFrame(() => scrollToNow(true))
 
+        // Everything updates every second from here on
         setInterval(tick, 1000)
 
+        // Browsers throttle or pause timers in background tabs / locked screens,
+        // which is the usual reason a day rollover (e.g. at 12am) seems "stuck".
+        // Force an immediate catch-up refresh the moment this becomes visible again.
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') tick()
         })
         window.addEventListener('focus', () => tick())
+
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                    .register("./service-worker.js")
+                    .then(() => {
+                        console.log("PWA Ready");
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            });
+        }
     </script>
 </body>
 
