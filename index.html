@@ -503,10 +503,12 @@
             scroll-behavior: smooth;
             flex: 1;
             min-height: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .week-grid-scroll::-webkit-scrollbar {
-            width: 4px;
+            display: none;
         }
 
         .week-grid-scroll::-webkit-scrollbar-thumb {
