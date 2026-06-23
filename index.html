@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Naap Schedule</title>
 
-    <!-- PWA -->
+    <link rel="icon" type="image/png" href="icon.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <meta name="mobile-web-app-capable" content="yes">
@@ -29,7 +29,7 @@
         :root {
             --bg: #050a15;
             --header: #0f1d38;
-            --accent: #f0a500;
+            --accent: #ffffff;
             --text: #e8f0ff;
             --muted: #8099cc;
             --grid: #374d86;
@@ -263,6 +263,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            min-height: 0;
         }
 
         .classes-list::-webkit-scrollbar {
@@ -439,10 +440,33 @@
             opacity: 0.8;
         }
 
+        /* ── Week grid panel ── */
         .week-grid-wrap {
-            padding: 8px 10px;
+            padding: 0 10px 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Drag handle ── */
+        .week-grid-handle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 2px 4px;
+            cursor: ns-resize;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            flex-shrink: 0;
+        }
+
+        .week-grid-handle:hover .handle-bar,
+        .week-grid-handle:active .handle-bar {
+            background: var(--accent);
+            opacity: 1;
         }
 
         .week-grid-title {
@@ -451,16 +475,34 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             color: var(--muted);
-            margin-bottom: 6px;
+            pointer-events: none;
+        }
+
+        .handle-bar {
+            width: 36px;
+            height: 3px;
+            border-radius: 3px;
+            background: var(--muted);
+            opacity: 0.4;
+            transition: opacity 0.15s, background 0.15s;
+        }
+
+        .handle-hint {
+            font-size: 8px;
+            color: var(--muted);
+            opacity: 0.35;
+            pointer-events: none;
+            letter-spacing: 0.3px;
         }
 
         .week-grid-scroll {
             position: relative;
-            max-height: 190px;
             overflow-y: auto;
             overflow-x: hidden;
             border-radius: 8px;
             scroll-behavior: smooth;
+            flex: 1;
+            min-height: 0;
         }
 
         .week-grid-scroll::-webkit-scrollbar {
@@ -496,7 +538,7 @@
         }
 
         .grid-time {
-            font-size: 7px;
+            font-size: 10px;
             justify-content: flex-start;
             padding-left: 4px;
             white-space: nowrap;
@@ -510,7 +552,7 @@
 
         .grid-class {
             color: white;
-            font-size: 7px;
+            font-size: 8px;
             font-weight: 700;
             line-height: 1.25;
             text-align: center;
@@ -546,7 +588,7 @@
                     transparent 4px,
                     transparent 8px);
             color: var(--muted);
-            font-size: 6px;
+            font-size: 8px;
             font-weight: 700;
             letter-spacing: 0.4px;
             text-transform: uppercase;
@@ -575,17 +617,6 @@
             pointer-events: none;
             display: none;
         }
-
-        .now-dot {
-            position: absolute;
-            left: 1px;
-            top: -4px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 4px var(--accent);
-        }
     </style>
 </head>
 
@@ -613,8 +644,11 @@
         <div class="classes-label" id="listLabel">Today's Classes</div>
         <div class="classes-list" id="classesList"></div>
 
-        <div class="week-grid-wrap">
-            <div class="week-grid-title">Weekly Timetable</div>
+        <div class="week-grid-wrap" id="weekGridWrap">
+            <div class="week-grid-handle" id="weekGridHandle">
+                <div class="handle-bar"></div>
+                <div class="week-grid-title">Weekly Timetable</div>
+            </div>
             <div class="week-grid-scroll" id="weekGridScroll">
                 <div id="weekGrid" class="week-grid"></div>
             </div>
@@ -695,13 +729,64 @@
             const h = now.getHours();
             const m = now.getMinutes();
             const s = now.getSeconds();
-
             const ampm = h < 12 ? "AM" : "PM";
             const h12 = h % 12 === 0 ? 12 : h % 12;
-
             document.getElementById("timeMain").textContent =
                 `${h12}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")} ${ampm}`;
         }
+
+        ; (function () {
+            const handle = document.getElementById('weekGridHandle')
+            const wrap = document.getElementById('weekGridWrap')
+            const MIN_H = 60
+            const MAX_H = 600
+            const DEFAULT_H = 210
+
+            let startY = 0
+            let startH = 0
+            let dragging = false
+
+            function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
+
+            function setHeight(h) {
+                wrap.style.height = clamp(h, MIN_H, MAX_H) + 'px'
+            }
+
+            const saved = parseInt(localStorage.getItem('wgHeight'), 10)
+            setHeight(isNaN(saved) ? DEFAULT_H : saved)
+
+            function onStart(clientY) {
+                startY = clientY
+                startH = wrap.offsetHeight
+                dragging = true
+                document.body.style.cursor = 'ns-resize'
+                document.body.style.userSelect = 'none'
+            }
+
+            function onMove(clientY) {
+                if (!dragging) return
+                const delta = startY - clientY
+                setHeight(startH + delta)
+            }
+
+            function onEnd() {
+                if (!dragging) return
+                dragging = false
+                document.body.style.cursor = ''
+                document.body.style.userSelect = ''
+                localStorage.setItem('wgHeight', wrap.offsetHeight)
+            }
+
+            // mouse
+            handle.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientY) })
+            document.addEventListener('mousemove', e => onMove(e.clientY))
+            document.addEventListener('mouseup', onEnd)
+
+            // touch
+            handle.addEventListener('touchstart', e => { onStart(e.touches[0].clientY) }, { passive: true })
+            document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientY) } }, { passive: false })
+            document.addEventListener('touchend', onEnd)
+        })()
 
         function renderWeekGrid() {
             const grid = document.getElementById('weekGrid');
@@ -717,19 +802,16 @@
 
             let html = '';
 
-            // header row
             html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
             days.forEach((day, dIdx) => {
                 const isToday = day === today;
                 html += `<div class="grid-cell grid-head ${isToday ? 'grid-today' : ''}" style="grid-row:1;grid-column:${dIdx + 2}">${day}</div>`;
             });
 
-            // time label column
             slots.forEach((slot, sIdx) => {
                 html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`;
             });
 
-            // day columns - merged class blocks + filler cells
             days.forEach((day, dIdx) => {
                 const isToday = day === today;
                 const covered = new Array(slots.length).fill(false);
@@ -761,8 +843,6 @@
                     </div>`;
                 });
 
-                // mark only the gaps *between* classes as vacant - never before the
-                // first class or after the last one for that day
                 for (let i = 0; i < dayCourses.length - 1; i++) {
                     const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM);
                     const gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM);
@@ -793,7 +873,6 @@
 
             grid.innerHTML = html;
 
-            // now-line element lives inside the grid so it scrolls with content
             const line = document.createElement('div');
             line.id = 'nowLine';
             line.className = 'now-line';
@@ -812,7 +891,6 @@
             const today = DAY_MAP[now.getDay()];
             const nowM = toMins(now.getHours(), now.getMinutes());
 
-            // toggle live highlight on the currently running class block
             grid.querySelectorAll('.grid-class').forEach(el => {
                 const isNow = el.dataset.day === today &&
                     nowM >= parseInt(el.dataset.start, 10) &&
@@ -820,7 +898,6 @@
                 el.classList.toggle('now-block', isNow);
             });
 
-            // highlight the time label for the current slot
             grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'));
 
             const inRange = nowM >= 540 && nowM < 1260;
@@ -970,7 +1047,6 @@
                 listLabel.style.display = 'none'
                 list.innerHTML = `
       <div class="empty-state">
-        <div class="icon">🎉</div>
         <div class="msg">No classes today!</div>
         <div class="sub">Enjoy your ${DAY_FULL[dow]}</div>
       </div>`
@@ -980,13 +1056,46 @@
             listLabel.style.display = 'block'
             const remaining = courses.filter(c => toMins(c.endH, c.endM) > nowM)
             const past = courses.filter(c => toMins(c.endH, c.endM) <= nowM)
-            const ordered = [...remaining, ...past]
 
             listLabel.textContent = remaining.length > 0
                 ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining`
                 : 'All done for today ✓'
 
-            list.innerHTML = ordered.map(c => {
+            const orderedItems = []
+
+            for (let i = 0; i < remaining.length; i++) {
+                orderedItems.push(remaining[i])
+                if (i < remaining.length - 1) {
+                    const gapStart = toMins(remaining[i].endH, remaining[i].endM)
+                    const gapEnd = toMins(remaining[i + 1].startH, remaining[i + 1].startM)
+                    if (gapEnd > gapStart) {
+                        orderedItems.push({ isVacant: true, startMin: gapStart, endMin: gapEnd })
+                    }
+                }
+            }
+
+            past.forEach(c => orderedItems.push(c))
+
+            list.innerHTML = orderedItems.map(item => {
+                if (item.isVacant) {
+                    const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60)
+                    return `
+      <div class="class-card vacant-card">
+        <div class="card-bar vacant-bar"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-id vacant-id">VACANT</div>
+            <div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div>
+          </div>
+          <div class="card-desc" style="color:var(--muted)">No class scheduled</div>
+          <div class="card-meta">
+            <div class="card-room" style="color:var(--muted)">Free period</div>
+            <div class="card-dur">${dur}</div>
+          </div>
+        </div>
+      </div>`
+                }
+                const c = item
                 const isNow = current && c === current
                 const isPast = toMins(c.endH, c.endM) <= nowM
                 return `
@@ -1009,7 +1118,6 @@
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
         }
 
-        // Clock ticks every second
         updateClock()
         setInterval(updateClock, 1000)
 
@@ -1017,7 +1125,6 @@
 
         function tick() {
             refresh()
-
             const today = DAY_MAP[new Date().getDay()]
             if (today !== lastRenderedDay) {
                 lastRenderedDay = today
@@ -1028,18 +1135,13 @@
             }
         }
 
-        // Initial render
         refresh()
         renderWeekGrid()
         lastRenderedDay = DAY_MAP[new Date().getDay()]
         requestAnimationFrame(() => scrollToNow(true))
 
-        // Everything updates every second from here on
         setInterval(tick, 1000)
 
-        // Browsers throttle or pause timers in background tabs / locked screens,
-        // which is the usual reason a day rollover (e.g. at 12am) seems "stuck".
-        // Force an immediate catch-up refresh the moment this becomes visible again.
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') tick()
         })
@@ -1049,12 +1151,8 @@
             window.addEventListener("load", () => {
                 navigator.serviceWorker
                     .register("./service-worker.js")
-                    .then(() => {
-                        console.log("PWA Ready");
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
+                    .then(() => { console.log("PWA Ready"); })
+                    .catch(err => { console.error(err); });
             });
         }
     </script>
