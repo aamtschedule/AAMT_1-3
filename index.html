@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Naap Schedule</title>
-
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
@@ -13,7 +12,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Schedule">
-
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
         rel="stylesheet">
@@ -23,7 +21,7 @@
         *::after {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
 
         :root {
@@ -35,7 +33,7 @@
             --grid: #374d86;
             --cell: #0a1428;
             --card: #0f1e42;
-            --radius: 16px;
+            --radius: 16px
         }
 
         html,
@@ -43,7 +41,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: transparent;
+            background: transparent
         }
 
         body {
@@ -52,7 +50,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            background: transparent;
+            background: transparent
         }
 
         .widget {
@@ -61,7 +59,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(255, 255, 255, .07)
         }
 
         .widget-header {
@@ -71,26 +69,26 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 2px solid var(--accent);
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .header-left {
             display: flex;
             flex-direction: column;
-            gap: 1px;
+            gap: 1px
         }
 
         .schedule-title {
             font-size: 16px;
             font-weight: 800;
             color: var(--text);
-            line-height: 1.1;
+            line-height: 1.1
         }
 
         .schedule-subtitle {
             font-size: 10px;
             color: var(--muted);
-            margin-bottom: 6px;
+            margin-bottom: 6px
         }
 
         .day-label {
@@ -98,15 +96,15 @@
             font-weight: 700;
             letter-spacing: 1.2px;
             text-transform: uppercase;
-            color: var(--accent);
+            color: var(--accent)
         }
 
         .date-label {
             font-size: 18px;
             font-weight: 800;
             color: var(--text);
-            letter-spacing: -0.3px;
-            line-height: 1.1;
+            letter-spacing: -.3px;
+            line-height: 1.1
         }
 
         .time-now {
@@ -114,34 +112,34 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--muted);
-            text-align: right;
+            text-align: right
         }
 
         .time-now .time-main {
             font-size: 15px;
             color: var(--text);
-            display: block;
+            display: block
         }
 
         .time-now .time-secs {
             font-size: 11px;
             color: var(--muted);
             display: block;
-            margin-top: 1px;
+            margin-top: 1px
         }
 
         .next-badge {
             font-size: 9px;
             font-weight: 700;
-            letter-spacing: 0.8px;
+            letter-spacing: .8px;
             text-transform: uppercase;
-            background: rgba(240, 165, 0, 0.15);
+            background: rgba(240, 165, 0, .15);
             color: var(--accent);
-            border: 1px solid rgba(240, 165, 0, 0.3);
+            border: 1px solid rgba(240, 165, 0, .3);
             border-radius: 4px;
             padding: 2px 5px;
             margin-top: 3px;
-            display: inline-block;
+            display: inline-block
         }
 
         .current-banner {
@@ -153,7 +151,7 @@
             gap: 10px;
             flex-shrink: 0;
             position: relative;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .current-banner::before {
@@ -161,11 +159,11 @@
             position: absolute;
             inset: 0;
             background: currentColor;
-            opacity: 0.12;
+            opacity: .12
         }
 
         .current-banner.vacant-banner {
-            border: 1px dashed var(--muted);
+            border: 1px dashed var(--muted)
         }
 
         .current-dot {
@@ -173,7 +171,7 @@
             height: 8px;
             border-radius: 50%;
             flex-shrink: 0;
-            animation: pulse 1.8s ease-in-out infinite;
+            animation: pulse 1.8s ease-in-out infinite
         }
 
         @keyframes pulse {
@@ -181,18 +179,18 @@
             0%,
             100% {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1)
             }
 
             50% {
-                opacity: 0.5;
-                transform: scale(0.75);
+                opacity: .5;
+                transform: scale(.75)
             }
         }
 
         .current-info {
             flex: 1;
-            min-width: 0;
+            min-width: 0
         }
 
         .current-tag {
@@ -200,8 +198,8 @@
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            opacity: 0.7;
-            margin-bottom: 2px;
+            opacity: .7;
+            margin-bottom: 2px
         }
 
         .current-id {
@@ -210,40 +208,114 @@
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: ellipsis
         }
 
         .current-desc {
             font-size: 11px;
             font-weight: 500;
-            opacity: 0.75;
+            opacity: .75;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: ellipsis
         }
 
         .current-time {
             font-size: 10px;
             font-weight: 600;
-            opacity: 0.6;
+            opacity: .6;
             text-align: right;
             flex-shrink: 0;
-            line-height: 1.5;
+            line-height: 1.5
         }
 
         .progress-bar-wrap {
             margin: 6px 10px 0;
             height: 3px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, .06);
             border-radius: 3px;
             overflow: hidden;
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .progress-bar {
             height: 100%;
             border-radius: 3px;
-            transition: width 0.5s ease;
+            transition: width .5s ease
+        }
+
+        /* ── Day tabs ── */
+        .day-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 8px 10px 0;
+            flex-shrink: 0
+        }
+
+        .day-tab {
+            flex: 1;
+            padding: 5px 2px;
+            border: none;
+            border-radius: 7px;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .15s, color .15s, transform .1s;
+            background: rgba(255, 255, 255, .06);
+            color: var(--muted)
+        }
+
+        .day-tab:hover {
+            background: rgba(255, 255, 255, .12);
+            color: var(--text)
+        }
+
+        .day-tab.active-today {
+            background: rgba(255, 255, 255, .16);
+            color: var(--text);
+            outline: 1px solid rgba(255, 255, 255, .25)
+        }
+
+        .day-tab.selected {
+            background: var(--accent);
+            color: #050a15
+        }
+
+        .day-tab:active {
+            transform: scale(.96)
+        }
+
+        .viewing-banner {
+            margin: 4px 10px 0;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, .05);
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: .4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0
+        }
+
+        .viewing-banner button {
+            background: none;
+            border: none;
+            font-size: 9px;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            text-decoration: underline;
+            padding: 0
+        }
+
+        .viewing-banner button:hover {
+            color: var(--text)
         }
 
         .classes-label {
@@ -253,7 +325,7 @@
             text-transform: uppercase;
             color: var(--muted);
             padding: 8px 12px 4px;
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .classes-list {
@@ -263,11 +335,11 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            min-height: 0;
+            min-height: 0
         }
 
         .classes-list::-webkit-scrollbar {
-            display: none;
+            display: none
         }
 
         .class-card {
@@ -277,29 +349,29 @@
             border-radius: 10px;
             overflow: hidden;
             background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, .06);
             flex-shrink: 0;
-            transition: opacity 0.2s;
+            transition: opacity .2s
         }
 
         .class-card.past {
-            opacity: 0.38;
+            opacity: .38
         }
 
         .class-card.now {
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 1px var(--color) inset;
+            border-color: rgba(255, 255, 255, .15);
+            box-shadow: 0 0 0 1px var(--color) inset
         }
 
         .card-bar {
             width: 4px;
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .card-body {
             flex: 1;
             padding: 8px 10px;
-            min-width: 0;
+            min-width: 0
         }
 
         .card-top {
@@ -307,14 +379,14 @@
             align-items: baseline;
             justify-content: space-between;
             gap: 6px;
-            margin-bottom: 2px;
+            margin-bottom: 2px
         }
 
         .card-id {
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
             font-weight: 700;
-            white-space: nowrap;
+            white-space: nowrap
         }
 
         .card-time {
@@ -322,24 +394,24 @@
             font-weight: 500;
             color: var(--muted);
             white-space: nowrap;
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .card-desc {
             font-size: 11px;
             font-weight: 500;
             color: var(--text);
-            opacity: 0.75;
+            opacity: .75;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: ellipsis
         }
 
         .card-meta {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 3px;
+            margin-top: 3px
         }
 
         .card-room {
@@ -347,34 +419,30 @@
             color: var(--muted);
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: ellipsis
         }
 
         .card-dur {
             font-size: 9px;
             font-weight: 600;
-            letter-spacing: 0.3px;
-            opacity: 0.5;
+            letter-spacing: .3px;
+            opacity: .5;
             flex-shrink: 0;
-            margin-left: auto;
+            margin-left: auto
         }
 
         .class-card.vacant-card {
-            background: repeating-linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.035) 0px,
-                    rgba(255, 255, 255, 0.035) 4px,
-                    transparent 4px,
-                    transparent 8px), var(--card);
-            border-style: dashed;
+            background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .035) 0px, rgba(255, 255, 255, .035) 4px, transparent 4px, transparent 8px), var(--card);
+            border-style: dashed
         }
 
         .vacant-bar {
-            background: var(--muted);
+            background: var(--muted)
         }
 
         .vacant-id {
             color: var(--muted);
-            font-style: italic;
+            font-style: italic
         }
 
         .empty-state {
@@ -386,23 +454,18 @@
             gap: 6px;
             color: var(--muted);
             padding: 20px;
-            text-align: center;
-        }
-
-        .empty-state .icon {
-            font-size: 28px;
-            opacity: 0.4;
+            text-align: center
         }
 
         .empty-state .msg {
             font-size: 12px;
             font-weight: 500;
-            opacity: 0.6;
+            opacity: .6
         }
 
         .empty-state .sub {
             font-size: 10px;
-            opacity: 0.35;
+            opacity: .35
         }
 
         .widget-footer {
@@ -410,19 +473,19 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
+            border-top: 1px solid rgba(255, 255, 255, .05);
+            flex-shrink: 0
         }
 
         .footer-title {
             font-size: 9px;
             font-weight: 600;
             color: var(--muted);
-            opacity: 0.5;
+            opacity: .5;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 60%;
+            max-width: 60%
         }
 
         .reload-btn {
@@ -430,27 +493,26 @@
             border: none;
             font-size: 10px;
             color: var(--muted);
-            opacity: 0.4;
+            opacity: .4;
             cursor: pointer;
             padding: 2px 4px;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif
         }
 
         .reload-btn:active {
-            opacity: 0.8;
+            opacity: .8
         }
 
         /* ── Week grid panel ── */
         .week-grid-wrap {
             padding: 0 10px 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, .05);
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden
         }
 
-        /* ── Drag handle ── */
         .week-grid-handle {
             display: flex;
             align-items: center;
@@ -460,13 +522,13 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .week-grid-handle:hover .handle-bar,
         .week-grid-handle:active .handle-bar {
             background: var(--accent);
-            opacity: 1;
+            opacity: 1
         }
 
         .week-grid-title {
@@ -475,7 +537,7 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             color: var(--muted);
-            pointer-events: none;
+            pointer-events: none
         }
 
         .handle-bar {
@@ -483,16 +545,16 @@
             height: 3px;
             border-radius: 3px;
             background: var(--muted);
-            opacity: 0.4;
-            transition: opacity 0.15s, background 0.15s;
+            opacity: .4;
+            transition: opacity .15s, background .15s
         }
 
         .handle-hint {
             font-size: 8px;
             color: var(--muted);
-            opacity: 0.35;
+            opacity: .35;
             pointer-events: none;
-            letter-spacing: 0.3px;
+            letter-spacing: .3px
         }
 
         .week-grid-scroll {
@@ -504,16 +566,11 @@
             flex: 1;
             min-height: 0;
             scrollbar-width: none;
-            -ms-overflow-style: none;
+            -ms-overflow-style: none
         }
 
         .week-grid-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .week-grid-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 4px;
+            display: none
         }
 
         .week-grid {
@@ -522,21 +579,28 @@
             grid-template-columns: 60px repeat(5, 1fr);
             grid-template-rows: 20px repeat(24, 16px);
             gap: 2px;
-            font-size: 8px;
+            font-size: 8px
         }
 
         .grid-cell {
             border-radius: 3px;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, .04);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--muted);
+            color: var(--muted)
         }
 
         .grid-head {
             font-weight: 700;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, .08);
+            cursor: pointer;
+            transition: background .15s, color .15s
+        }
+
+        .grid-head:hover {
+            background: rgba(255, 255, 255, .18);
+            color: var(--text)
         }
 
         .grid-time {
@@ -544,12 +608,12 @@
             justify-content: flex-start;
             padding-left: 4px;
             white-space: nowrap;
-            transition: color 0.2s;
+            transition: color .2s
         }
 
         .grid-time.now-time {
             color: var(--accent);
-            font-weight: 700;
+            font-weight: 700
         }
 
         .grid-class {
@@ -559,53 +623,59 @@
             line-height: 1.25;
             text-align: center;
             overflow: hidden;
-            padding: 1px 2px;
+            padding: 1px 2px
         }
 
         .grid-today.grid-head {
-            background: rgba(240, 165, 0, 0.2);
+            background: rgba(240, 165, 0, .2);
             color: var(--accent);
-            outline: 1px solid var(--accent);
+            outline: 1px solid var(--accent)
         }
 
         .grid-cell.grid-today:not(.grid-class):not(.grid-head) {
-            background: rgba(240, 165, 0, 0.07);
+            background: rgba(240, 165, 0, .07)
         }
 
         .grid-class.grid-today {
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
-            filter: saturate(1.15);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, .35) inset;
+            filter: saturate(1.15)
         }
 
         .grid-class.now-block {
-            box-shadow: 0 0 0 1.5px #fff inset, 0 0 6px rgba(255, 255, 255, 0.55);
+            box-shadow: 0 0 0 1.5px #fff inset, 0 0 6px rgba(255, 255, 255, .55);
             animation: nowPulse 1.6s ease-in-out infinite;
-            z-index: 2;
+            z-index: 2
         }
 
         .grid-vacant {
-            background: repeating-linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.035) 0px,
-                    rgba(255, 255, 255, 0.035) 4px,
-                    transparent 4px,
-                    transparent 8px);
+            background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .035) 0px, rgba(255, 255, 255, .035) 4px, transparent 4px, transparent 8px);
             color: var(--muted);
             font-size: 8px;
             font-weight: 700;
-            letter-spacing: 0.4px;
+            letter-spacing: .4px;
             text-transform: uppercase;
-            opacity: 0.6;
+            opacity: .6
+        }
+
+        .grid-selected-day.grid-head {
+            background: rgba(255, 255, 255, .28);
+            color: #050a15;
+            outline: 1px solid #fff
+        }
+
+        .grid-cell.grid-selected-day:not(.grid-class):not(.grid-head) {
+            background: rgba(255, 255, 255, .04)
         }
 
         @keyframes nowPulse {
 
             0%,
             100% {
-                filter: brightness(1) saturate(1.15);
+                filter: brightness(1) saturate(1.15)
             }
 
             50% {
-                filter: brightness(1.3) saturate(1.3);
+                filter: brightness(1.3) saturate(1.3)
             }
         }
 
@@ -617,20 +687,18 @@
             border-top: 1.5px dashed var(--accent);
             z-index: 5;
             pointer-events: none;
-            display: none;
+            display: none
         }
     </style>
 </head>
 
 <body>
-
     <div class="widget" id="widget">
 
         <div class="widget-header">
             <div class="header-left">
                 <div class="schedule-title" id="scheduleTitle"></div>
                 <div class="schedule-subtitle" id="scheduleSubtitle"></div>
-
                 <div class="day-label" id="hdrDay"></div>
                 <div class="date-label" id="hdrDate"></div>
                 <div id="hdrBadge"></div>
@@ -642,6 +710,12 @@
         </div>
 
         <div id="currentWrap"></div>
+
+        <div class="day-tabs" id="dayTabs"></div>
+        <div id="viewingBanner" style="display:none" class="viewing-banner">
+            <span id="viewingLabel"></span>
+            <button onclick="returnToToday()">← back to today</button>
+        </div>
 
         <div class="classes-label" id="listLabel">Today's Classes</div>
         <div class="classes-list" id="classesList"></div>
@@ -693,428 +767,235 @@
             ]
         }
 
+        const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
         const DAY_MAP = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' }
         const DAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
+        let selectedDay = null
+
+        function todayKey() { return DAY_MAP[new Date().getDay()] }
         function toMins(h, m) { return h * 60 + m }
+        function fmt12(h, m) { const a = h < 12 ? 'AM' : 'PM'; const h2 = h % 12 === 0 ? 12 : h % 12; return `${h2}:${String(m).padStart(2, '0')} ${a}` }
+        function durStr(sH, sM, eH, eM) { const mins = toMins(eH, eM) - toMins(sH, sM); const h = Math.floor(mins / 60), m = mins % 60; return h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m` }
+        function minsToWords(t) { t = Math.max(0, Math.round(t)); const h = Math.floor(t / 60), m = t % 60; const hp = h > 0 ? `${h} hour${h !== 1 ? 's' : ''}` : ''; const mp = m > 0 ? `${m} minute${m !== 1 ? 's' : ''}` : ''; if (h > 0 && m > 0) return `${hp} and ${mp}`; if (h > 0) return hp; return mp || '0 minutes' }
+        function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
 
-        function fmt12(h, m) {
-            const ampm = h < 12 ? 'AM' : 'PM'
-            const h12 = h % 12 === 0 ? 12 : h % 12
-            return `${h12}:${String(m).padStart(2, '0')} ${ampm}`
+        function returnToToday() {
+            selectedDay = null
+            buildTabs()
+            refresh()
+            renderWeekGrid()
         }
 
-        function durStr(startH, startM, endH, endM) {
-            const mins = toMins(endH, endM) - toMins(startH, startM)
-            const h = Math.floor(mins / 60), m = mins % 60
-            return h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`
+        function selectDay(day) {
+            selectedDay = (day === todayKey()) ? null : day
+            buildTabs()
+            refresh()
+            renderWeekGrid()
         }
 
-        function minsToWords(totalMins) {
-            totalMins = Math.max(0, Math.round(totalMins))
-            const h = Math.floor(totalMins / 60)
-            const m = totalMins % 60
-            const hPart = h > 0 ? `${h} hour${h !== 1 ? 's' : ''}` : ''
-            const mPart = m > 0 ? `${m} minute${m !== 1 ? 's' : ''}` : ''
-            if (h > 0 && m > 0) return `${hPart} and ${mPart}`
-            if (h > 0) return hPart
-            return mPart || '0 minutes'
-        }
-
-        function esc(str) {
-            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        function buildTabs() {
+            const today = todayKey()
+            const tabs = document.getElementById('dayTabs')
+            const activeDay = selectedDay || today
+            tabs.innerHTML = WEEKDAYS.map(d => {
+                const isSelected = d === activeDay
+                const isToday = d === today
+                const cls = isSelected ? 'day-tab selected' : (isToday ? 'day-tab active-today' : 'day-tab')
+                return `<button class="${cls}" onclick="selectDay('${d}')">${d}</button>`
+            }).join('')
+            const banner = document.getElementById('viewingBanner')
+            if (selectedDay && selectedDay !== today) {
+                banner.style.display = 'flex'
+                document.getElementById('viewingLabel').textContent = `Viewing ${selectedDay} schedule`
+            } else {
+                banner.style.display = 'none'
+            }
         }
 
         function updateClock() {
-            const now = new Date();
-            const h = now.getHours();
-            const m = now.getMinutes();
-            const s = now.getSeconds();
-            const ampm = h < 12 ? "AM" : "PM";
-            const h12 = h % 12 === 0 ? 12 : h % 12;
-            document.getElementById("timeMain").textContent =
-                `${h12}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")} ${ampm}`;
+            const now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), a = h < 12 ? 'AM' : 'PM', h2 = h % 12 === 0 ? 12 : h % 12
+            document.getElementById('timeMain').textContent = `${h2}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')} ${a}`
         }
 
         ; (function () {
-            const handle = document.getElementById('weekGridHandle')
-            const wrap = document.getElementById('weekGridWrap')
-            const MIN_H = 60
-            const MAX_H = 600
-            const DEFAULT_H = 210
-
-            let startY = 0
-            let startH = 0
-            let dragging = false
-
+            const handle = document.getElementById('weekGridHandle'), wrap = document.getElementById('weekGridWrap')
+            const MIN_H = 60, MAX_H = 600, DEFAULT_H = 210
+            let startY = 0, startH = 0, dragging = false
             function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
-
-            function setHeight(h) {
-                wrap.style.height = clamp(h, MIN_H, MAX_H) + 'px'
-            }
-
+            function setHeight(h) { wrap.style.height = clamp(h, MIN_H, MAX_H) + 'px' }
             const saved = parseInt(localStorage.getItem('wgHeight'), 10)
             setHeight(isNaN(saved) ? DEFAULT_H : saved)
-
-            function onStart(clientY) {
-                startY = clientY
-                startH = wrap.offsetHeight
-                dragging = true
-                document.body.style.cursor = 'ns-resize'
-                document.body.style.userSelect = 'none'
-            }
-
-            function onMove(clientY) {
-                if (!dragging) return
-                const delta = startY - clientY
-                setHeight(startH + delta)
-            }
-
-            function onEnd() {
-                if (!dragging) return
-                dragging = false
-                document.body.style.cursor = ''
-                document.body.style.userSelect = ''
-                localStorage.setItem('wgHeight', wrap.offsetHeight)
-            }
-
-            // mouse
+            function onStart(y) { startY = y; startH = wrap.offsetHeight; dragging = true; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none' }
+            function onMove(y) { if (!dragging) return; setHeight(startH + (startY - y)) }
+            function onEnd() { if (!dragging) return; dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; localStorage.setItem('wgHeight', wrap.offsetHeight) }
             handle.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientY) })
             document.addEventListener('mousemove', e => onMove(e.clientY))
             document.addEventListener('mouseup', onEnd)
-
-            // touch
             handle.addEventListener('touchstart', e => { onStart(e.touches[0].clientY) }, { passive: true })
             document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientY) } }, { passive: false })
             document.addEventListener('touchend', onEnd)
         })()
 
         function renderWeekGrid() {
-            const grid = document.getElementById('weekGrid');
-
-            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-            const today = DAY_MAP[new Date().getDay()];
-
-            const slots = [];
-            for (let h = 9; h <= 20; h++) {
-                slots.push({ h, m: 0 });
-                slots.push({ h, m: 30 });
-            }
-
-            let html = '';
-
-            html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
-            days.forEach((day, dIdx) => {
-                const isToday = day === today;
-                html += `<div class="grid-cell grid-head ${isToday ? 'grid-today' : ''}" style="grid-row:1;grid-column:${dIdx + 2}">${day}</div>`;
-            });
-
+            const grid = document.getElementById('weekGrid')
+            const today = todayKey()
+            const activeDay = selectedDay || today
+            const slots = []
+            for (let h = 9; h <= 20; h++) { slots.push({ h, m: 0 }); slots.push({ h, m: 30 }) }
+            let html = ''
+            html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`
+            WEEKDAYS.forEach((day, dIdx) => {
+                const isToday = day === today
+                const isSelected = day === activeDay
+                const cls = isSelected ? 'grid-cell grid-head grid-selected-day' : (isToday ? 'grid-cell grid-head grid-today' : 'grid-cell grid-head')
+                html += `<div class="${cls}" style="grid-row:1;grid-column:${dIdx + 2};cursor:pointer" onclick="selectDay('${day}')" title="View ${day} schedule">${day}</div>`
+            })
             slots.forEach((slot, sIdx) => {
-                html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`;
-            });
-
-            days.forEach((day, dIdx) => {
-                const isToday = day === today;
-                const covered = new Array(slots.length).fill(false);
-
-                const dayCourses = scheduleData.courses
-                    .filter(c => c.days.includes(day))
-                    .sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
-
+                html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`
+            })
+            WEEKDAYS.forEach((day, dIdx) => {
+                const isToday = day === today
+                const covered = new Array(slots.length).fill(false)
+                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM))
                 dayCourses.forEach(c => {
-                    const startMin = toMins(c.startH, c.startM);
-                    const endMin = toMins(c.endH, c.endM);
-                    const startSlot = Math.round((startMin - 540) / 30);
-                    const span = Math.round((endMin - startMin) / 30);
-                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) return;
-
-                    const rowStart = startSlot + 2;
-                    const rowEnd = Math.min(rowStart + span, slots.length + 2);
-                    for (let i = startSlot; i < startSlot + span && i < slots.length; i++) covered[i] = true;
-
-                    html += `
-                    <div
-                        class="grid-cell grid-class ${isToday ? 'grid-today' : ''}"
-                        data-day="${day}"
-                        data-start="${startMin}"
-                        data-end="${endMin}"
-                        style="grid-row:${rowStart} / ${rowEnd};grid-column:${dIdx + 2};background:${c.color}"
-                        title="${esc(c.id)} - ${esc(c.desc)}">
-                        ${esc(c.id)}
-                    </div>`;
-                });
-
+                    const startMin = toMins(c.startH, c.startM), endMin = toMins(c.endH, c.endM)
+                    const startSlot = Math.round((startMin - 540) / 30), span = Math.round((endMin - startMin) / 30)
+                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) return
+                    const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2)
+                    for (let i = startSlot; i < startSlot + span && i < slots.length; i++)covered[i] = true
+                    html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''}" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color}" title="${esc(c.id)} - ${esc(c.desc)}">${esc(c.id)}</div>`
+                })
                 for (let i = 0; i < dayCourses.length - 1; i++) {
-                    const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM);
-                    const gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM);
-                    if (gapEnd <= gapStart) continue;
-
-                    const startSlot = Math.round((gapStart - 540) / 30);
-                    const span = Math.round((gapEnd - gapStart) / 30);
-                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue;
-
-                    const rowStart = startSlot + 2;
-                    const rowEnd = Math.min(rowStart + span, slots.length + 2);
-                    for (let s = startSlot; s < startSlot + span && s < slots.length; s++) covered[s] = true;
-
-                    html += `
-                    <div
-                        class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}"
-                        style="grid-row:${rowStart} / ${rowEnd};grid-column:${dIdx + 2}"
-                        title="Vacant - no class scheduled">
-                        Vacant
-                    </div>`;
+                    const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM), gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM)
+                    if (gapEnd <= gapStart) continue
+                    const startSlot = Math.round((gapStart - 540) / 30), span = Math.round((gapEnd - gapStart) / 30)
+                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue
+                    const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2)
+                    for (let s = startSlot; s < startSlot + span && s < slots.length; s++)covered[s] = true
+                    html += `<div class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2}" title="Vacant">Vacant</div>`
                 }
-
-                slots.forEach((slot, sIdx) => {
-                    if (covered[sIdx]) return;
-                    html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`;
-                });
-            });
-
-            grid.innerHTML = html;
-
-            const line = document.createElement('div');
-            line.id = 'nowLine';
-            line.className = 'now-line';
-            line.innerHTML = '<span class="now-dot"></span>';
-            grid.appendChild(line);
-
-            updateNowLine();
+                slots.forEach((_, sIdx) => {
+                    if (covered[sIdx]) return
+                    html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`
+                })
+            })
+            grid.innerHTML = html
+            const line = document.createElement('div'); line.id = 'nowLine'; line.className = 'now-line'; grid.appendChild(line)
+            updateNowLine()
         }
 
         function updateNowLine() {
-            const grid = document.getElementById('weekGrid');
-            const line = document.getElementById('nowLine');
-            if (!grid || !line) return;
-
-            const now = new Date();
-            const today = DAY_MAP[now.getDay()];
-            const nowM = toMins(now.getHours(), now.getMinutes());
-
+            const grid = document.getElementById('weekGrid'), line = document.getElementById('nowLine')
+            if (!grid || !line) return
+            const now = new Date(), today = todayKey(), nowM = toMins(now.getHours(), now.getMinutes())
             grid.querySelectorAll('.grid-class').forEach(el => {
-                const isNow = el.dataset.day === today &&
-                    nowM >= parseInt(el.dataset.start, 10) &&
-                    nowM < parseInt(el.dataset.end, 10);
-                el.classList.toggle('now-block', isNow);
-            });
-
-            grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'));
-
-            const inRange = nowM >= 540 && nowM < 1260;
-            if (!inRange) {
-                line.style.display = 'none';
-                return;
-            }
-
-            const slotFloat = (nowM - 540) / 30;
-            const flooredIdx = Math.max(0, Math.min(23, Math.floor(slotFloat)));
-            const frac = slotFloat - Math.floor(slotFloat);
-
-            const cellEl = grid.querySelector(`.grid-time[data-slot="${flooredIdx}"]`);
-            if (!cellEl) {
-                line.style.display = 'none';
-                return;
-            }
-            cellEl.classList.add('now-time');
-
-            const top = cellEl.offsetTop + frac * cellEl.offsetHeight;
-            line.style.top = `${top}px`;
-            line.style.display = 'block';
+                const isNow = el.dataset.day === today && nowM >= parseInt(el.dataset.start, 10) && nowM < parseInt(el.dataset.end, 10)
+                el.classList.toggle('now-block', isNow)
+            })
+            grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'))
+            const inRange = nowM >= 540 && nowM < 1260
+            if (!inRange) { line.style.display = 'none'; return }
+            const slotFloat = (nowM - 540) / 30, flooredIdx = Math.max(0, Math.min(23, Math.floor(slotFloat))), frac = slotFloat - Math.floor(slotFloat)
+            const cellEl = grid.querySelector(`.grid-time[data-slot="${flooredIdx}"]`)
+            if (!cellEl) { line.style.display = 'none'; return }
+            cellEl.classList.add('now-time')
+            line.style.top = `${cellEl.offsetTop + frac * cellEl.offsetHeight}px`; line.style.display = 'block'
         }
 
         function scrollToNow(instant) {
-            const wrap = document.getElementById('weekGridScroll');
-            const grid = document.getElementById('weekGrid');
-            if (!wrap || !grid) return;
-
-            const now = new Date();
-            const nowM = toMins(now.getHours(), now.getMinutes());
-            const clamped = Math.min(1259, Math.max(540, nowM));
-            const slotIdx = Math.max(0, Math.min(23, Math.floor((clamped - 540) / 30)));
-
-            const cellEl = grid.querySelector(`.grid-time[data-slot="${slotIdx}"]`);
-            if (!cellEl) return;
-
-            const target = cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2);
-            wrap.scrollTo({ top: Math.max(0, target), behavior: instant ? 'auto' : 'smooth' });
+            const wrap = document.getElementById('weekGridScroll'), grid = document.getElementById('weekGrid')
+            if (!wrap || !grid) return
+            const now = new Date(), nowM = toMins(now.getHours(), now.getMinutes())
+            const clamped = Math.min(1259, Math.max(540, nowM)), slotIdx = Math.max(0, Math.min(23, Math.floor((clamped - 540) / 30)))
+            const cellEl = grid.querySelector(`.grid-time[data-slot="${slotIdx}"]`)
+            if (!cellEl) return
+            wrap.scrollTo({ top: Math.max(0, cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2)), behavior: instant ? 'auto' : 'smooth' })
         }
 
-        function manualRefresh() {
-            refresh();
-            renderWeekGrid();
-            requestAnimationFrame(() => scrollToNow(false));
-        }
+        function manualRefresh() { refresh(); renderWeekGrid(); requestAnimationFrame(() => scrollToNow(false)) }
 
         function refresh() {
-            const now = new Date()
-            const dow = now.getDay()
-            const today = DAY_MAP[dow]
-            const nowM = toMins(now.getHours(), now.getMinutes())
+            const now = new Date(), dow = now.getDay(), todayShort = DAY_MAP[dow], nowM = toMins(now.getHours(), now.getMinutes())
+            const viewDay = selectedDay || todayShort
+            const isViewingToday = viewDay === todayShort
 
             document.getElementById('hdrDay').textContent = DAY_FULL[dow].toUpperCase()
             document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`
+            document.getElementById('scheduleTitle').textContent = scheduleData.title || 'Schedule'
+            document.getElementById('scheduleSubtitle').textContent = scheduleData.subtitle || ''
 
-            document.getElementById('scheduleTitle').textContent =
-                scheduleData.title || 'Schedule';
+            const allDayCourses = (scheduleData.courses || []).filter(c => c.days && c.days.includes(viewDay)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM))
 
-            document.getElementById('scheduleSubtitle').textContent =
-                scheduleData.subtitle || '';
-
-            const courses = (scheduleData.courses || [])
-                .filter(c => c.days && c.days.includes(today))
-                .sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM))
-
-            const current = courses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM))
-            const upcoming = courses.find(c => toMins(c.startH, c.startM) > nowM)
-
+            const current = isViewingToday ? allDayCourses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM)) : null
+            const upcoming = isViewingToday ? allDayCourses.find(c => toMins(c.startH, c.startM) > nowM) : null
             let vacantNow = null
-            for (let i = 0; i < courses.length - 1; i++) {
-                const gapStart = toMins(courses[i].endH, courses[i].endM)
-                const gapEnd = toMins(courses[i + 1].startH, courses[i + 1].startM)
-                if (gapEnd > gapStart && nowM >= gapStart && nowM < gapEnd) {
-                    vacantNow = { startMin: gapStart, endMin: gapEnd }
-                    break
+            if (isViewingToday) {
+                for (let i = 0; i < allDayCourses.length - 1; i++) {
+                    const gs = toMins(allDayCourses[i].endH, allDayCourses[i].endM), ge = toMins(allDayCourses[i + 1].startH, allDayCourses[i + 1].startM)
+                    if (ge > gs && nowM >= gs && nowM < ge) { vacantNow = { startMin: gs, endMin: ge }; break }
                 }
             }
 
             const badge = document.getElementById('hdrBadge')
             if (current) {
                 badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`
-            } else if (upcoming) {
-                const minsUntil = toMins(upcoming.startH, upcoming.startM) - nowM
-                const h2 = Math.floor(minsUntil / 60), m2 = minsUntil % 60
-                const untilStr = h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`
-                badge.innerHTML = `<span class="next-badge">Next in ${untilStr}</span>`
-            } else {
-                badge.innerHTML = ''
-            }
+            } else if (upcoming && isViewingToday) {
+                const mu = toMins(upcoming.startH, upcoming.startM) - nowM, h2 = Math.floor(mu / 60), m2 = mu % 60
+                badge.innerHTML = `<span class="next-badge">Next in ${h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`}</span>`
+            } else { badge.innerHTML = '' }
 
             const wrap = document.getElementById('currentWrap')
-            if (current) {
-                const startM2 = toMins(current.startH, current.startM)
-                const endM2 = toMins(current.endH, current.endM)
-                const totalDur = endM2 - startM2
-                const elapsed = nowM - startM2
-                const pct = Math.min(100, Math.max(0, (elapsed / totalDur) * 100))
-                const minsLeft = endM2 - nowM
-
-                wrap.innerHTML = `
-      <div class="current-banner" style="color:${current.color};margin:10px 10px 0">
-        <div class="current-dot" style="background:${current.color}"></div>
-        <div class="current-info">
-          <div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(minsLeft)} left</div>
-          <div class="current-id" style="color:${current.color}">${esc(current.id)}</div>
-          <div class="current-desc">${esc(current.desc)}</div>
-        </div>
-        <div class="current-time" style="color:${current.color}">
-          ${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}
-        </div>
-      </div>
-      <div class="progress-bar-wrap" style="margin:5px 10px 0">
-        <div class="progress-bar" style="width:${pct}%;background:${current.color}"></div>
-      </div>
-    `
+            if (!isViewingToday) { wrap.innerHTML = '' }
+            else if (current) {
+                const sM = toMins(current.startH, current.startM), eM = toMins(current.endH, current.endM)
+                const pct = Math.min(100, Math.max(0, ((nowM - sM) / (eM - sM)) * 100)), left = eM - nowM
+                wrap.innerHTML = `<div class="current-banner" style="color:${current.color};margin:10px 10px 0"><div class="current-dot" style="background:${current.color}"></div><div class="current-info"><div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(left)} left</div><div class="current-id" style="color:${current.color}">${esc(current.id)}</div><div class="current-desc">${esc(current.desc)}</div></div><div class="current-time" style="color:${current.color}">${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${current.color}"></div></div>`
             } else if (vacantNow) {
-                const totalDur = vacantNow.endMin - vacantNow.startMin
-                const elapsed = nowM - vacantNow.startMin
-                const pct = Math.min(100, Math.max(0, (elapsed / totalDur) * 100))
-                const minsLeft = vacantNow.endMin - nowM
+                const pct = Math.min(100, Math.max(0, ((nowM - vacantNow.startMin) / (vacantNow.endMin - vacantNow.startMin)) * 100)), left = vacantNow.endMin - nowM
+                wrap.innerHTML = `<div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0"><div class="current-dot" style="background:var(--muted)"></div><div class="current-info"><div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(left)} left</div><div class="current-id" style="color:var(--muted)">VACANT</div><div class="current-desc">No class scheduled</div></div><div class="current-time" style="color:var(--muted)">${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div></div>`
+            } else { wrap.innerHTML = '' }
 
-                wrap.innerHTML = `
-      <div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0">
-        <div class="current-dot" style="background:var(--muted)"></div>
-        <div class="current-info">
-          <div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(minsLeft)} left</div>
-          <div class="current-id" style="color:var(--muted)">VACANT</div>
-          <div class="current-desc">No class scheduled</div>
-        </div>
-        <div class="current-time" style="color:var(--muted)">
-          ${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}
-        </div>
-      </div>
-      <div class="progress-bar-wrap" style="margin:5px 10px 0">
-        <div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div>
-      </div>
-    `
-            } else {
-                wrap.innerHTML = ''
-            }
-
-            const listLabel = document.getElementById('listLabel')
-            const list = document.getElementById('classesList')
-
-            if (courses.length === 0) {
+            const listLabel = document.getElementById('listLabel'), list = document.getElementById('classesList')
+            if (allDayCourses.length === 0) {
                 listLabel.style.display = 'none'
-                list.innerHTML = `
-      <div class="empty-state">
-        <div class="msg">No classes today!</div>
-        <div class="sub">Enjoy your ${DAY_FULL[dow]}</div>
-      </div>`
+                list.innerHTML = `<div class="empty-state"><div class="msg">No classes on ${viewDay}!</div><div class="sub">Nothing scheduled</div></div>`
+                document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
                 return
             }
-
             listLabel.style.display = 'block'
-            const remaining = courses.filter(c => toMins(c.endH, c.endM) > nowM)
-            const past = courses.filter(c => toMins(c.endH, c.endM) <= nowM)
 
-            listLabel.textContent = remaining.length > 0
-                ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining`
-                : 'All done for today ✓'
+            let remaining, past
+            if (isViewingToday) {
+                remaining = allDayCourses.filter(c => toMins(c.endH, c.endM) > nowM)
+                past = allDayCourses.filter(c => toMins(c.endH, c.endM) <= nowM)
+                listLabel.textContent = remaining.length > 0 ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining` : 'All done for today ✓'
+            } else {
+                remaining = allDayCourses
+                past = []
+                listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`
+            }
 
             const orderedItems = []
-
             for (let i = 0; i < remaining.length; i++) {
                 orderedItems.push(remaining[i])
                 if (i < remaining.length - 1) {
-                    const gapStart = toMins(remaining[i].endH, remaining[i].endM)
-                    const gapEnd = toMins(remaining[i + 1].startH, remaining[i + 1].startM)
-                    if (gapEnd > gapStart) {
-                        orderedItems.push({ isVacant: true, startMin: gapStart, endMin: gapEnd })
-                    }
+                    const gs = toMins(remaining[i].endH, remaining[i].endM), ge = toMins(remaining[i + 1].startH, remaining[i + 1].startM)
+                    if (ge > gs) orderedItems.push({ isVacant: true, startMin: gs, endMin: ge })
                 }
             }
-
             past.forEach(c => orderedItems.push(c))
 
             list.innerHTML = orderedItems.map(item => {
                 if (item.isVacant) {
                     const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60)
-                    return `
-      <div class="class-card vacant-card">
-        <div class="card-bar vacant-bar"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="card-id vacant-id">VACANT</div>
-            <div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div>
-          </div>
-          <div class="card-desc" style="color:var(--muted)">No class scheduled</div>
-          <div class="card-meta">
-            <div class="card-room" style="color:var(--muted)">Free period</div>
-            <div class="card-dur">${dur}</div>
-          </div>
-        </div>
-      </div>`
+                    return `<div class="class-card vacant-card"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`
                 }
                 const c = item
                 const isNow = current && c === current
-                const isPast = toMins(c.endH, c.endM) <= nowM
-                return `
-      <div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}">
-        <div class="card-bar" style="background:${c.color}"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="card-id" style="color:${c.color}">${esc(c.id)}</div>
-            <div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div>
-          </div>
-          <div class="card-desc">${esc(c.desc)}</div>
-          <div class="card-meta">
-            <div class="card-room"><span style="font-weight: bold;">Room: </span>${esc(c.room)}</div>
-            <div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div>
-          </div>
-        </div>
-      </div>`
+                const isPast = isViewingToday && toMins(c.endH, c.endM) <= nowM
+                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div><div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div></div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div><div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div></div></div></div>`
             }).join('')
 
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
@@ -1122,40 +1003,31 @@
 
         updateClock()
         setInterval(updateClock, 1000)
+        buildTabs()
 
         let lastRenderedDay = null
-
         function tick() {
             refresh()
-            const today = DAY_MAP[new Date().getDay()]
-            if (today !== lastRenderedDay) {
-                lastRenderedDay = today
-                renderWeekGrid()
-                requestAnimationFrame(() => scrollToNow(true))
-            } else {
-                updateNowLine()
-            }
+            const today = todayKey()
+            if (today !== lastRenderedDay) { lastRenderedDay = today; renderWeekGrid(); requestAnimationFrame(() => scrollToNow(true)) }
+            else { updateNowLine() }
+            buildTabs()
         }
 
         refresh()
         renderWeekGrid()
-        lastRenderedDay = DAY_MAP[new Date().getDay()]
+        lastRenderedDay = todayKey()
         requestAnimationFrame(() => scrollToNow(true))
-
         setInterval(tick, 1000)
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') tick()
-        })
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick() })
         window.addEventListener('focus', () => tick())
 
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
-                navigator.serviceWorker
-                    .register("./service-worker.js")
-                    .then(() => { console.log("PWA Ready"); })
-                    .catch(err => { console.error(err); });
-            });
+                navigator.serviceWorker.register("./service-worker.js")
+                    .then(() => { console.log("PWA Ready") })
+                    .catch(err => { console.error(err) })
+            })
         }
     </script>
 </body>
