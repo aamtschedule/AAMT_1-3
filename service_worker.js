@@ -1,9 +1,17 @@
-const CACHE_NAME = "naap-schedule-v1";
+const CACHE_NAME = "aamt-v2";
 
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./admin.html",
+
+  "./manifest_index.json",
+  "./manifest_admin.json",
+
+  "./index-icon-192.png",
+  "./index-icon-512.png",
+  "./admin-icon-192.png",
+  "./admin-icon-512.png"
 ];
 
 self.addEventListener("install", event => {
