@@ -32,28 +32,13 @@
             --warn: #f0a500
         }
 
-        * {
-            font-family: 'Inter', sans-serif;
-            color: var(--text)
-        }
+        * { font-family: 'Inter', sans-serif; color: var(--text) }
 
-        body {
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column
-        }
+        body { background: var(--bg); min-height: 100vh; display: flex; flex-direction: column }
 
-        a {
-            color: var(--muted);
-            text-decoration: none
-        }
+        a { color: var(--muted); text-decoration: none }
+        a:hover { color: var(--text) }
 
-        a:hover {
-            color: var(--text)
-        }
-
-        /* ── Header ── */
         .adm-header {
             background: var(--header);
             border-bottom: 2px solid var(--accent);
@@ -66,17 +51,8 @@
             z-index: 100
         }
 
-        .adm-title {
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: .3px
-        }
-
-        .adm-subtitle {
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 1px
-        }
+        .adm-title { font-size: 15px; font-weight: 800; letter-spacing: .3px }
+        .adm-subtitle { font-size: 10px; color: var(--muted); margin-top: 1px }
 
         .back-btn {
             font-size: 10px;
@@ -92,12 +68,8 @@
             transition: background .15s, color .15s
         }
 
-        .back-btn:hover {
-            background: rgba(255, 255, 255, .15);
-            color: var(--text)
-        }
+        .back-btn:hover { background: rgba(255, 255, 255, .15); color: var(--text) }
 
-        /* ── Body layout ── */
         .adm-body {
             flex: 1;
             padding: 16px;
@@ -109,7 +81,6 @@
             gap: 16px
         }
 
-        /* ── Section ── */
         .section-label {
             font-size: 9px;
             font-weight: 700;
@@ -119,7 +90,6 @@
             margin-bottom: 8px
         }
 
-        /* ── Add form card ── */
         .form-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -127,16 +97,8 @@
             padding: 14px
         }
 
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 10px
-        }
-
-        .form-row:last-child {
-            margin-bottom: 0
-        }
+        .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px }
+        .form-row:last-child { margin-bottom: 0 }
 
         .form-label {
             font-size: 10px;
@@ -162,26 +124,13 @@
 
         .form-input:focus,
         .form-select:focus,
-        .form-textarea:focus {
-            border-color: rgba(255, 255, 255, .35)
-        }
+        .form-textarea:focus { border-color: rgba(255, 255, 255, .35) }
 
-        .form-select option {
-            background: #0a1428;
-            color: var(--text)
-        }
+        .form-select option { background: #0a1428; color: var(--text) }
 
-        .form-textarea {
-            resize: vertical;
-            min-height: 60px;
-            line-height: 1.5
-        }
+        .form-textarea { resize: vertical; min-height: 60px; line-height: 1.5 }
 
-        .form-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px
-        }
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
 
         .submit-btn {
             width: 100%;
@@ -196,25 +145,11 @@
             margin-top: 4px
         }
 
-        .submit-btn:active {
-            transform: scale(.98)
-        }
+        .submit-btn:active { transform: scale(.98) }
+        .submit-btn.add { background: var(--accent); color: #050a15 }
+        .submit-btn.edit { background: #3a7bd5; color: #fff }
 
-        .submit-btn.add {
-            background: var(--accent);
-            color: #050a15
-        }
-
-        .submit-btn.edit {
-            background: #3a7bd5;
-            color: #fff
-        }
-
-        .type-tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px
-        }
+        .type-tabs { display: flex; gap: 6px; margin-bottom: 12px }
 
         .type-tab {
             flex: 1;
@@ -238,12 +173,7 @@
             border-color: rgba(255, 255, 255, .3)
         }
 
-        /* ── Events list ── */
-        .events-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px
-        }
+        .events-list { display: flex; flex-direction: column; gap: 6px }
 
         .event-item {
             background: var(--card);
@@ -256,21 +186,11 @@
             transition: border-color .15s
         }
 
-        .event-item:hover {
-            border-color: rgba(255, 255, 255, .2)
-        }
+        .event-item:hover { border-color: rgba(255, 255, 255, .2) }
 
-        .event-bar {
-            width: 3px;
-            border-radius: 3px;
-            align-self: stretch;
-            flex-shrink: 0
-        }
+        .event-bar { width: 3px; border-radius: 3px; align-self: stretch; flex-shrink: 0 }
 
-        .event-body {
-            flex: 1;
-            min-width: 0
-        }
+        .event-body { flex: 1; min-width: 0 }
 
         .event-top {
             display: flex;
@@ -280,11 +200,7 @@
             flex-wrap: wrap
         }
 
-        .event-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text)
-        }
+        .event-name { font-size: 12px; font-weight: 700; color: var(--text) }
 
         .event-subject-badge {
             font-size: 8px;
@@ -330,12 +246,7 @@
             border-radius: 3px
         }
 
-        .event-actions {
-            display: flex;
-            gap: 5px;
-            flex-shrink: 0;
-            margin-top: 1px
-        }
+        .event-actions { display: flex; gap: 5px; flex-shrink: 0; margin-top: 1px }
 
         .icon-btn {
             background: rgba(255, 255, 255, .06);
@@ -349,32 +260,12 @@
             line-height: 1
         }
 
-        .icon-btn:hover.edit-btn {
-            background: rgba(58, 123, 213, .2);
-            color: #7ab3ff;
-            border-color: rgba(58, 123, 213, .4)
-        }
+        .icon-btn:hover.edit-btn { background: rgba(58, 123, 213, .2); color: #7ab3ff; border-color: rgba(58, 123, 213, .4) }
+        .icon-btn:hover.del-btn { background: rgba(255, 82, 82, .15); color: #ff8080; border-color: rgba(255, 82, 82, .3) }
 
-        .icon-btn:hover.del-btn {
-            background: rgba(255, 82, 82, .15);
-            color: #ff8080;
-            border-color: rgba(255, 82, 82, .3)
-        }
+        .empty-events { font-size: 11px; color: var(--muted); opacity: .5; text-align: center; padding: 24px 0 }
 
-        .empty-events {
-            font-size: 11px;
-            color: var(--muted);
-            opacity: .5;
-            text-align: center;
-            padding: 24px 0
-        }
-
-        /* ── Filter bar ── */
-        .filter-bar {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap
-        }
+        .filter-bar { display: flex; gap: 5px; flex-wrap: wrap }
 
         .filter-chip {
             font-size: 9px;
@@ -396,7 +287,6 @@
             border-color: rgba(255, 255, 255, .25)
         }
 
-        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -415,12 +305,8 @@
             white-space: nowrap
         }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1 }
 
-        /* ── Cancel btn ── */
         .cancel-btn {
             width: 100%;
             padding: 8px;
@@ -435,11 +321,8 @@
             transition: background .15s
         }
 
-        .cancel-btn:hover {
-            background: rgba(255, 255, 255, .06)
-        }
+        .cancel-btn:hover { background: rgba(255, 255, 255, .06) }
 
-        /* ── Count badge ── */
         .count-badge {
             display: inline-flex;
             align-items: center;
@@ -452,6 +335,79 @@
             color: var(--muted);
             margin-left: 6px
         }
+
+        /* ── Firebase status indicator ── */
+        .db-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid transparent
+        }
+
+        .db-status.connecting {
+            color: var(--warn);
+            border-color: rgba(240, 165, 0, .3);
+            background: rgba(240, 165, 0, .08)
+        }
+
+        .db-status.connected {
+            color: var(--success);
+            border-color: rgba(46, 194, 126, .3);
+            background: rgba(46, 194, 126, .08)
+        }
+
+        .db-status.error {
+            color: var(--danger);
+            border-color: rgba(255, 82, 82, .3);
+            background: rgba(255, 82, 82, .08)
+        }
+
+        .db-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor
+        }
+
+        .db-status.connected .db-dot { animation: dbPulse 2s ease-in-out infinite }
+
+        @keyframes dbPulse {
+            0%, 100% { opacity: 1 }
+            50% { opacity: .4 }
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 10, 21, .7);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .loading-overlay.show { display: flex }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255,255,255,.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .7s linear infinite
+        }
+
+        @keyframes spin { to { transform: rotate(360deg) } }
     </style>
 </head>
 
@@ -460,9 +416,20 @@
     <div class="adm-header">
         <div>
             <div class="adm-title">⚙ Schedule Admin</div>
-            <div class="adm-subtitle">Manage events & assignments</div>
+            <div class="adm-subtitle">Manage events &amp; assignments</div>
         </div>
-        <a href="index.html" class="back-btn">Back to Schedule</a>
+        <div style="display:flex;gap:8px;align-items:center">
+            <div class="db-status connecting" id="dbStatus">
+                <div class="db-dot"></div>
+                <span id="dbStatusText">Connecting…</span>
+            </div>
+            <a href="index.html" class="back-btn">Back to Schedule</a>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div>Saving to Firebase…</div>
     </div>
 
     <div class="adm-body">
@@ -473,8 +440,7 @@
             <div class="form-card" id="formCard">
 
                 <div class="type-tabs">
-                    <div class="type-tab active" id="tab-assignment" onclick="switchType('assignment')">📋 Assignment
-                    </div>
+                    <div class="type-tab active" id="tab-assignment" onclick="switchType('assignment')">📋 Assignment</div>
                     <div class="type-tab" id="tab-event" onclick="switchType('event')">📅 Event</div>
                 </div>
 
@@ -527,16 +493,14 @@
                 </div>
 
                 <button class="submit-btn add" id="submitBtn" onclick="submitForm()">Add Assignment</button>
-                <button class="cancel-btn" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Cancel
-                    edit</button>
+                <button class="cancel-btn" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Cancel edit</button>
             </div>
         </div>
 
         <!-- EVENTS LIST -->
         <div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                <div class="section-label" style="margin-bottom:0">All items <span class="count-badge"
-                        id="totalCount">0</span></div>
+                <div class="section-label" style="margin-bottom:0">All items <span class="count-badge" id="totalCount">0</span></div>
             </div>
             <div class="filter-bar" style="margin-bottom:10px">
                 <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
@@ -545,14 +509,78 @@
                 <button class="filter-chip" onclick="setFilter('upcoming',this)">Upcoming</button>
                 <button class="filter-chip" onclick="setFilter('overdue',this)">Overdue</button>
             </div>
-            <div class="events-list" id="eventsList"></div>
+            <div class="events-list" id="eventsList">
+                <div class="empty-events">Connecting to Firebase…</div>
+            </div>
         </div>
 
     </div>
 
     <div class="toast" id="toast"></div>
 
+    <!-- ── Firebase SDK (module) ── -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            getDocs,
+            updateDoc,
+            deleteDoc,
+            doc,
+            onSnapshot,
+            query,
+            orderBy,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        // ── Firebase config ──
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDOE3BMZ_pPHDbq3i4PLmYYzfur_AgJ0",
+            authDomain: "schedule-9b66c.firebaseapp.com",
+            projectId: "schedule-9b66c",
+            storageBucket: "schedule-9b66c.firebasestorage.app",
+            messagingSenderId: "684107196052",
+            appId: "1:684107196052:web:eaa1d94d5656bf6955b681",
+            measurementId: "G-F1THW9K3WD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const COLLECTION = "events"; // Firestore collection name
+
+        // ── Expose db + helpers to global scope so non-module functions can call them ──
+        window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, COLLECTION };
+
+        // ── Real-time listener: update list whenever Firestore changes ──
+        const q = query(collection(db, COLLECTION), orderBy("createdAt", "asc"));
+        onSnapshot(q, (snapshot) => {
+            window._allEvents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            setDbStatus('connected');
+            renderList();
+        }, (err) => {
+            console.error("Firestore error:", err);
+            setDbStatus('error', err.message);
+        });
+
+        function setDbStatus(state, msg) {
+            const el = document.getElementById('dbStatus');
+            const txt = document.getElementById('dbStatusText');
+            el.className = 'db-status ' + state;
+            txt.textContent = state === 'connected' ? 'Live' : state === 'error' ? 'Error: ' + (msg || '') : 'Connecting…';
+        }
+        window.setDbStatus = setDbStatus;
+    </script>
+
+    <!-- ── App logic (non-module, uses window._fb) ── -->
     <script>
+        // Exposed from module above
+        // window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, COLLECTION }
+        // window._allEvents = [] — kept in sync by onSnapshot
+
+        window._allEvents = window._allEvents || [];
+
         const scheduleData = {
             courses: [
                 { id: "AMT1106", desc: "Maintenance Forms and Publications", color: "#3a7bd5" },
@@ -563,7 +591,8 @@
                 { id: "AMT1101", desc: "Aviation Safety", color: "#00bcd4" },
                 { id: "AMT1102", desc: "Aircraft Flight Control", color: "#ff5722" },
                 { id: "GEC1106", desc: "Mathematics in the Modern World", color: "#4caf50" },
-                { id: "PATHFIT1", desc: "Movement Competency Training", color: "#ffc107" }
+                { id: "PATHFIT1", desc: "Movement Competency Training", color: "#ffc107" },
+                { id: "ROTC", desc: "Reserve Officers' Training Corps", color: "#556B2F" }
             ]
         }
 
@@ -571,168 +600,232 @@
         let editMode = false
         let activeFilter = 'all'
 
-        function loadEvents() { try { return JSON.parse(localStorage.getItem('naap_events') || '[]') } catch (e) { return [] } }
-        function saveEvents(arr) { localStorage.setItem('naap_events', JSON.stringify(arr)) }
-        function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6) }
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
-        function showToast(msg, color = 'var(--success)') { const t = document.getElementById('toast'); t.textContent = msg; t.style.borderColor = color + '55'; t.style.background = color + '22'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200) }
+
+        function showToast(msg, color) {
+            color = color || 'var(--success)';
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.borderColor = color + '55';
+            t.style.background = color + '22';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        function showLoading(v) {
+            document.getElementById('loadingOverlay').classList.toggle('show', v);
+        }
 
         function getSubjectColor(id) { const c = scheduleData.courses.find(x => x.id === id); return c ? c.color : '#8099cc' }
         function getSubjectDesc(id) { const c = scheduleData.courses.find(x => x.id === id); return c ? c.desc : '' }
-        function urgencyClass(dl) { if (!dl) return 'ok'; const d = new Date(dl + ' 23:59'); const diff = (d - new Date()) / 86400000; if (diff < 0) return 'overdue'; if (diff <= 3) return 'soon'; if (diff <= 7) return 'later'; return 'ok' }
-        function urgencyLabel(dl) { if (!dl) return ''; const d = new Date(dl + ' 23:59'); const diff = Math.ceil((d - new Date()) / 86400000); if (diff < 0) return 'OVERDUE'; if (diff === 0) return 'DUE TODAY'; if (diff === 1) return 'DUE TOMORROW'; return `Due in ${diff} days` }
+
+        function urgencyClass(dl) {
+            if (!dl) return 'ok';
+            const d = new Date(dl + ' 23:59'); const diff = (d - new Date()) / 86400000;
+            if (diff < 0) return 'overdue'; if (diff <= 3) return 'soon'; if (diff <= 7) return 'later'; return 'ok'
+        }
+        function urgencyLabel(dl) {
+            if (!dl) return '';
+            const d = new Date(dl + ' 23:59'); const diff = Math.ceil((d - new Date()) / 86400000);
+            if (diff < 0) return 'OVERDUE'; if (diff === 0) return 'DUE TODAY'; if (diff === 1) return 'DUE TOMORROW'; return `Due in ${diff} days`
+        }
         function urgencyColor(uc) { return uc === 'overdue' ? '#ff5252' : uc === 'soon' ? '#ff8a65' : uc === 'later' ? '#f0a500' : '#2ec27e' }
 
         function populateSubjects() {
-            const selects = ['subjectSelect', 'eventSubject']
-            selects.forEach(id => {
-                const el = document.getElementById(id)
-                const isEventSubject = id === 'eventSubject'
-                const opts = scheduleData.courses.map(c => `<option value="${c.id}">${c.id} — ${c.desc}</option>`).join('')
-                el.innerHTML = (isEventSubject ? '<option value="">None</option>' : '') + opts
-            })
+            ['subjectSelect', 'eventSubject'].forEach(id => {
+                const el = document.getElementById(id);
+                const isEvent = id === 'eventSubject';
+                el.innerHTML = (isEvent ? '<option value="">None</option>' : '<option value="">— Select subject —</option>') +
+                    scheduleData.courses.map(c => `<option value="${c.id}">${c.id} — ${c.desc}</option>`).join('');
+            });
         }
 
         function switchType(type) {
-            currentType = type
-            document.getElementById('assignmentFields').style.display = type === 'assignment' ? '' : 'none'
-            document.getElementById('eventFields').style.display = type === 'event' ? '' : 'none'
-            document.getElementById('tab-assignment').classList.toggle('active', type === 'assignment')
-            document.getElementById('tab-event').classList.toggle('active', type === 'event')
-            if (!editMode) document.getElementById('submitBtn').textContent = type === 'assignment' ? 'Add Assignment' : 'Add Event'
+            currentType = type;
+            document.getElementById('assignmentFields').style.display = type === 'assignment' ? '' : 'none';
+            document.getElementById('eventFields').style.display = type === 'event' ? '' : 'none';
+            document.getElementById('tab-assignment').classList.toggle('active', type === 'assignment');
+            document.getElementById('tab-event').classList.toggle('active', type === 'event');
+            if (!editMode) document.getElementById('submitBtn').textContent = type === 'assignment' ? 'Add Assignment' : 'Add Event';
         }
 
         function setFilter(f, btn) {
-            activeFilter = f
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'))
-            btn.classList.add('active')
-            renderList()
+            activeFilter = f;
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            renderList();
         }
 
-        function submitForm() {
+        async function submitForm() {
+            const fb = window._fb;
+            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
+
             if (currentType === 'assignment') {
-                const subjectId = document.getElementById('subjectSelect').value
-                const name = document.getElementById('assignName').value.trim()
-                const desc = document.getElementById('assignDesc').value.trim()
-                const deadline = document.getElementById('assignDeadline').value
+                const subjectId = document.getElementById('subjectSelect').value;
+                const name = document.getElementById('assignName').value.trim();
+                const desc = document.getElementById('assignDesc').value.trim();
+                const deadline = document.getElementById('assignDeadline').value;
                 if (!subjectId) { showToast('Please select a subject', '#ff5252'); return }
                 if (!name) { showToast('Please enter a name', '#ff5252'); return }
                 if (!deadline) { showToast('Please set a deadline', '#ff5252'); return }
-                const events = loadEvents()
-                if (editMode) {
-                    const idx = events.findIndex(e => e.id === document.getElementById('editId').value)
-                    if (idx > -1) { events[idx] = { ...events[idx], subjectId, name, description: desc, deadline, type: 'assignment' }; saveEvents(events); showToast('Assignment updated ✓'); cancelEdit(); renderList(); return }
-                }
-                events.push({ id: genId(), type: 'assignment', subjectId, name, description: desc, deadline, createdAt: Date.now() })
-                saveEvents(events); clearForm(); showToast('Assignment added ✓'); renderList()
+
+                const data = { type: 'assignment', subjectId, name, description: desc, deadline };
+                showLoading(true);
+                try {
+                    if (editMode) {
+                        const id = document.getElementById('editId').value;
+                        await fb.updateDoc(fb.doc(fb.db, fb.COLLECTION, id), data);
+                        showToast('Assignment updated ✓');
+                        cancelEdit();
+                    } else {
+                        data.createdAt = fb.serverTimestamp();
+                        await fb.addDoc(fb.collection(fb.db, fb.COLLECTION), data);
+                        showToast('Assignment added ✓');
+                        clearForm();
+                    }
+                } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+                showLoading(false);
+
             } else {
-                const name = document.getElementById('eventName').value.trim()
-                const desc = document.getElementById('eventDesc').value.trim()
-                const eventDate = document.getElementById('eventDate').value
-                const subjectId = document.getElementById('eventSubject').value
+                const name = document.getElementById('eventName').value.trim();
+                const desc = document.getElementById('eventDesc').value.trim();
+                const eventDate = document.getElementById('eventDate').value;
+                const subjectId = document.getElementById('eventSubject').value;
                 if (!name) { showToast('Please enter an event name', '#ff5252'); return }
                 if (!eventDate) { showToast('Please set a date', '#ff5252'); return }
-                const events = loadEvents()
-                if (editMode) {
-                    const idx = events.findIndex(e => e.id === document.getElementById('editId').value)
-                    if (idx > -1) { events[idx] = { ...events[idx], subjectId, name, description: desc, eventDate, type: 'event' }; saveEvents(events); showToast('Event updated ✓'); cancelEdit(); renderList(); return }
-                }
-                events.push({ id: genId(), type: 'event', subjectId, name, description: desc, eventDate, createdAt: Date.now() })
-                saveEvents(events); clearForm(); showToast('Event added ✓'); renderList()
+
+                const data = { type: 'event', subjectId, name, description: desc, eventDate };
+                showLoading(true);
+                try {
+                    if (editMode) {
+                        const id = document.getElementById('editId').value;
+                        await fb.updateDoc(fb.doc(fb.db, fb.COLLECTION, id), data);
+                        showToast('Event updated ✓');
+                        cancelEdit();
+                    } else {
+                        data.createdAt = fb.serverTimestamp();
+                        await fb.addDoc(fb.collection(fb.db, fb.COLLECTION), data);
+                        showToast('Event added ✓');
+                        clearForm();
+                    }
+                } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+                showLoading(false);
             }
         }
 
         function clearForm() {
-            ['subjectSelect', 'assignName', 'assignDesc', 'assignDeadline', 'eventName', 'eventDesc', 'eventDate', 'eventSubject'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '' })
-            document.getElementById('editId').value = ''
+            ['subjectSelect', 'assignName', 'assignDesc', 'assignDeadline',
+             'eventName', 'eventDesc', 'eventDate', 'eventSubject'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.value = '';
+            });
+            document.getElementById('editId').value = '';
         }
 
         function editEvent(id) {
-            const events = loadEvents(); const e = events.find(x => x.id === id); if (!e) return
-            editMode = true
-            document.getElementById('editId').value = id
-            document.getElementById('formSectionLabel').textContent = 'Editing item'
-            document.getElementById('submitBtn').textContent = 'Save changes'
-            document.getElementById('submitBtn').className = 'submit-btn edit'
-            document.getElementById('cancelEditBtn').style.display = ''
-            switchType(e.type)
+            const e = (window._allEvents || []).find(x => x.id === id); if (!e) return;
+            editMode = true;
+            document.getElementById('editId').value = id;
+            document.getElementById('formSectionLabel').textContent = 'Editing item';
+            document.getElementById('submitBtn').textContent = 'Save changes';
+            document.getElementById('submitBtn').className = 'submit-btn edit';
+            document.getElementById('cancelEditBtn').style.display = '';
+            switchType(e.type);
             if (e.type === 'assignment') {
-                document.getElementById('subjectSelect').value = e.subjectId || ''
-                document.getElementById('assignName').value = e.name || ''
-                document.getElementById('assignDesc').value = e.description || ''
-                document.getElementById('assignDeadline').value = e.deadline || ''
+                document.getElementById('subjectSelect').value = e.subjectId || '';
+                document.getElementById('assignName').value = e.name || '';
+                document.getElementById('assignDesc').value = e.description || '';
+                document.getElementById('assignDeadline').value = e.deadline || '';
             } else {
-                document.getElementById('eventName').value = e.name || ''
-                document.getElementById('eventDesc').value = e.description || ''
-                document.getElementById('eventDate').value = e.eventDate || ''
-                document.getElementById('eventSubject').value = e.subjectId || ''
+                document.getElementById('eventName').value = e.name || '';
+                document.getElementById('eventDesc').value = e.description || '';
+                document.getElementById('eventDate').value = e.eventDate || '';
+                document.getElementById('eventSubject').value = e.subjectId || '';
             }
-            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' })
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function cancelEdit() {
-            editMode = false; clearForm()
-            document.getElementById('editId').value = ''
-            document.getElementById('formSectionLabel').textContent = 'Add new item'
-            document.getElementById('submitBtn').textContent = currentType === 'assignment' ? 'Add Assignment' : 'Add Event'
-            document.getElementById('submitBtn').className = 'submit-btn add'
-            document.getElementById('cancelEditBtn').style.display = 'none'
+            editMode = false; clearForm();
+            document.getElementById('editId').value = '';
+            document.getElementById('formSectionLabel').textContent = 'Add new item';
+            document.getElementById('submitBtn').textContent = currentType === 'assignment' ? 'Add Assignment' : 'Add Event';
+            document.getElementById('submitBtn').className = 'submit-btn add';
+            document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
-        function deleteEvent(id) {
-            if (!confirm('Delete this item?')) return
-            const events = loadEvents().filter(e => e.id !== id); saveEvents(events); showToast('Deleted', '#ff8080'); renderList()
+        async function deleteEvent(id) {
+            if (!confirm('Delete this item?')) return;
+            const fb = window._fb;
+            showLoading(true);
+            try {
+                await fb.deleteDoc(fb.doc(fb.db, fb.COLLECTION, id));
+                showToast('Deleted', '#ff8080');
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
+            showLoading(false);
         }
 
         function renderList() {
-            const events = loadEvents()
-            const now = new Date()
-            let filtered = events
-            if (activeFilter === 'assignment') filtered = events.filter(e => e.type === 'assignment')
-            else if (activeFilter === 'event') filtered = events.filter(e => e.type === 'event')
-            else if (activeFilter === 'upcoming') filtered = events.filter(e => { const dl = e.deadline || e.eventDate; return dl && new Date(dl + ' 23:59') >= now })
-            else if (activeFilter === 'overdue') filtered = events.filter(e => e.deadline && new Date(e.deadline + ' 23:59') < now)
-            filtered.sort((a, b) => { const da = a.deadline || a.eventDate || '9999'; const db = b.deadline || b.eventDate || '9999'; return da < db ? -1 : da > db ? 1 : 0 })
-            document.getElementById('totalCount').textContent = filtered.length
-            const list = document.getElementById('eventsList')
-            if (filtered.length === 0) { list.innerHTML = `<div class="empty-events">${activeFilter === 'overdue' ? 'No overdue items 🎉' : activeFilter === 'upcoming' ? 'No upcoming items' : 'No items yet — add one above'}</div>`; return }
+            const events = window._allEvents || [];
+            const now = new Date();
+            let filtered = [...events];
+            if (activeFilter === 'assignment') filtered = events.filter(e => e.type === 'assignment');
+            else if (activeFilter === 'event') filtered = events.filter(e => e.type === 'event');
+            else if (activeFilter === 'upcoming') filtered = events.filter(e => { const dl = e.deadline || e.eventDate; return dl && new Date(dl + ' 23:59') >= now });
+            else if (activeFilter === 'overdue') filtered = events.filter(e => e.deadline && new Date(e.deadline + ' 23:59') < now);
+
+            filtered.sort((a, b) => {
+                const da = a.deadline || a.eventDate || '9999';
+                const db2 = b.deadline || b.eventDate || '9999';
+                return da < db2 ? -1 : da > db2 ? 1 : 0;
+            });
+
+            document.getElementById('totalCount').textContent = filtered.length;
+            const list = document.getElementById('eventsList');
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="empty-events">${
+                    activeFilter === 'overdue' ? 'No overdue items 🎉' :
+                    activeFilter === 'upcoming' ? 'No upcoming items' :
+                    'No items yet — add one above'
+                }</div>`;
+                return;
+            }
+
             list.innerHTML = filtered.map(e => {
-                const col = e.subjectId ? getSubjectColor(e.subjectId) : '#8099cc'
-                const dl = e.deadline || e.eventDate
-                const uc = urgencyClass(e.deadline || '')
-                const ucol = urgencyColor(uc)
-                const deadlineText = dl ? new Date(dl).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''
-                const urgLabel = e.type === 'assignment' ? urgencyLabel(e.deadline || '') : ''
+                const col = e.subjectId ? getSubjectColor(e.subjectId) : '#8099cc';
+                const dl = e.deadline || e.eventDate;
+                const uc = urgencyClass(e.deadline || '');
+                const ucol = urgencyColor(uc);
+                const deadlineText = dl ? new Date(dl).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                const urgLabel = e.type === 'assignment' ? urgencyLabel(e.deadline || '') : '';
                 return `<div class="event-item">
-      <div class="event-bar" style="background:${col}"></div>
-      <div class="event-body">
-        <div class="event-top">
-          <div class="event-name">${esc(e.name)}</div>
-          ${e.subjectId ? `<div class="event-subject-badge" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
-          <div class="event-type-badge">${e.type === 'assignment' ? '📋' : '📅'} ${esc(e.type)}</div>
-        </div>
-        ${e.description ? `<div class="event-desc">${esc(e.description)}</div>` : ''}
-        <div class="event-meta">
-          ${deadlineText ? `<span>${e.type === 'assignment' ? 'Deadline' : 'Date'}: ${deadlineText}</span>` : ''}
-          ${urgLabel ? `<span class="event-deadline-chip" style="background:${ucol}22;color:${ucol}">${urgLabel}</span>` : ''}
-        </div>
-      </div>
-      <div class="event-actions">
-        <button class="icon-btn edit-btn" onclick="editEvent('${e.id}')" title="Edit">✏</button>
-        <button class="icon-btn del-btn" onclick="deleteEvent('${e.id}')" title="Delete">✕</button>
-      </div>
-    </div>`
-            }).join('')
+  <div class="event-bar" style="background:${col}"></div>
+  <div class="event-body">
+    <div class="event-top">
+      <div class="event-name">${esc(e.name)}</div>
+      ${e.subjectId ? `<div class="event-subject-badge" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
+      <div class="event-type-badge">${e.type === 'assignment' ? '📋' : '📅'} ${esc(e.type)}</div>
+    </div>
+    ${e.description ? `<div class="event-desc">${esc(e.description)}</div>` : ''}
+    <div class="event-meta">
+      ${deadlineText ? `<span>${e.type === 'assignment' ? 'Deadline' : 'Date'}: ${deadlineText}</span>` : ''}
+      ${urgLabel ? `<span class="event-deadline-chip" style="background:${ucol}22;color:${ucol}">${urgLabel}</span>` : ''}
+    </div>
+  </div>
+  <div class="event-actions">
+    <button class="icon-btn edit-btn" onclick="editEvent('${e.id}')" title="Edit">✏</button>
+    <button class="icon-btn del-btn" onclick="deleteEvent('${e.id}')" title="Delete">✕</button>
+  </div>
+</div>`;
+            }).join('');
         }
 
-        populateSubjects()
-        renderList()
-
-        // Default deadline to today + 7 days
-        const d = new Date(); d.setDate(d.getDate() + 7)
-        document.getElementById('assignDeadline').value = d.toISOString().split('T')[0]
-        document.getElementById('eventDate').value = new Date().toISOString().split('T')[0]
+        // ── Init ──
+        populateSubjects();
+        const d = new Date(); d.setDate(d.getDate() + 7);
+        document.getElementById('assignDeadline').value = d.toISOString().split('T')[0];
+        document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
     </script>
-</body>
 
+</body>
 </html>
