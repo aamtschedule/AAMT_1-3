@@ -244,7 +244,6 @@
             transition: width .5s ease
         }
 
-        /* ── Day tabs ── */
         .day-tabs {
             display: flex;
             gap: 4px;
@@ -386,7 +385,10 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
             font-weight: 700;
-            white-space: nowrap
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px
         }
 
         .card-time {
@@ -503,6 +505,40 @@
             opacity: .8
         }
 
+        /* ── Assignment badge on class cards ── */
+        .assign-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            border-radius: 3px;
+            padding: 1px 4px;
+            color: #fff;
+            flex-shrink: 0
+        }
+
+        .assign-badge.due-soon {
+            background: rgba(255, 80, 80, .85)
+        }
+
+        .assign-badge.due-later {
+            background: rgba(240, 165, 0, .75)
+        }
+
+        .assign-badge.due-ok {
+            background: rgba(46, 194, 126, .7)
+        }
+
+        .assign-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor
+        }
+
         /* ── Week grid panel ── */
         .week-grid-wrap {
             padding: 0 10px 10px;
@@ -576,8 +612,8 @@
         .week-grid {
             position: relative;
             display: grid;
-            grid-template-columns: 60px repeat(5, 1fr);
-            grid-template-rows: 20px repeat(24, 16px);
+            grid-template-columns: 60px repeat(6, 1fr);
+            grid-template-rows: 20px repeat(28, 16px);
             gap: 2px;
             font-size: 8px
         }
@@ -689,12 +725,279 @@
             pointer-events: none;
             display: none
         }
+
+        /* ── View toggle button ── */
+        .view-toggle-btn {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .15);
+            color: var(--text);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 3px 8px;
+            transition: background .15s;
+            flex-shrink: 0
+        }
+
+        .view-toggle-btn:hover {
+            background: rgba(255, 255, 255, .16)
+        }
+
+        .view-toggle-btn.active {
+            background: var(--accent);
+            color: #050a15;
+            border-color: var(--accent)
+        }
+
+        /* ── Week grid top bar (toggle row) ── */
+        .week-grid-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 2px;
+            flex-shrink: 0
+        }
+
+        /* ── Calendar view ── */
+        .calendar-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden
+        }
+
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px 6px;
+            flex-shrink: 0
+        }
+
+        .cal-nav-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: var(--muted);
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 9px;
+            transition: background .15s, color .15s;
+            line-height: 1
+        }
+
+        .cal-nav-btn:hover {
+            background: rgba(255, 255, 255, .1);
+            color: var(--text)
+        }
+
+        .cal-month-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: .4px
+        }
+
+        .cal-grid-wrap {
+            padding: 0 8px 6px;
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0
+        }
+
+        .cal-dow-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 3px;
+            flex-shrink: 0
+        }
+
+        .cal-dow {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-align: center;
+            padding: 3px 0
+        }
+
+        .cal-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            flex: 1;
+            min-height: 0
+        }
+
+        .cal-day {
+            border-radius: 6px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 2px 3px;
+            cursor: pointer;
+            transition: background .12s, border-color .12s;
+            position: relative;
+            min-height: 0
+        }
+
+        .cal-day:hover {
+            background: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .15)
+        }
+
+        .cal-day.today {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, .08)
+        }
+
+        .cal-day.selected {
+            background: rgba(255, 255, 255, .18);
+            border-color: var(--accent)
+        }
+
+        .cal-day.other-month {
+            opacity: .3
+        }
+
+        .cal-day.has-class {
+            border-color: rgba(100, 150, 255, .35)
+        }
+
+        .cal-day-num {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1
+        }
+
+        .cal-day.today .cal-day-num {
+            color: var(--accent)
+        }
+
+        .cal-day-dots {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2px;
+            max-width: 28px
+        }
+
+        .cal-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            flex-shrink: 0
+        }
+
+        .cal-assign-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 3px 1px currentColor
+        }
+
+        .cal-day-panel {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            padding: 0 10px 8px;
+            scrollbar-width: none
+        }
+
+        .cal-day-panel::-webkit-scrollbar {
+            display: none
+        }
+
+        .cal-panel-header {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 0 6px
+        }
+
+        .cal-event-item {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border: 1px solid rgba(255, 255, 255, .07)
+        }
+
+        .cal-event-type {
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            margin-bottom: 2px
+        }
+
+        .cal-event-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px
+        }
+
+        .cal-event-desc {
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.4
+        }
+
+        .cal-event-deadline {
+            font-size: 9px;
+            font-weight: 600;
+            margin-top: 4px
+        }
+
+        .cal-event-subject {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            letter-spacing: .4px
+        }
+
+        /* ── Admin link ── */
+        .admin-link {
+            font-size: 9px;
+            color: var(--muted);
+            opacity: .4;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 2px 4px;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif
+        }
+
+        .admin-link:hover {
+            opacity: .8;
+            color: var(--text)
+        }
     </style>
 </head>
 
 <body>
     <div class="widget" id="widget">
-
         <div class="widget-header">
             <div class="header-left">
                 <div class="schedule-title" id="scheduleTitle"></div>
@@ -720,27 +1023,87 @@
         <div class="classes-label" id="listLabel">Today's Classes</div>
         <div class="classes-list" id="classesList"></div>
 
+        <!-- Calendar view (hidden by default) -->
+        <div id="calendarView" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
+            <div class="cal-header">
+                <button class="cal-nav-btn" onclick="calPrev()">&#8249;</button>
+                <div class="cal-month-label" id="calMonthLabel"></div>
+                <button class="cal-nav-btn" onclick="calNext()">&#8250;</button>
+            </div>
+            <div class="cal-grid-wrap">
+                <div class="cal-dow-row">
+                    <div class="cal-dow">Sun</div>
+                    <div class="cal-dow">Mon</div>
+                    <div class="cal-dow">Tue</div>
+                    <div class="cal-dow">Wed</div>
+                    <div class="cal-dow">Thu</div>
+                    <div class="cal-dow">Fri</div>
+                    <div class="cal-dow">Sat</div>
+                </div>
+                <div class="cal-days-grid" id="calDaysGrid"></div>
+            </div>
+            <div class="cal-day-panel" id="calDayPanel">
+                <div style="color:var(--muted);font-size:11px;text-align:center;padding:12px 0;opacity:.5">Select a date
+                    to view events</div>
+            </div>
+        </div>
+
         <div class="week-grid-wrap" id="weekGridWrap">
             <div class="week-grid-handle" id="weekGridHandle">
                 <div class="handle-bar"></div>
-                <div class="week-grid-title">Weekly Timetable</div>
+                <div class="week-grid-topbar" style="flex:1;margin-left:8px">
+                    <div class="week-grid-title">Weekly Timetable</div>
+                    <div style="display:flex;gap:5px;align-items:center">
+                        <button class="view-toggle-btn" id="timetableToggle"
+                            onclick="setBottomView('timetable')">Timetable</button>
+                        <button class="view-toggle-btn" id="calendarToggle"
+                            onclick="setBottomView('calendar')">Calendar</button>
+                    </div>
+                </div>
             </div>
-            <div class="week-grid-scroll" id="weekGridScroll">
-                <div id="weekGrid" class="week-grid"></div>
+            <div id="bottomContent" style="flex:1;overflow:hidden;min-height:0;display:flex;flex-direction:column">
+                <div class="week-grid-scroll" id="weekGridScroll" style="flex:1;min-height:0">
+                    <div id="weekGrid" class="week-grid"></div>
+                </div>
+                <div id="calendarInner" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
+                    <div class="cal-header" style="padding:4px 4px 4px">
+                        <button class="cal-nav-btn" onclick="calPrev()">&#8249;</button>
+                        <div class="cal-month-label" id="calMonthLabel2"></div>
+                        <button class="cal-nav-btn" onclick="calNext()">&#8250;</button>
+                    </div>
+                    <div
+                        style="padding:0 4px 4px;flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden">
+                        <div class="cal-dow-row">
+                            <div class="cal-dow">Sun</div>
+                            <div class="cal-dow">Mon</div>
+                            <div class="cal-dow">Tue</div>
+                            <div class="cal-dow">Wed</div>
+                            <div class="cal-dow">Thu</div>
+                            <div class="cal-dow">Fri</div>
+                            <div class="cal-dow">Sat</div>
+                        </div>
+                        <div class="cal-days-grid" id="calDaysGrid2" style="min-height:0;flex:1"></div>
+                    </div>
+                    <div class="cal-day-panel" id="calDayPanel2" style="max-height:120px;flex-shrink:0">
+                        <div style="color:var(--muted);font-size:10px;text-align:center;padding:8px 0;opacity:.5">Select
+                            a date to view events</div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="widget-footer">
             <div class="footer-title" id="footerTitle"></div>
-            <button class="reload-btn" onclick="manualRefresh()">↻ refresh</button>
+            <div style="display:flex;gap:8px;align-items:center">
+                <a href="admin.html" class="admin-link">⚙ admin</a>
+                <button class="reload-btn" onclick="manualRefresh()">↻ refresh</button>
+            </div>
         </div>
-
     </div>
 
     <script>
         const scheduleData = {
-            "title": "AAMT 1-3 SCHEDULE",
-            "subtitle": "A.Y. 2026 – 2027",
+            "title": "AAMT 1-3 SCHEDULE", "subtitle": "A.Y. 2026 – 2027",
             "courses": [
                 { "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Simulation Lab", "color": "#3a7bd5", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 16, "endM": 0 },
                 { "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Mon"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
@@ -763,272 +1126,282 @@
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "TBA", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 }
+                { "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "TBA", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
+                { "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "TBA", "color": "#556B2F", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0 }
             ]
         }
 
-        const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+        const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         const DAY_MAP = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' }
         const DAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const MONTH_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
         let selectedDay = null
+        let bottomView = 'timetable'
+        let calYear = new Date().getFullYear()
+        let calMonth = new Date().getMonth()
+        let calSelectedDate = null
+
+        function loadEvents() { try { return JSON.parse(localStorage.getItem('naap_events') || '[]') } catch (e) { return [] } }
 
         function todayKey() { return DAY_MAP[new Date().getDay()] }
         function toMins(h, m) { return h * 60 + m }
         function fmt12(h, m) { const a = h < 12 ? 'AM' : 'PM'; const h2 = h % 12 === 0 ? 12 : h % 12; return `${h2}:${String(m).padStart(2, '0')} ${a}` }
         function durStr(sH, sM, eH, eM) { const mins = toMins(eH, eM) - toMins(sH, sM); const h = Math.floor(mins / 60), m = mins % 60; return h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m` }
-        function minsToWords(t) { t = Math.max(0, Math.round(t)); const h = Math.floor(t / 60), m = t % 60; const hp = h > 0 ? `${h} hour${h !== 1 ? 's' : ''}` : ''; const mp = m > 0 ? `${m} minute${m !== 1 ? 's' : ''}` : ''; if (h > 0 && m > 0) return `${hp} and ${mp}`; if (h > 0) return hp; return mp || '0 minutes' }
+        function minsToWords(t) { t = Math.max(0, Math.round(t)); const h = Math.floor(t / 60), m = t % 60; const hp = h > 0 ? `${h}h` : ''; const mp = m > 0 ? `${m}m` : ''; return (hp && mp) ? `${hp} ${mp}` : hp || mp || '<1m' }
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
+        function dateKey(y, mo, d) { return `${y}-${String(mo + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}` }
 
-        function returnToToday() {
-            selectedDay = null
-            buildTabs()
-            refresh()
-            renderWeekGrid()
+        function getSubjectColor(subjectId) {
+            const c = scheduleData.courses.find(x => x.id === subjectId); return c ? c.color : '#8099cc'
+        }
+        function getEventsForDate(dk) { return loadEvents().filter(e => e.deadline === dk || e.eventDate === dk) }
+        function getEventsForSubject(subjectId) {
+            const events = loadEvents();
+            const now = new Date();
+            return events.filter(e => e.subjectId === subjectId && e.deadline && new Date(e.deadline + ' 23:59') >= now)
+        }
+        function urgencyClass(deadlineStr) {
+            if (!deadlineStr) return 'due-ok';
+            const d = new Date(deadlineStr + ' 23:59'); const now = new Date();
+            const diff = (d - now) / 86400000;
+            if (diff < 0) return 'due-soon';
+            if (diff <= 3) return 'due-soon';
+            if (diff <= 7) return 'due-later';
+            return 'due-ok'
+        }
+        function urgencyLabel(deadlineStr) {
+            if (!deadlineStr) return '';
+            const d = new Date(deadlineStr + ' 23:59'); const now = new Date();
+            const diff = Math.ceil((d - now) / 86400000);
+            if (diff < 0) return 'OVERDUE';
+            if (diff === 0) return 'DUE TODAY';
+            if (diff === 1) return 'DUE TMRW';
+            return `${diff}d LEFT`
         }
 
-        function selectDay(day) {
-            selectedDay = (day === todayKey()) ? null : day
-            buildTabs()
-            refresh()
-            renderWeekGrid()
+        function returnToToday() { selectedDay = null; buildTabs(); refresh(); renderWeekGrid() }
+        function selectDay(day) { selectedDay = (day === todayKey()) ? null : day; buildTabs(); refresh(); renderWeekGrid() }
+
+        function setBottomView(v) {
+            bottomView = v;
+            const ws = document.getElementById('weekGridScroll');
+            const ci = document.getElementById('calendarInner');
+            const tt = document.getElementById('timetableToggle');
+            const ct = document.getElementById('calendarToggle');
+            if (v === 'timetable') { ws.style.display = ''; ci.style.display = 'none'; tt.classList.add('active'); ct.classList.remove('active'); }
+            else { ws.style.display = 'none'; ci.style.display = 'flex'; tt.classList.remove('active'); ct.classList.add('active'); renderCalendar2(); }
         }
 
         function buildTabs() {
-            const today = todayKey()
-            const tabs = document.getElementById('dayTabs')
-            const activeDay = selectedDay || today
-            tabs.innerHTML = WEEKDAYS.map(d => {
-                const isSelected = d === activeDay
-                const isToday = d === today
-                const cls = isSelected ? 'day-tab selected' : (isToday ? 'day-tab active-today' : 'day-tab')
-                return `<button class="${cls}" onclick="selectDay('${d}')">${d}</button>`
-            }).join('')
-            const banner = document.getElementById('viewingBanner')
-            if (selectedDay && selectedDay !== today) {
-                banner.style.display = 'flex'
-                document.getElementById('viewingLabel').textContent = `Viewing ${selectedDay} schedule`
-            } else {
-                banner.style.display = 'none'
-            }
+            const today = todayKey(); const tabs = document.getElementById('dayTabs'); const activeDay = selectedDay || today;
+            tabs.innerHTML = WEEKDAYS.map(d => { const isSelected = d === activeDay; const isToday = d === today; const cls = isSelected ? 'day-tab selected' : (isToday ? 'day-tab active-today' : 'day-tab'); return `<button class="${cls}" onclick="selectDay('${d}')">${d}</button>` }).join('');
+            const banner = document.getElementById('viewingBanner');
+            if (selectedDay && selectedDay !== today) { banner.style.display = 'flex'; document.getElementById('viewingLabel').textContent = `Viewing ${selectedDay} schedule`; }
+            else { banner.style.display = 'none'; }
         }
 
         function updateClock() {
-            const now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), a = h < 12 ? 'AM' : 'PM', h2 = h % 12 === 0 ? 12 : h % 12
-            document.getElementById('timeMain').textContent = `${h2}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')} ${a}`
+            const now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), a = h < 12 ? 'AM' : 'PM', h2 = h % 12 === 0 ? 12 : h % 12;
+            document.getElementById('timeMain').textContent = `${h2}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')} ${a}`;
         }
 
         ; (function () {
-            const handle = document.getElementById('weekGridHandle'), wrap = document.getElementById('weekGridWrap')
-            const MIN_H = 60, MAX_H = 600, DEFAULT_H = 210
-            let startY = 0, startH = 0, dragging = false
+            const handle = document.getElementById('weekGridHandle'), wrap = document.getElementById('weekGridWrap');
+            const MIN_H = 80, MAX_H = 600, DEFAULT_H = 210;
+            let startY = 0, startH = 0, dragging = false;
             function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
             function setHeight(h) { wrap.style.height = clamp(h, MIN_H, MAX_H) + 'px' }
-            const saved = parseInt(localStorage.getItem('wgHeight'), 10)
-            setHeight(isNaN(saved) ? DEFAULT_H : saved)
+            const saved = parseInt(localStorage.getItem('wgHeight'), 10); setHeight(isNaN(saved) ? DEFAULT_H : saved);
             function onStart(y) { startY = y; startH = wrap.offsetHeight; dragging = true; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none' }
             function onMove(y) { if (!dragging) return; setHeight(startH + (startY - y)) }
             function onEnd() { if (!dragging) return; dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; localStorage.setItem('wgHeight', wrap.offsetHeight) }
-            handle.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientY) })
-            document.addEventListener('mousemove', e => onMove(e.clientY))
-            document.addEventListener('mouseup', onEnd)
-            handle.addEventListener('touchstart', e => { onStart(e.touches[0].clientY) }, { passive: true })
-            document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientY) } }, { passive: false })
-            document.addEventListener('touchend', onEnd)
-        })()
+            handle.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientY) });
+            document.addEventListener('mousemove', e => onMove(e.clientY));
+            document.addEventListener('mouseup', onEnd);
+            handle.addEventListener('touchstart', e => { onStart(e.touches[0].clientY) }, { passive: true });
+            document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientY) } }, { passive: false });
+            document.addEventListener('touchend', onEnd);
+        })();
 
+        /* ── Calendar rendering ── */
+        function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar2(); }
+        function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar2(); }
+
+        function renderCalendar2() {
+            const lbl = document.getElementById('calMonthLabel2');
+            if (lbl) lbl.textContent = `${MONTH_FULL[calMonth]} ${calYear}`;
+            renderCalGrid('calDaysGrid2', calYear, calMonth, function (dk) {
+                calSelectedDate = dk; renderCalPanel2(dk); renderCalGrid('calDaysGrid2', calYear, calMonth, function (dk2) { calSelectedDate = dk2; renderCalPanel2(dk2); });
+            });
+        }
+
+        function renderCalGrid(gridId, year, month, onSelect) {
+            const grid = document.getElementById(gridId); if (!grid) return;
+            const today = new Date(); const todayDk = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrev = new Date(year, month, 0).getDate();
+            const events = loadEvents();
+            let html = '';
+            let dayNum = 1, nextNum = 1, cell = 0;
+            const total = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            for (let i = 0; i < total; i++) {
+                let d, m2 = month, y2 = year, other = false;
+                if (i < firstDay) { d = daysInPrev - (firstDay - 1 - i); m2 = month - 1; if (m2 < 0) { m2 = 11; y2--; } other = true; }
+                else if (dayNum > daysInMonth) { d = nextNum++; m2 = month + 1; if (m2 > 11) { m2 = 0; y2++; } other = true; }
+                else { d = dayNum++; }
+                const dk = dateKey(y2, m2, d);
+                const isToday = dk === todayDk;
+                const isSelected = dk === calSelectedDate;
+                const dayEvents = events.filter(e => e.deadline === dk || e.eventDate === dk);
+                const shortDay = DAY_MAP[new Date(y2, m2, d).getDay()];
+                const hasCls = scheduleData.courses.some(c => c.days.includes(shortDay));
+                let dots = '';
+                const seen = new Set();
+                dayEvents.forEach(e => {
+                    const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
+                    const key = col + e.type;
+                    if (!seen.has(key)) { seen.add(key); dots += `<div class="cal-assign-dot" style="color:${col};background:${col}"></div>`; }
+                });
+                if (hasCls && !other && !dots) { dots = `<div class="cal-dot" style="background:rgba(255,255,255,.25)"></div>`; }
+                const cls = ['cal-day', isToday ? 'today' : '', isSelected ? 'selected' : '', other ? 'other-month' : '', hasCls && !other ? 'has-class' : ''].filter(Boolean).join(' ');
+                html += `<div class="${cls}" onclick="(${onSelect.toString()})('${dk}')"><span class="cal-day-num">${d}</span><div class="cal-day-dots">${dots}</div></div>`;
+            }
+            grid.innerHTML = html;
+        }
+
+        function renderCalPanel2(dk) {
+            const panel = document.getElementById('calDayPanel2'); if (!panel) return;
+            const parts = dk.split('-'); const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+            const dayName = DAY_FULL[d.getDay()]; const monthName = MONTH_FULL[d.getMonth()];
+            const dayEvents = loadEvents().filter(e => e.deadline === dk || e.eventDate === dk);
+            const shortDay = DAY_MAP[d.getDay()];
+            const dayClasses = scheduleData.courses.filter(c => c.days.includes(shortDay)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
+            let html = `<div class="cal-panel-header">${dayName}, ${monthName} ${d.getDate()}</div>`;
+            if (dayEvents.length === 0 && dayClasses.length === 0) { html += `<div style="font-size:10px;color:var(--muted);opacity:.5;padding:6px 0">No events or classes</div>`; panel.innerHTML = html; return; }
+            dayEvents.forEach(e => {
+                const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
+                const urg = e.type === 'assignment' ? urgencyClass(e.deadline) : '';
+                const label = e.type === 'assignment' ? urgencyLabel(e.deadline) : '';
+                html += `<div class="cal-event-item" style="border-left:3px solid ${col}">
+      ${e.subjectId ? `<div class="cal-event-subject" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
+      <div class="cal-event-type" style="color:${col}">${esc(e.type === 'assignment' ? '📋 Assignment' : '📅 Event')}</div>
+      <div class="cal-event-name">${esc(e.name)}</div>
+      ${e.description ? `<div class="cal-event-desc">${esc(e.description)}</div>` : ''}
+      ${label ? `<div class="cal-event-deadline" style="color:${urg === 'due-soon' ? '#ff6b6b' : urg === 'due-later' ? '#f0a500' : '#2ec27e'}">${label}</div>` : ''}
+    </div>`;
+            });
+            if (dayClasses.length > 0) {
+                html += `<div style="font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);padding:4px 0 3px">Classes</div>`;
+                dayClasses.forEach(c => { html += `<div style="font-size:10px;color:var(--muted);padding:2px 0;display:flex;gap:6px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:${c.color};flex-shrink:0;display:inline-block"></span><span style="color:${c.color};font-weight:700">${esc(c.id)}</span> ${fmt12(c.startH, c.startM)}–${fmt12(c.endH, c.endM)} · ${esc(c.room)}</div>`; });
+            }
+            panel.innerHTML = html;
+        }
+
+        /* ── Week grid ── */
         function renderWeekGrid() {
-            const grid = document.getElementById('weekGrid')
-            const today = todayKey()
-            const activeDay = selectedDay || today
-            const slots = []
-            for (let h = 9; h <= 20; h++) { slots.push({ h, m: 0 }); slots.push({ h, m: 30 }) }
-            let html = ''
-            html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`
+            const grid = document.getElementById('weekGrid'); const today = todayKey(); const activeDay = selectedDay || today;
+            const slots = []; for (let h = 7; h <= 20; h++) { slots.push({ h, m: 0 }); slots.push({ h, m: 30 }) }
+            let html = '';
+            html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
+            WEEKDAYS.forEach((day, dIdx) => { const isToday = day === today; const isSelected = day === activeDay; const cls = isSelected ? 'grid-cell grid-head grid-selected-day' : (isToday ? 'grid-cell grid-head grid-today' : 'grid-cell grid-head'); html += `<div class="${cls}" style="grid-row:1;grid-column:${dIdx + 2};cursor:pointer" onclick="selectDay('${day}')" title="View ${day}">${day}</div>`; });
+            slots.forEach((slot, sIdx) => { html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`; });
             WEEKDAYS.forEach((day, dIdx) => {
-                const isToday = day === today
-                const isSelected = day === activeDay
-                const cls = isSelected ? 'grid-cell grid-head grid-selected-day' : (isToday ? 'grid-cell grid-head grid-today' : 'grid-cell grid-head')
-                html += `<div class="${cls}" style="grid-row:1;grid-column:${dIdx + 2};cursor:pointer" onclick="selectDay('${day}')" title="View ${day} schedule">${day}</div>`
-            })
-            slots.forEach((slot, sIdx) => {
-                html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`
-            })
-            WEEKDAYS.forEach((day, dIdx) => {
-                const isToday = day === today
-                const covered = new Array(slots.length).fill(false)
-                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM))
-                dayCourses.forEach(c => {
-                    const startMin = toMins(c.startH, c.startM), endMin = toMins(c.endH, c.endM)
-                    const startSlot = Math.round((startMin - 540) / 30), span = Math.round((endMin - startMin) / 30)
-                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) return
-                    const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2)
-                    for (let i = startSlot; i < startSlot + span && i < slots.length; i++)covered[i] = true
-                    html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''}" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color}" title="${esc(c.id)} - ${esc(c.desc)}">${esc(c.id)}</div>`
-                })
-                for (let i = 0; i < dayCourses.length - 1; i++) {
-                    const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM), gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM)
-                    if (gapEnd <= gapStart) continue
-                    const startSlot = Math.round((gapStart - 540) / 30), span = Math.round((gapEnd - gapStart) / 30)
-                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue
-                    const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2)
-                    for (let s = startSlot; s < startSlot + span && s < slots.length; s++)covered[s] = true
-                    html += `<div class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2}" title="Vacant">Vacant</div>`
-                }
-                slots.forEach((_, sIdx) => {
-                    if (covered[sIdx]) return
-                    html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`
-                })
-            })
-            grid.innerHTML = html
-            const line = document.createElement('div'); line.id = 'nowLine'; line.className = 'now-line'; grid.appendChild(line)
-            updateNowLine()
+                const isToday = day === today; const covered = new Array(slots.length).fill(false);
+                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
+                dayCourses.forEach(c => { const startMin = toMins(c.startH, c.startM), endMin = toMins(c.endH, c.endM); const startSlot = Math.round((startMin - 420) / 30), span = Math.round((endMin - startMin) / 30); if (startSlot < 0 || startSlot >= slots.length || span <= 0) return; const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2); for (let i = startSlot; i < startSlot + span && i < slots.length; i++)covered[i] = true; html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''}" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color}" title="${esc(c.id)}">${esc(c.id)}</div>`; });
+                for (let i = 0; i < dayCourses.length - 1; i++) { const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM), gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM); if (gapEnd <= gapStart) continue; const startSlot = Math.round((gapStart - 420) / 30), span = Math.round((gapEnd - gapStart) / 30); if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue; const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2); for (let s = startSlot; s < startSlot + span && s < slots.length; s++)covered[s] = true; html += `<div class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2}" title="Vacant">Vacant</div>`; }
+                slots.forEach((_, sIdx) => { if (covered[sIdx]) return; html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`; });
+            });
+            grid.innerHTML = html;
+            const line = document.createElement('div'); line.id = 'nowLine'; line.className = 'now-line'; grid.appendChild(line);
+            updateNowLine();
         }
 
         function updateNowLine() {
-            const grid = document.getElementById('weekGrid'), line = document.getElementById('nowLine')
-            if (!grid || !line) return
-            const now = new Date(), today = todayKey(), nowM = toMins(now.getHours(), now.getMinutes())
-            grid.querySelectorAll('.grid-class').forEach(el => {
-                const isNow = el.dataset.day === today && nowM >= parseInt(el.dataset.start, 10) && nowM < parseInt(el.dataset.end, 10)
-                el.classList.toggle('now-block', isNow)
-            })
-            grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'))
-            const inRange = nowM >= 540 && nowM < 1260
-            if (!inRange) { line.style.display = 'none'; return }
-            const slotFloat = (nowM - 540) / 30, flooredIdx = Math.max(0, Math.min(23, Math.floor(slotFloat))), frac = slotFloat - Math.floor(slotFloat)
-            const cellEl = grid.querySelector(`.grid-time[data-slot="${flooredIdx}"]`)
-            if (!cellEl) { line.style.display = 'none'; return }
-            cellEl.classList.add('now-time')
-            line.style.top = `${cellEl.offsetTop + frac * cellEl.offsetHeight}px`; line.style.display = 'block'
+            const grid = document.getElementById('weekGrid'), line = document.getElementById('nowLine'); if (!grid || !line) return;
+            const now = new Date(), today = todayKey(), nowM = toMins(now.getHours(), now.getMinutes());
+            grid.querySelectorAll('.grid-class').forEach(el => { const isNow = el.dataset.day === today && nowM >= parseInt(el.dataset.start, 10) && nowM < parseInt(el.dataset.end, 10); el.classList.toggle('now-block', isNow); });
+            grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'));
+            const inRange = nowM >= 420 && nowM < 1260; if (!inRange) { line.style.display = 'none'; return; }
+            const slotFloat = (nowM - 420) / 30, flooredIdx = Math.max(0, Math.min(27, Math.floor(slotFloat))), frac = slotFloat - Math.floor(slotFloat);
+            const cellEl = grid.querySelector(`.grid-time[data-slot="${flooredIdx}"]`); if (!cellEl) { line.style.display = 'none'; return; }
+            cellEl.classList.add('now-time'); line.style.top = `${cellEl.offsetTop + frac * cellEl.offsetHeight}px`; line.style.display = 'block';
         }
 
         function scrollToNow(instant) {
-            const wrap = document.getElementById('weekGridScroll'), grid = document.getElementById('weekGrid')
-            if (!wrap || !grid) return
-            const now = new Date(), nowM = toMins(now.getHours(), now.getMinutes())
-            const clamped = Math.min(1259, Math.max(540, nowM)), slotIdx = Math.max(0, Math.min(23, Math.floor((clamped - 540) / 30)))
-            const cellEl = grid.querySelector(`.grid-time[data-slot="${slotIdx}"]`)
-            if (!cellEl) return
-            wrap.scrollTo({ top: Math.max(0, cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2)), behavior: instant ? 'auto' : 'smooth' })
+            const wrap = document.getElementById('weekGridScroll'), grid = document.getElementById('weekGrid'); if (!wrap || !grid) return;
+            const now = new Date(), nowM = toMins(now.getHours(), now.getMinutes());
+            const clamped = Math.min(1259, Math.max(420, nowM)), slotIdx = Math.max(0, Math.min(27, Math.floor((clamped - 420) / 30)));
+            const cellEl = grid.querySelector(`.grid-time[data-slot="${slotIdx}"]`); if (!cellEl) return;
+            wrap.scrollTo({ top: Math.max(0, cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2)), behavior: instant ? 'auto' : 'smooth' });
         }
 
-        function manualRefresh() { refresh(); renderWeekGrid(); requestAnimationFrame(() => scrollToNow(false)) }
+        function manualRefresh() { refresh(); renderWeekGrid(); if (bottomView === 'calendar') renderCalendar2(); requestAnimationFrame(() => scrollToNow(false)); }
 
+        /* ── Main refresh ── */
         function refresh() {
-            const now = new Date(), dow = now.getDay(), todayShort = DAY_MAP[dow], nowM = toMins(now.getHours(), now.getMinutes())
-            const viewDay = selectedDay || todayShort
-            const isViewingToday = viewDay === todayShort
+            const now = new Date(), dow = now.getDay(), todayShort = DAY_MAP[dow], nowM = toMins(now.getHours(), now.getMinutes());
+            const viewDay = selectedDay || todayShort; const isViewingToday = viewDay === todayShort;
+            document.getElementById('hdrDay').textContent = DAY_FULL[dow].toUpperCase();
+            document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            document.getElementById('scheduleTitle').textContent = scheduleData.title || 'Schedule';
+            document.getElementById('scheduleSubtitle').textContent = scheduleData.subtitle || '';
+            const allDayCourses = (scheduleData.courses || []).filter(c => c.days && c.days.includes(viewDay)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
+            const current = isViewingToday ? allDayCourses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM)) : null;
+            const upcoming = isViewingToday ? allDayCourses.find(c => toMins(c.startH, c.startM) > nowM) : null;
+            let vacantNow = null;
+            if (isViewingToday) { for (let i = 0; i < allDayCourses.length - 1; i++) { const gs = toMins(allDayCourses[i].endH, allDayCourses[i].endM), ge = toMins(allDayCourses[i + 1].startH, allDayCourses[i + 1].startM); if (ge > gs && nowM >= gs && nowM < ge) { vacantNow = { startMin: gs, endMin: ge }; break; } } }
+            const badge = document.getElementById('hdrBadge');
+            if (current) { badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`; }
+            else if (upcoming && isViewingToday) { const mu = toMins(upcoming.startH, upcoming.startM) - nowM, h2 = Math.floor(mu / 60), m2 = mu % 60; badge.innerHTML = `<span class="next-badge">Next in ${h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`}</span>`; }
+            else { badge.innerHTML = ''; }
+            const wrap = document.getElementById('currentWrap');
+            if (!isViewingToday) { wrap.innerHTML = ''; }
+            else if (current) { const sM = toMins(current.startH, current.startM), eM = toMins(current.endH, current.endM); const pct = Math.min(100, Math.max(0, ((nowM - sM) / (eM - sM)) * 100)), left = eM - nowM; wrap.innerHTML = `<div class="current-banner" style="color:${current.color};margin:10px 10px 0"><div class="current-dot" style="background:${current.color}"></div><div class="current-info"><div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(left)} left</div><div class="current-id" style="color:${current.color}">${esc(current.id)}</div><div class="current-desc">${esc(current.desc)}</div></div><div class="current-time" style="color:${current.color}">${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${current.color}"></div></div>`; }
+            else if (vacantNow) { const pct = Math.min(100, Math.max(0, ((nowM - vacantNow.startMin) / (vacantNow.endMin - vacantNow.startMin)) * 100)), left = vacantNow.endMin - nowM; wrap.innerHTML = `<div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0"><div class="current-dot" style="background:var(--muted)"></div><div class="current-info"><div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(left)} left</div><div class="current-id" style="color:var(--muted)">VACANT</div><div class="current-desc">No class scheduled</div></div><div class="current-time" style="color:var(--muted)">${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div></div>`; }
+            else { wrap.innerHTML = ''; }
 
-            document.getElementById('hdrDay').textContent = DAY_FULL[dow].toUpperCase()
-            document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`
-            document.getElementById('scheduleTitle').textContent = scheduleData.title || 'Schedule'
-            document.getElementById('scheduleSubtitle').textContent = scheduleData.subtitle || ''
-
-            const allDayCourses = (scheduleData.courses || []).filter(c => c.days && c.days.includes(viewDay)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM))
-
-            const current = isViewingToday ? allDayCourses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM)) : null
-            const upcoming = isViewingToday ? allDayCourses.find(c => toMins(c.startH, c.startM) > nowM) : null
-            let vacantNow = null
-            if (isViewingToday) {
-                for (let i = 0; i < allDayCourses.length - 1; i++) {
-                    const gs = toMins(allDayCourses[i].endH, allDayCourses[i].endM), ge = toMins(allDayCourses[i + 1].startH, allDayCourses[i + 1].startM)
-                    if (ge > gs && nowM >= gs && nowM < ge) { vacantNow = { startMin: gs, endMin: ge }; break }
-                }
-            }
-
-            const badge = document.getElementById('hdrBadge')
-            if (current) {
-                badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`
-            } else if (upcoming && isViewingToday) {
-                const mu = toMins(upcoming.startH, upcoming.startM) - nowM, h2 = Math.floor(mu / 60), m2 = mu % 60
-                badge.innerHTML = `<span class="next-badge">Next in ${h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`}</span>`
-            } else { badge.innerHTML = '' }
-
-            const wrap = document.getElementById('currentWrap')
-            if (!isViewingToday) { wrap.innerHTML = '' }
-            else if (current) {
-                const sM = toMins(current.startH, current.startM), eM = toMins(current.endH, current.endM)
-                const pct = Math.min(100, Math.max(0, ((nowM - sM) / (eM - sM)) * 100)), left = eM - nowM
-                wrap.innerHTML = `<div class="current-banner" style="color:${current.color};margin:10px 10px 0"><div class="current-dot" style="background:${current.color}"></div><div class="current-info"><div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(left)} left</div><div class="current-id" style="color:${current.color}">${esc(current.id)}</div><div class="current-desc">${esc(current.desc)}</div></div><div class="current-time" style="color:${current.color}">${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${current.color}"></div></div>`
-            } else if (vacantNow) {
-                const pct = Math.min(100, Math.max(0, ((nowM - vacantNow.startMin) / (vacantNow.endMin - vacantNow.startMin)) * 100)), left = vacantNow.endMin - nowM
-                wrap.innerHTML = `<div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0"><div class="current-dot" style="background:var(--muted)"></div><div class="current-info"><div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(left)} left</div><div class="current-id" style="color:var(--muted)">VACANT</div><div class="current-desc">No class scheduled</div></div><div class="current-time" style="color:var(--muted)">${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div></div>`
-            } else { wrap.innerHTML = '' }
-
-            const listLabel = document.getElementById('listLabel'), list = document.getElementById('classesList')
-            if (allDayCourses.length === 0) {
-                listLabel.style.display = 'none'
-                list.innerHTML = `<div class="empty-state"><div class="msg">No classes on ${viewDay}!</div><div class="sub">Nothing scheduled</div></div>`
-                document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
-                return
-            }
-            listLabel.style.display = 'block'
-
-            let remaining, past
-            if (isViewingToday) {
-                remaining = allDayCourses.filter(c => toMins(c.endH, c.endM) > nowM)
-                past = allDayCourses.filter(c => toMins(c.endH, c.endM) <= nowM)
-                listLabel.textContent = remaining.length > 0 ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining` : 'All done for today ✓'
-            } else {
-                remaining = allDayCourses
-                past = []
-                listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`
-            }
-
-            const orderedItems = []
-            for (let i = 0; i < remaining.length; i++) {
-                orderedItems.push(remaining[i])
-                if (i < remaining.length - 1) {
-                    const gs = toMins(remaining[i].endH, remaining[i].endM), ge = toMins(remaining[i + 1].startH, remaining[i + 1].startM)
-                    if (ge > gs) orderedItems.push({ isVacant: true, startMin: gs, endMin: ge })
-                }
-            }
-            past.forEach(c => orderedItems.push(c))
-
+            const listLabel = document.getElementById('listLabel'), list = document.getElementById('classesList');
+            if (allDayCourses.length === 0) { listLabel.style.display = 'none'; list.innerHTML = `<div class="empty-state"><div class="msg">No classes on ${viewDay}!</div><div class="sub">Nothing scheduled</div></div>`; document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'; return; }
+            listLabel.style.display = 'block';
+            let remaining, past;
+            if (isViewingToday) { remaining = allDayCourses.filter(c => toMins(c.endH, c.endM) > nowM); past = allDayCourses.filter(c => toMins(c.endH, c.endM) <= nowM); listLabel.textContent = remaining.length > 0 ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining` : 'All done for today ✓'; }
+            else { remaining = allDayCourses; past = []; listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`; }
+            const orderedItems = [];
+            for (let i = 0; i < remaining.length; i++) { orderedItems.push(remaining[i]); if (i < remaining.length - 1) { const gs = toMins(remaining[i].endH, remaining[i].endM), ge = toMins(remaining[i + 1].startH, remaining[i + 1].startM); if (ge > gs) orderedItems.push({ isVacant: true, startMin: gs, endMin: ge }); } }
+            past.forEach(c => orderedItems.push(c));
             list.innerHTML = orderedItems.map(item => {
-                if (item.isVacant) {
-                    const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60)
-                    return `<div class="class-card vacant-card"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`
-                }
-                const c = item
-                const isNow = current && c === current
-                const isPast = isViewingToday && toMins(c.endH, c.endM) <= nowM
-                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div><div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div></div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div><div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div></div></div></div>`
-            }).join('')
-
-            document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'
+                if (item.isVacant) { const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60); return `<div class="class-card vacant-card"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`; }
+                const c = item; const isNow = current && c === current; const isPast = isViewingToday && toMins(c.endH, c.endM) <= nowM;
+                // Assignment badges
+                const assigns = getEventsForSubject(c.id);
+                let badges = '';
+                assigns.forEach(e => { const uc = urgencyClass(e.deadline); const ul = urgencyLabel(e.deadline); badges += `<span class="assign-badge ${uc}" title="${esc(e.name)} — ${ul}"><span class="assign-dot"></span>${esc(e.name.length > 12 ? e.name.slice(0, 11) + '…' : e.name)}</span>`; });
+                const assignRow = badges ? `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${badges}</div>` : '';
+                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div><div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div></div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div><div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div></div>${assignRow}</div></div>`;
+            }).join('');
+            document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule';
         }
 
-        updateClock()
-        setInterval(updateClock, 1000)
-        buildTabs()
-
-        let lastRenderedDay = null
+        /* ── Init ── */
+        updateClock(); setInterval(updateClock, 1000);
+        buildTabs(); setBottomView('timetable');
+        let lastRenderedDay = null;
         function tick() {
-            refresh()
-            const today = todayKey()
-            if (today !== lastRenderedDay) { lastRenderedDay = today; renderWeekGrid(); requestAnimationFrame(() => scrollToNow(true)) }
-            else { updateNowLine() }
-            buildTabs()
+            refresh(); const today = todayKey();
+            if (today !== lastRenderedDay) { lastRenderedDay = today; renderWeekGrid(); requestAnimationFrame(() => scrollToNow(true)); }
+            else { updateNowLine(); }
+            buildTabs();
         }
-
-        refresh()
-        renderWeekGrid()
-        lastRenderedDay = todayKey()
-        requestAnimationFrame(() => scrollToNow(true))
-        setInterval(tick, 1000)
-        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick() })
-        window.addEventListener('focus', () => tick())
-
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("./service-worker.js")
-                    .then(() => { console.log("PWA Ready") })
-                    .catch(err => { console.error(err) })
-            })
-        }
+        refresh(); renderWeekGrid(); lastRenderedDay = todayKey();
+        requestAnimationFrame(() => scrollToNow(true));
+        setInterval(tick, 1000);
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick(); });
+        window.addEventListener('focus', () => tick());
+        if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("./service-worker.js").then(() => console.log("PWA Ready")).catch(err => console.error(err)); }); }
     </script>
 </body>
 
