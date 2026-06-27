@@ -505,7 +505,6 @@
             opacity: .8
         }
 
-        /* ── Assignment badge on class cards ── */
         .assign-badge {
             display: inline-flex;
             align-items: center;
@@ -529,7 +528,7 @@
         }
 
         .assign-badge.due-ok {
-            background: rgba(46, 194, 126, .7)
+            background: rgba(98, 255, 98, 0.7)
         }
 
         .assign-dot {
@@ -539,7 +538,6 @@
             background: currentColor
         }
 
-        /* ── Week grid panel ── */
         .week-grid-wrap {
             padding: 0 10px 10px;
             border-top: 1px solid rgba(255, 255, 255, .05);
@@ -726,7 +724,6 @@
             display: none
         }
 
-        /* ── View toggle button ── */
         .view-toggle-btn {
             background: rgba(255, 255, 255, .08);
             border: 1px solid rgba(255, 255, 255, .15);
@@ -753,7 +750,6 @@
             border-color: var(--accent)
         }
 
-        /* ── Week grid top bar (toggle row) ── */
         .week-grid-topbar {
             display: flex;
             align-items: center;
@@ -762,7 +758,6 @@
             flex-shrink: 0
         }
 
-        /* ── Calendar view ── */
         .calendar-wrap {
             flex: 1;
             display: flex;
@@ -976,7 +971,6 @@
             letter-spacing: .4px
         }
 
-        /* ── Admin link ── */
         .admin-link {
             font-size: 9px;
             color: var(--muted);
@@ -992,6 +986,44 @@
         .admin-link:hover {
             opacity: .8;
             color: var(--text)
+        }
+
+        /* ── Grid assignment indicators ── */
+        .grid-assign-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: block;
+            box-shadow: 0 0 4px 1px currentColor;
+            margin: 0 auto
+        }
+
+        .grid-assign-count {
+            font-size: 7px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: .3px;
+            display: block;
+            text-align: center;
+            opacity: .9
+        }
+
+        /* TBA badge style */
+        .tba-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            border-radius: 3px;
+            padding: 1px 5px;
+            background: rgba(128, 153, 204, .18);
+            color: var(--muted);
+            border: 1px dashed rgba(128, 153, 204, .35);
+            flex-shrink: 0
         }
     </style>
 </head>
@@ -1023,7 +1055,6 @@
         <div class="classes-label" id="listLabel">Today's Classes</div>
         <div class="classes-list" id="classesList"></div>
 
-        <!-- Calendar view (hidden by default) -->
         <div id="calendarView" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
             <div class="cal-header">
                 <button class="cal-nav-btn" onclick="calPrev()">&#8249;</button>
@@ -1126,7 +1157,7 @@
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
                 { "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "TBA", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
-                { "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "TBA", "color": "#556B2F", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0 }
+                { "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "TBA", "color": "#556B2F", "days": ["Sat"], "startH": "TBA", "startM": "TBA", "endH": "TBA", "endM": "TBA" }
             ]
         }
 
@@ -1142,7 +1173,14 @@
         let calMonth = new Date().getMonth()
         let calSelectedDate = null
 
-        function loadEvents() { try { return JSON.parse(localStorage.getItem('naap_events') || '[]') } catch (e) { return [] } }
+        /* ── TBA helpers ── */
+        function isTBA(c) { return c.startH === 'TBA' || c.startH === undefined || c.startH === null }
+        function safeToMins(c) { return isTBA(c) ? 9999 : toMins(c.startH, c.startM) }
+        function safeEndMins(c) { return isTBA(c) ? 9999 : toMins(c.endH, c.endM) }
+        function fmtTime(c) { return isTBA(c) ? 'Time TBA' : `${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}` }
+        function fmtDur(c) { return isTBA(c) ? 'TBA' : durStr(c.startH, c.startM, c.endH, c.endM) }
+
+        function loadEvents() { return window._fbEvents || [] }
 
         function todayKey() { return DAY_MAP[new Date().getDay()] }
         function toMins(h, m) { return h * 60 + m }
@@ -1244,7 +1282,7 @@
             const daysInPrev = new Date(year, month, 0).getDate();
             const events = loadEvents();
             let html = '';
-            let dayNum = 1, nextNum = 1, cell = 0;
+            let dayNum = 1, nextNum = 1;
             const total = Math.ceil((firstDay + daysInMonth) / 7) * 7;
             for (let i = 0; i < total; i++) {
                 let d, m2 = month, y2 = year, other = false;
@@ -1277,7 +1315,7 @@
             const dayName = DAY_FULL[d.getDay()]; const monthName = MONTH_FULL[d.getMonth()];
             const dayEvents = loadEvents().filter(e => e.deadline === dk || e.eventDate === dk);
             const shortDay = DAY_MAP[d.getDay()];
-            const dayClasses = scheduleData.courses.filter(c => c.days.includes(shortDay)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
+            const dayClasses = scheduleData.courses.filter(c => c.days.includes(shortDay)).sort((a, b) => safeToMins(a) - safeToMins(b));
             let html = `<div class="cal-panel-header">${dayName}, ${monthName} ${d.getDate()}</div>`;
             if (dayEvents.length === 0 && dayClasses.length === 0) { html += `<div style="font-size:10px;color:var(--muted);opacity:.5;padding:6px 0">No events or classes</div>`; panel.innerHTML = html; return; }
             dayEvents.forEach(e => {
@@ -1294,7 +1332,10 @@
             });
             if (dayClasses.length > 0) {
                 html += `<div style="font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);padding:4px 0 3px">Classes</div>`;
-                dayClasses.forEach(c => { html += `<div style="font-size:10px;color:var(--muted);padding:2px 0;display:flex;gap:6px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:${c.color};flex-shrink:0;display:inline-block"></span><span style="color:${c.color};font-weight:700">${esc(c.id)}</span> ${fmt12(c.startH, c.startM)}–${fmt12(c.endH, c.endM)} · ${esc(c.room)}</div>`; });
+                dayClasses.forEach(c => {
+                    const timeStr = isTBA(c) ? 'Time TBA' : `${fmt12(c.startH, c.startM)}–${fmt12(c.endH, c.endM)}`;
+                    html += `<div style="font-size:10px;color:var(--muted);padding:2px 0;display:flex;gap:6px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:${c.color};flex-shrink:0;display:inline-block"></span><span style="color:${c.color};font-weight:700">${esc(c.id)}</span> ${timeStr} · ${esc(c.room)}</div>`;
+                });
             }
             panel.innerHTML = html;
         }
@@ -1309,10 +1350,35 @@
             slots.forEach((slot, sIdx) => { html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`; });
             WEEKDAYS.forEach((day, dIdx) => {
                 const isToday = day === today; const covered = new Array(slots.length).fill(false);
-                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
-                dayCourses.forEach(c => { const startMin = toMins(c.startH, c.startM), endMin = toMins(c.endH, c.endM); const startSlot = Math.round((startMin - 420) / 30), span = Math.round((endMin - startMin) / 30); if (startSlot < 0 || startSlot >= slots.length || span <= 0) return; const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2); for (let i = startSlot; i < startSlot + span && i < slots.length; i++)covered[i] = true; html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''}" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color}" title="${esc(c.id)}">${esc(c.id)}</div>`; });
+                /* Only include non-TBA courses in the grid */
+                const dayCourses = scheduleData.courses.filter(c => c.days.includes(day) && !isTBA(c)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
+                /* TBA courses for this day — show as a special label in the last row */
+                const tbaCourses = scheduleData.courses.filter(c => c.days.includes(day) && isTBA(c));
+                dayCourses.forEach(c => {
+                    const startMin = toMins(c.startH, c.startM), endMin = toMins(c.endH, c.endM);
+                    const startSlot = Math.round((startMin - 420) / 30), span = Math.round((endMin - startMin) / 30);
+                    if (startSlot < 0 || startSlot >= slots.length || span <= 0) return;
+                    const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2);
+                    for (let i = startSlot; i < startSlot + span && i < slots.length; i++) covered[i] = true;
+                    const subjectEvents = getEventsForSubject(c.id);
+                    const hasOverdue = subjectEvents.some(e => urgencyClass(e.deadline) === 'due-soon');
+                    const hasWarn    = !hasOverdue && subjectEvents.some(e => urgencyClass(e.deadline) === 'due-later');
+                    const dotColor   = hasOverdue ? '#ff5252' : hasWarn ? '#f0a500' : '#2ec27e';
+                    const dotHtml    = subjectEvents.length > 0
+                        ? `<span class="grid-assign-dot" style="background:${dotColor}" title="${subjectEvents.length} item${subjectEvents.length > 1 ? 's' : ''}"></span>`
+                        : '';
+                    const tall = span >= 4;
+                    const countHtml = tall && subjectEvents.length > 0
+                        ? `<span class="grid-assign-count" style="color:${dotColor}">${subjectEvents.length}</span>`
+                        : '';
+                    html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''}" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color};flex-direction:column;gap:1px" title="${esc(c.id)}${subjectEvents.length > 0 ? ` · ${subjectEvents.length} task${subjectEvents.length>1?'s':''}` : ''}">${esc(c.id)}${dotHtml}${countHtml}</div>`;
+                });
                 for (let i = 0; i < dayCourses.length - 1; i++) { const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM), gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM); if (gapEnd <= gapStart) continue; const startSlot = Math.round((gapStart - 420) / 30), span = Math.round((gapEnd - gapStart) / 30); if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue; const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2); for (let s = startSlot; s < startSlot + span && s < slots.length; s++)covered[s] = true; html += `<div class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2}" title="Vacant">Vacant</div>`; }
                 slots.forEach((_, sIdx) => { if (covered[sIdx]) return; html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`; });
+                /* If there are TBA courses, overlay a small label at the very bottom of the column */
+                if (tbaCourses.length > 0) {
+                    html += `<div class="grid-cell" style="grid-row:${slots.length + 1};grid-column:${dIdx + 2};background:${tbaCourses[0].color}33;font-size:7px;font-weight:700;color:${tbaCourses[0].color};border:1px dashed ${tbaCourses[0].color}55;padding:1px" title="${esc(tbaCourses.map(c => c.id).join(', '))} – Time TBA">TBA</div>`;
+                }
             });
             grid.innerHTML = html;
             const line = document.createElement('div'); line.id = 'nowLine'; line.className = 'now-line'; grid.appendChild(line);
@@ -1348,11 +1414,20 @@
             document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
             document.getElementById('scheduleTitle').textContent = scheduleData.title || 'Schedule';
             document.getElementById('scheduleSubtitle').textContent = scheduleData.subtitle || '';
-            const allDayCourses = (scheduleData.courses || []).filter(c => c.days && c.days.includes(viewDay)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
-            const current = isViewingToday ? allDayCourses.find(c => nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM)) : null;
-            const upcoming = isViewingToday ? allDayCourses.find(c => toMins(c.startH, c.startM) > nowM) : null;
+
+            /* Sort: TBA courses go to the bottom */
+            const allDayCourses = (scheduleData.courses || [])
+                .filter(c => c.days && c.days.includes(viewDay))
+                .sort((a, b) => safeToMins(a) - safeToMins(b));
+
+            /* current/upcoming only applies to non-TBA courses */
+            const current = isViewingToday ? allDayCourses.find(c => !isTBA(c) && nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM)) : null;
+            const upcoming = isViewingToday ? allDayCourses.find(c => !isTBA(c) && toMins(c.startH, c.startM) > nowM) : null;
             let vacantNow = null;
-            if (isViewingToday) { for (let i = 0; i < allDayCourses.length - 1; i++) { const gs = toMins(allDayCourses[i].endH, allDayCourses[i].endM), ge = toMins(allDayCourses[i + 1].startH, allDayCourses[i + 1].startM); if (ge > gs && nowM >= gs && nowM < ge) { vacantNow = { startMin: gs, endMin: ge }; break; } } }
+            if (isViewingToday) {
+                const nonTBA = allDayCourses.filter(c => !isTBA(c));
+                for (let i = 0; i < nonTBA.length - 1; i++) { const gs = toMins(nonTBA[i].endH, nonTBA[i].endM), ge = toMins(nonTBA[i + 1].startH, nonTBA[i + 1].startM); if (ge > gs && nowM >= gs && nowM < ge) { vacantNow = { startMin: gs, endMin: ge }; break; } }
+            }
             const badge = document.getElementById('hdrBadge');
             if (current) { badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`; }
             else if (upcoming && isViewingToday) { const mu = toMins(upcoming.startH, upcoming.startM) - nowM, h2 = Math.floor(mu / 60), m2 = mu % 60; badge.innerHTML = `<span class="next-badge">Next in ${h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`}</span>`; }
@@ -1366,21 +1441,46 @@
             const listLabel = document.getElementById('listLabel'), list = document.getElementById('classesList');
             if (allDayCourses.length === 0) { listLabel.style.display = 'none'; list.innerHTML = `<div class="empty-state"><div class="msg">No classes on ${viewDay}!</div><div class="sub">Nothing scheduled</div></div>`; document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'; return; }
             listLabel.style.display = 'block';
+
+            /* Separate TBA and non-TBA for list rendering */
+            const nonTBACourses = allDayCourses.filter(c => !isTBA(c));
+            const tbaCourses = allDayCourses.filter(c => isTBA(c));
+
             let remaining, past;
-            if (isViewingToday) { remaining = allDayCourses.filter(c => toMins(c.endH, c.endM) > nowM); past = allDayCourses.filter(c => toMins(c.endH, c.endM) <= nowM); listLabel.textContent = remaining.length > 0 ? `${remaining.length} class${remaining.length > 1 ? 'es' : ''} remaining` : 'All done for today ✓'; }
-            else { remaining = allDayCourses; past = []; listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`; }
+            if (isViewingToday) {
+                remaining = nonTBACourses.filter(c => toMins(c.endH, c.endM) > nowM);
+                past = nonTBACourses.filter(c => toMins(c.endH, c.endM) <= nowM);
+                const totalRemaining = remaining.length + tbaCourses.length;
+                listLabel.textContent = totalRemaining > 0 ? `${totalRemaining} class${totalRemaining > 1 ? 'es' : ''} remaining` : 'All done for today ✓';
+            } else {
+                remaining = nonTBACourses; past = [];
+                listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`;
+            }
+
             const orderedItems = [];
             for (let i = 0; i < remaining.length; i++) { orderedItems.push(remaining[i]); if (i < remaining.length - 1) { const gs = toMins(remaining[i].endH, remaining[i].endM), ge = toMins(remaining[i + 1].startH, remaining[i + 1].startM); if (ge > gs) orderedItems.push({ isVacant: true, startMin: gs, endMin: ge }); } }
             past.forEach(c => orderedItems.push(c));
+            /* TBA courses always go at the very end */
+            tbaCourses.forEach(c => orderedItems.push(c));
+
             list.innerHTML = orderedItems.map(item => {
-                if (item.isVacant) { const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60); return `<div class="class-card vacant-card"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`; }
-                const c = item; const isNow = current && c === current; const isPast = isViewingToday && toMins(c.endH, c.endM) <= nowM;
-                // Assignment badges
+                if (item.isVacant) {
+                    const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60);
+                    return `<div class="class-card vacant-card"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`;
+                }
+                const c = item;
+                const isNow = current && c === current;
+                const isPast = isViewingToday && !isTBA(c) && toMins(c.endH, c.endM) <= nowM;
                 const assigns = getEventsForSubject(c.id);
                 let badges = '';
                 assigns.forEach(e => { const uc = urgencyClass(e.deadline); const ul = urgencyLabel(e.deadline); badges += `<span class="assign-badge ${uc}" title="${esc(e.name)} — ${ul}"><span class="assign-dot"></span>${esc(e.name.length > 12 ? e.name.slice(0, 11) + '…' : e.name)}</span>`; });
                 const assignRow = badges ? `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${badges}</div>` : '';
-                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div><div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div></div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div><div class="card-dur">${durStr(c.startH, c.startM, c.endH, c.endM)}</div></div>${assignRow}</div></div>`;
+                /* TBA-specific time display */
+                const timeDisplay = isTBA(c)
+                    ? `<span class="tba-badge">⏳ Time TBA</span>`
+                    : `<div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div>`;
+                const durDisplay = fmtDur(c);
+                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div><div class="card-dur">${durDisplay}</div></div>${assignRow}</div></div>`;
             }).join('');
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule';
         }
@@ -1401,6 +1501,38 @@
         document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick(); });
         window.addEventListener('focus', () => tick());
         if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("./service-worker.js").then(() => console.log("PWA Ready")).catch(err => console.error(err)); }); }
+    </script>
+
+    <!-- ── Firebase: real-time events sync ── -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDOE3BMZ_pPHDbq3i4PLmYYzfur_AgJ0",
+            authDomain: "schedule-9b66c.firebaseapp.com",
+            projectId: "schedule-9b66c",
+            storageBucket: "schedule-9b66c.firebasestorage.app",
+            messagingSenderId: "684107196052",
+            appId: "1:684107196052:web:eaa1d94d5656bf6955b681",
+            measurementId: "G-F1THW9K3WD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Keep a live-synced copy of all events in window._fbEvents
+        window._fbEvents = [];
+
+        const q = query(collection(db, "events"), orderBy("createdAt", "asc"));
+        onSnapshot(q, (snapshot) => {
+            window._fbEvents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            // Re-render the schedule list whenever Firestore data changes
+            if (typeof refresh === 'function') refresh();
+            if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
+        }, (err) => {
+            console.warn("Firestore sync error:", err.message);
+        });
     </script>
 </body>
 
