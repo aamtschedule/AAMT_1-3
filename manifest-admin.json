@@ -1,20 +1,20 @@
 {
-  "name": "AAMT 1-3 Schedule",
-  "short_name": "AAMT 1-3 Schedule",
-  "description": "AAMT 1-3 Schedule",
-  "start_url": "./index.html",
+  "name": "AAMT 1-3",
+  "short_name": "AAMT 1-3",
+  "description": "AAMT 1-3",
+  "start_url": "./admin.html",
   "display": "standalone",
   "background_color": "#111827",
   "theme_color": "#2563eb",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "admin_icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "admin_icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
