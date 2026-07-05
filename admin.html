@@ -777,6 +777,7 @@
         <div class="top-tabs">
             <div class="top-tab active" id="pageTab-items" onclick="switchPage('items')">📋 Items</div>
             <div class="top-tab" id="pageTab-subjects" onclick="switchPage('subjects')">🎓 Subjects</div>
+            <div class="top-tab" id="pageTab-sessions" onclick="switchPage('sessions')">🕐 Timetable</div>
         </div>
 
         <!-- ══════════ ITEMS PAGE ══════════ -->
@@ -986,6 +987,77 @@
         </div>
         <!-- ══════════ /SUBJECTS PAGE ══════════ -->
 
+        <!-- ══════════ SESSIONS PAGE ══════════ -->
+        <div id="page-sessions" style="display:none">
+
+            <div>
+                <div class="section-label">Add a class session</div>
+                <div class="form-card">
+                    <div class="form-row">
+                        <label class="form-label">Subject</label>
+                        <select class="form-select" id="sessSubject">
+                            <option value="">— Select subject —</option>
+                        </select>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-row" style="margin-bottom:0">
+                            <label class="form-label">Day</label>
+                            <select class="form-select" id="sessDay">
+                                <option value="Mon">Mon</option>
+                                <option value="Tue">Tue</option>
+                                <option value="Wed">Wed</option>
+                                <option value="Thu">Thu</option>
+                                <option value="Fri">Fri</option>
+                                <option value="Sat">Sat</option>
+                                <option value="Sun">Sun</option>
+                                <option value="TBA">Time TBA</option>
+                            </select>
+                        </div>
+                        <div class="form-row" style="margin-bottom:0">
+                            <label class="form-label">Room</label>
+                            <input class="form-input" type="text" id="sessRoom" placeholder="e.g. Aero Room">
+                        </div>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-row" style="margin-bottom:0">
+                            <label class="form-label">Start time</label>
+                            <input class="form-input" type="time" id="sessStart">
+                        </div>
+                        <div class="form-row" style="margin-bottom:0">
+                            <label class="form-label">End time</label>
+                            <input class="form-input" type="time" id="sessEnd">
+                        </div>
+                    </div>
+                    <div class="tba-note">Leave day as "Time TBA" (and times blank) for a session that has no fixed
+                        slot yet. To change an existing class's day/time/room, edit it directly in the list below
+                        instead of adding a new one.</div>
+                    <button class="submit-btn add" onclick="addCustomSession()" style="margin-top:10px">+ Add
+                        Session</button>
+                </div>
+            </div>
+
+            <div>
+                <div
+                    style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:8px">
+                    <div class="section-label" style="margin-bottom:0">All class sessions <span class="count-badge"
+                            id="sessCount">0</span></div>
+                    <span class="dirty-note" id="sessDirtyNote" style="display:none">● unsaved changes</span>
+                </div>
+                <div class="subj-toolbar">
+                    <div class="subj-toolbar-left"></div>
+                    <button class="btn-sm primary" id="saveAllSessBtn" onclick="saveAllSessionEdits()" disabled>💾 Save
+                        all edits</button>
+                </div>
+                <div class="tba-note" style="margin-bottom:8px">Editing a built-in class here creates an override
+                    (day, time, room) without touching the app's code. "Cancel this session" hides it from the
+                    schedule; the revert (↺) button removes the override and restores the original built-in slot.
+                </div>
+                <div class="events-list" id="sessionsList"></div>
+            </div>
+
+        </div>
+        <!-- ══════════ /SESSIONS PAGE ══════════ -->
+
     </div>
 
     <div class="toast" id="toast"></div>
@@ -1023,9 +1095,10 @@
         const db = getFirestore(app);
         const COLLECTION = "events"; // Firestore collection name
         const SUBJ_COLLECTION = "subjects";
+        const SESSION_COLLECTION = "sessions";
 
         // ── Expose db + helpers to global scope so non-module functions can call them ──
-        window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION };
+        window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION, SESSION_COLLECTION };
 
         // ── Real-time listener: update list whenever Firestore changes ──
         const q = query(collection(db, COLLECTION), orderBy("createdAt", "asc"));
@@ -1044,8 +1117,19 @@
             window._allSubjects = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             if (typeof populateSubjects === 'function') populateSubjects();
             if (typeof renderSubjectsList === 'function') renderSubjectsList();
+            if (typeof renderSessionsList === 'function') renderSessionsList();
         }, (err) => {
             console.error("Firestore subjects error:", err);
+        });
+
+        // ── Sessions listener (day/time/room overrides + custom sessions) ──
+        const qSess = collection(db, SESSION_COLLECTION);
+        onSnapshot(qSess, (snapshot) => {
+            window._allSessions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (typeof renderSessionsList === 'function') renderSessionsList();
+            if (typeof populateSubjects === 'function') populateSubjects();
+        }, (err) => {
+            console.error("Firestore sessions error:", err);
         });
 
         function setDbStatus(state, msg) {
@@ -1060,43 +1144,47 @@
     <!-- ── App logic (non-module, uses window._fb) ── -->
     <script>
         // Exposed from module above
-        // window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION }
-        // window._allEvents / window._allSubjects — kept in sync by onSnapshot
+        // window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION, SESSION_COLLECTION }
+        // window._allEvents / window._allSubjects / window._allSessions — kept in sync by onSnapshot
 
         window._allEvents = window._allEvents || [];
         window._allSubjects = window._allSubjects || [];
+        window._allSessions = window._allSessions || [];
 
         // Full built-in timetable, used to compute per-subject session options
         // (a subject can meet more than once on the same day, e.g. morning + evening).
+        // Each entry has a stable slotId so Firestore can override its day/time/room
+        // or mark it cancelled, without ever touching this hardcoded array.
         const scheduleData = {
             courses: [
-                { id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Simulation Lab", color: "#3a7bd5", days: ["Mon"], startH: 13, startM: 0, endH: 16, endM: 0 },
-                { id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Aero Room", color: "#3a7bd5", days: ["Mon"], startH: 18, startM: 30, endH: 20, endM: 0 },
-                { id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Aero Room", color: "#3a7bd5", days: ["Wed"], startH: 18, startM: 30, endH: 20, endM: 0 },
-                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "PP Lab", color: "#e05a9a", days: ["Mon"], startH: 10, startM: 0, endH: 13, endM: 0 },
-                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "Aero Room", color: "#e05a9a", days: ["Tue"], startH: 16, startM: 0, endH: 17, endM: 30 },
-                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "PP Lab", color: "#e05a9a", days: ["Wed"], startH: 14, startM: 0, endH: 17, endM: 0 },
-                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "Aero Room", color: "#e05a9a", days: ["Thu"], startH: 16, startM: 0, endH: 17, endM: 30 },
-                { id: "DRAW1101", desc: "Aircraft Drawing", room: "DR1", color: "#2ec27e", days: ["Tue"], startH: 9, startM: 0, endH: 12, endM: 0 },
-                { id: "AMT1104", desc: "Aircraft Handtools and Equipment", room: "Aero Room", color: "#e8702a", days: ["Tue"], startH: 18, startM: 0, endH: 19, endM: 0 },
-                { id: "AMT1104", desc: "Aircraft Handtools and Equipment", room: "Fabrication Lab", color: "#e8702a", days: ["Thu"], startH: 10, startM: 0, endH: 13, endM: 0 },
-                { id: "AMT1103", desc: "Aircraft Propeller", room: "P/P Lab", color: "#9c6ade", days: ["Tue"], startH: 13, startM: 30, endH: 15, endM: 0 },
-                { id: "AMT1103", desc: "Aircraft Propeller", room: "Aero Room", color: "#9c6ade", days: ["Thu"], startH: 18, startM: 0, endH: 19, endM: 0 },
-                { id: "AMT1103", desc: "Aircraft Propeller", room: "P/P Lab", color: "#9c6ade", days: ["Thu"], startH: 13, startM: 30, endH: 15, endM: 0 },
-                { id: "AMT1101", desc: "Aviation Safety", room: "Aero Room", color: "#00bcd4", days: ["Tue"], startH: 15, startM: 0, endH: 16, endM: 0 },
-                { id: "AMT1101", desc: "Aviation Safety", room: "Aero Room", color: "#00bcd4", days: ["Thu"], startH: 15, startM: 0, endH: 16, endM: 0 },
-                { id: "AMT1102", desc: "Aircraft Flight Control", room: "Hangar Table 1", color: "#ff5722", days: ["Tue"], startH: 19, startM: 0, endH: 20, endM: 30 },
-                { id: "AMT1102", desc: "Aircraft Flight Control", room: "Hangar Table 1", color: "#ff5722", days: ["Thu"], startH: 19, startM: 0, endH: 20, endM: 30 },
-                { id: "AMT1102", desc: "Aircraft Flight Control", room: "Aero Room", color: "#ff5722", days: ["Fri"], startH: 18, startM: 0, endH: 19, endM: 0 },
-                { id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Mon"], startH: 17, startM: 0, endH: 18, endM: 0 },
-                { id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Wed"], startH: 17, startM: 0, endH: 18, endM: 0 },
-                { id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Fri"], startH: 17, startM: 0, endH: 18, endM: 0 },
-                { id: "PATHFIT1", desc: "Movement Competency Training", room: "TBA", color: "#ffc107", days: ["Wed"], startH: 12, startM: 0, endH: 14, endM: 0 },
-                { id: "ROTC", desc: "Reserve Officers' Training Corps", room: "TBA", color: "#556B2F", days: ["Sat"], startH: "TBA", startM: "TBA", endH: "TBA", endM: "TBA" }
+                { slotId: "s0", id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Simulation Lab", color: "#3a7bd5", days: ["Mon"], startH: 13, startM: 0, endH: 16, endM: 0 },
+                { slotId: "s1", id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Aero Room", color: "#3a7bd5", days: ["Mon"], startH: 18, startM: 30, endH: 20, endM: 0 },
+                { slotId: "s2", id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Aero Room", color: "#3a7bd5", days: ["Wed"], startH: 18, startM: 30, endH: 20, endM: 0 },
+                { slotId: "s3", id: "AMT1105", desc: "Aircraft Powerplant 1", room: "PP Lab", color: "#e05a9a", days: ["Mon"], startH: 10, startM: 0, endH: 13, endM: 0 },
+                { slotId: "s4", id: "AMT1105", desc: "Aircraft Powerplant 1", room: "Aero Room", color: "#e05a9a", days: ["Tue"], startH: 16, startM: 0, endH: 17, endM: 30 },
+                { slotId: "s5", id: "AMT1105", desc: "Aircraft Powerplant 1", room: "PP Lab", color: "#e05a9a", days: ["Wed"], startH: 14, startM: 0, endH: 17, endM: 0 },
+                { slotId: "s6", id: "AMT1105", desc: "Aircraft Powerplant 1", room: "Aero Room", color: "#e05a9a", days: ["Thu"], startH: 16, startM: 0, endH: 17, endM: 30 },
+                { slotId: "s7", id: "DRAW1101", desc: "Aircraft Drawing", room: "DR1", color: "#2ec27e", days: ["Tue"], startH: 9, startM: 0, endH: 12, endM: 0 },
+                { slotId: "s8", id: "AMT1104", desc: "Aircraft Handtools and Equipment", room: "Aero Room", color: "#e8702a", days: ["Tue"], startH: 18, startM: 0, endH: 19, endM: 0 },
+                { slotId: "s9", id: "AMT1104", desc: "Aircraft Handtools and Equipment", room: "Fabrication Lab", color: "#e8702a", days: ["Thu"], startH: 10, startM: 0, endH: 13, endM: 0 },
+                { slotId: "s10", id: "AMT1103", desc: "Aircraft Propeller", room: "P/P Lab", color: "#9c6ade", days: ["Tue"], startH: 13, startM: 30, endH: 15, endM: 0 },
+                { slotId: "s11", id: "AMT1103", desc: "Aircraft Propeller", room: "Aero Room", color: "#9c6ade", days: ["Thu"], startH: 18, startM: 0, endH: 19, endM: 0 },
+                { slotId: "s12", id: "AMT1103", desc: "Aircraft Propeller", room: "P/P Lab", color: "#9c6ade", days: ["Thu"], startH: 13, startM: 30, endH: 15, endM: 0 },
+                { slotId: "s13", id: "AMT1101", desc: "Aviation Safety", room: "Aero Room", color: "#00bcd4", days: ["Tue"], startH: 15, startM: 0, endH: 16, endM: 0 },
+                { slotId: "s14", id: "AMT1101", desc: "Aviation Safety", room: "Aero Room", color: "#00bcd4", days: ["Thu"], startH: 15, startM: 0, endH: 16, endM: 0 },
+                { slotId: "s15", id: "AMT1102", desc: "Aircraft Flight Control", room: "Hangar Table 1", color: "#ff5722", days: ["Tue"], startH: 19, startM: 0, endH: 20, endM: 30 },
+                { slotId: "s16", id: "AMT1102", desc: "Aircraft Flight Control", room: "Hangar Table 1", color: "#ff5722", days: ["Thu"], startH: 19, startM: 0, endH: 20, endM: 30 },
+                { slotId: "s17", id: "AMT1102", desc: "Aircraft Flight Control", room: "Aero Room", color: "#ff5722", days: ["Fri"], startH: 18, startM: 0, endH: 19, endM: 0 },
+                { slotId: "s18", id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Mon"], startH: 17, startM: 0, endH: 18, endM: 0 },
+                { slotId: "s19", id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Wed"], startH: 17, startM: 0, endH: 18, endM: 0 },
+                { slotId: "s20", id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Fri"], startH: 17, startM: 0, endH: 18, endM: 0 },
+                { slotId: "s21", id: "PATHFIT1", desc: "Movement Competency Training", room: "TBA", color: "#ffc107", days: ["Wed"], startH: 12, startM: 0, endH: 14, endM: 0 },
+                { slotId: "s22", id: "ROTC", desc: "Reserve Officers' Training Corps", room: "TBA", color: "#556B2F", days: ["Sat"], startH: "TBA", startM: "TBA", endH: "TBA", endM: "TBA" }
             ]
         }
 
         const SWATCHES = ['#3a7bd5', '#e05a9a', '#2ec27e', '#e8702a', '#9c6ade', '#00bcd4', '#ff5722', '#4caf50', '#ffc107', '#556B2F', '#f0a500', '#ff5252', '#7ab3ff', '#8099cc'];
+        const DAY_OPTIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
         let currentType = 'assignment'
         let editMode = false
@@ -1109,9 +1197,16 @@
         // dirtySubjects[courseId] = { desc, instructor, color, _docId (or null) }
         let dirtySubjects = {};
 
+        // ── Bulk session-edit state ──
+        // currentSessionRows: merged/effective course list, rendered in sorted order
+        // dirtySessions[idx] = { day, startH, startM, endH, endM, room, hidden }
+        let currentSessionRows = [];
+        let dirtySessions = {};
+
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
         function fmt12(h, m) { const a = h < 12 ? 'AM' : 'PM'; const h2 = h % 12 === 0 ? 12 : h % 12; return `${h2}:${String(m).padStart(2, '0')} ${a}` }
         function isTBA(c) { return c.startH === 'TBA' || c.startH === undefined || c.startH === null }
+        function safeToMinsLocal(c) { return isTBA(c) ? 9999 : (c.startH * 60 + c.startM) }
 
         function showToast(msg, color) {
             color = color || 'var(--success)';
@@ -1132,9 +1227,12 @@
             currentPage = page;
             document.getElementById('page-items').style.display = page === 'items' ? '' : 'none';
             document.getElementById('page-subjects').style.display = page === 'subjects' ? '' : 'none';
+            document.getElementById('page-sessions').style.display = page === 'sessions' ? '' : 'none';
             document.getElementById('pageTab-items').classList.toggle('active', page === 'items');
             document.getElementById('pageTab-subjects').classList.toggle('active', page === 'subjects');
+            document.getElementById('pageTab-sessions').classList.toggle('active', page === 'sessions');
             if (page === 'subjects') renderSubjectsList();
+            if (page === 'sessions') renderSessionsList();
         }
 
         /* ── Unified subject catalog: built-in timetable ids + Firestore overrides/new subjects ── */
@@ -1147,8 +1245,47 @@
         function getSubjectDesc(id) { const o = getSubjectOverride(id); if (o && o.desc) return o.desc; const c = scheduleData.courses.find(x => x.id === id); return c ? c.desc : '' }
         function getSubjectColor(id) { const o = getSubjectOverride(id); if (o && o.color) return o.color; const c = scheduleData.courses.find(x => x.id === id); return c ? c.color : '#8099cc' }
         function getSubjectInstructor(id) { const o = getSubjectOverride(id); return (o && o.instructor) || '' }
+
+        /* ── Merge built-in timetable with Firestore session overrides/custom sessions/cancellations ── */
+        function getEffectiveCourses() {
+            const overridesBySlot = {};
+            const customSessions = [];
+            (window._allSessions || []).forEach(o => {
+                if (o.slotId) overridesBySlot[o.slotId] = o; else customSessions.push(o);
+            });
+            const merged = [];
+            scheduleData.courses.forEach(c => {
+                const o = overridesBySlot[c.slotId];
+                if (!o) { merged.push(c); return; }
+                if (o.hidden) return;
+                const tba = o.day === 'TBA';
+                merged.push({
+                    id: c.id, desc: c.desc, color: c.color, slotId: c.slotId,
+                    room: (o.room !== undefined && o.room !== '') ? o.room : c.room,
+                    days: [o.day || c.days[0]],
+                    startH: tba ? 'TBA' : (o.startH !== undefined && o.startH !== null ? o.startH : c.startH),
+                    startM: tba ? 'TBA' : (o.startM !== undefined && o.startM !== null ? o.startM : c.startM),
+                    endH: tba ? 'TBA' : (o.endH !== undefined && o.endH !== null ? o.endH : c.endH),
+                    endM: tba ? 'TBA' : (o.endM !== undefined && o.endM !== null ? o.endM : c.endM),
+                    _overridden: true, _docId: o.id
+                });
+            });
+            customSessions.forEach(o => {
+                const tba = !o.day || o.day === 'TBA';
+                merged.push({
+                    id: o.courseId, desc: getSubjectDesc(o.courseId), color: getSubjectColor(o.courseId),
+                    slotId: null, room: o.room || 'TBA', days: [tba ? 'TBA' : o.day],
+                    startH: tba ? 'TBA' : o.startH, startM: tba ? 'TBA' : o.startM,
+                    endH: tba ? 'TBA' : o.endH, endM: tba ? 'TBA' : o.endM,
+                    _custom: true, _docId: o.id
+                });
+            });
+            return merged;
+        }
+        window.getEffectiveCourses = getEffectiveCourses;
+
         function getSubjectSessions(id) {
-            return scheduleData.courses
+            return getEffectiveCourses()
                 .filter(c => c.id === id && !isTBA(c))
                 .map(c => ({
                     key: `${c.days[0]}|${c.startH}:${c.startM}`,
@@ -1174,7 +1311,7 @@
 
         function populateSubjects() {
             const ids = getAllSubjectIds();
-            ['subjectSelect', 'eventSubject', 'reminderSubject'].forEach(elId => {
+            ['subjectSelect', 'eventSubject', 'reminderSubject', 'sessSubject'].forEach(elId => {
                 const el = document.getElementById(elId);
                 if (!el) return;
                 const isOptional = elId === 'eventSubject';
@@ -1687,6 +1824,233 @@
 </div>`;
             }).join('');
         }
+
+        /* ══════════ Sessions (timetable) page logic ══════════ */
+
+        function updateSessDirtyUI() {
+            const n = Object.keys(dirtySessions).length;
+            document.getElementById('sessDirtyNote').style.display = n ? '' : 'none';
+            document.getElementById('saveAllSessBtn').disabled = n === 0;
+        }
+
+        function ensureDirtySessionRow(idx) {
+            if (!dirtySessions[idx]) {
+                const c = currentSessionRows[idx];
+                dirtySessions[idx] = {
+                    day: isTBA(c) ? 'TBA' : c.days[0],
+                    startH: isTBA(c) ? '' : c.startH,
+                    startM: isTBA(c) ? '' : c.startM,
+                    endH: isTBA(c) ? '' : c.endH,
+                    endM: isTBA(c) ? '' : c.endM,
+                    room: c.room || '',
+                    hidden: false
+                };
+            }
+            return dirtySessions[idx];
+        }
+
+        function markSessRowDirty(idx) {
+            const row = document.querySelector(`[data-sess-row="${idx}"]`);
+            if (row) row.classList.add('dirty-row');
+            updateSessDirtyUI();
+        }
+
+        function onSessDayChange(idx, value) {
+            const d = ensureDirtySessionRow(idx);
+            d.day = value;
+            markSessRowDirty(idx);
+            renderSessionsList();
+        }
+        window.onSessDayChange = onSessDayChange;
+
+        function onSessStartChange(idx, value) {
+            const d = ensureDirtySessionRow(idx);
+            if (value) { const [h, m] = value.split(':').map(Number); d.startH = h; d.startM = m; }
+            else { d.startH = ''; d.startM = ''; }
+            markSessRowDirty(idx);
+        }
+        window.onSessStartChange = onSessStartChange;
+
+        function onSessEndChange(idx, value) {
+            const d = ensureDirtySessionRow(idx);
+            if (value) { const [h, m] = value.split(':').map(Number); d.endH = h; d.endM = m; }
+            else { d.endH = ''; d.endM = ''; }
+            markSessRowDirty(idx);
+        }
+        window.onSessEndChange = onSessEndChange;
+
+        function onSessRoomChange(idx, value) {
+            const d = ensureDirtySessionRow(idx);
+            d.room = value;
+            markSessRowDirty(idx);
+        }
+        window.onSessRoomChange = onSessRoomChange;
+
+        function toggleSessHidden(idx, checked) {
+            const d = ensureDirtySessionRow(idx);
+            d.hidden = checked;
+            markSessRowDirty(idx);
+            renderSessionsList();
+        }
+        window.toggleSessHidden = toggleSessHidden;
+
+        async function saveAllSessionEdits() {
+            const fb = window._fb;
+            const idxs = Object.keys(dirtySessions);
+            if (idxs.length === 0) return;
+            showLoading(true, `Saving ${idxs.length} session change${idxs.length > 1 ? 's' : ''}…`);
+            try {
+                const batch = fb.writeBatch(fb.db);
+                idxs.forEach(idxStr => {
+                    const idx = +idxStr;
+                    const c = currentSessionRows[idx];
+                    const d = dirtySessions[idx];
+                    const tba = d.day === 'TBA';
+                    const payload = {
+                        slotId: c.slotId || null,
+                        courseId: c.id,
+                        day: d.day,
+                        room: d.room,
+                        hidden: !!d.hidden,
+                        startH: tba || d.startH === '' ? null : d.startH,
+                        startM: tba || d.startM === '' ? null : d.startM,
+                        endH: tba || d.endH === '' ? null : d.endH,
+                        endM: tba || d.endM === '' ? null : d.endM
+                    };
+                    if (c._docId) {
+                        batch.update(fb.doc(fb.db, fb.SESSION_COLLECTION, c._docId), payload);
+                    } else {
+                        const newRef = fb.doc(fb.collection(fb.db, fb.SESSION_COLLECTION));
+                        batch.set(newRef, payload);
+                    }
+                });
+                await batch.commit();
+                dirtySessions = {};
+                showToast(`Saved ${idxs.length} session change${idxs.length > 1 ? 's' : ''} ✓`);
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+            showLoading(false);
+            updateSessDirtyUI();
+        }
+        window.saveAllSessionEdits = saveAllSessionEdits;
+
+        async function revertSessionOverride(docId) {
+            if (!confirm('Revert to the original built-in day/time/room for this class?')) return;
+            const fb = window._fb;
+            showLoading(true, 'Reverting…');
+            try {
+                await fb.deleteDoc(fb.doc(fb.db, fb.SESSION_COLLECTION, docId));
+                showToast('Reverted to built-in ✓', '#ff8080');
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
+            showLoading(false);
+        }
+        window.revertSessionOverride = revertSessionOverride;
+
+        async function deleteCustomSession(docId) {
+            if (!confirm('Delete this class session?')) return;
+            const fb = window._fb;
+            showLoading(true, 'Deleting…');
+            try {
+                await fb.deleteDoc(fb.doc(fb.db, fb.SESSION_COLLECTION, docId));
+                showToast('Deleted', '#ff8080');
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
+            showLoading(false);
+        }
+        window.deleteCustomSession = deleteCustomSession;
+
+        async function addCustomSession() {
+            const fb = window._fb;
+            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
+            const courseId = document.getElementById('sessSubject').value;
+            const day = document.getElementById('sessDay').value;
+            const room = document.getElementById('sessRoom').value.trim();
+            const startVal = document.getElementById('sessStart').value;
+            const endVal = document.getElementById('sessEnd').value;
+            if (!courseId) { showToast('Please select a subject', '#ff5252'); return; }
+            const tba = day === 'TBA';
+            if (!tba && (!startVal || !endVal)) { showToast('Please set start and end time (or choose Time TBA)', '#ff5252'); return; }
+            let startH = null, startM = null, endH = null, endM = null;
+            if (!tba) { [startH, startM] = startVal.split(':').map(Number);[endH, endM] = endVal.split(':').map(Number); }
+            const data = { slotId: null, courseId, day, room, startH, startM, endH, endM, hidden: false };
+            showLoading(true, 'Adding session…');
+            try {
+                await fb.addDoc(fb.collection(fb.db, fb.SESSION_COLLECTION), data);
+                showToast('Session added ✓');
+                document.getElementById('sessRoom').value = '';
+                document.getElementById('sessStart').value = '';
+                document.getElementById('sessEnd').value = '';
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
+            showLoading(false);
+        }
+        window.addCustomSession = addCustomSession;
+
+        function renderSessionsList() {
+            const merged = getEffectiveCourses();
+            const dayOrder = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6, TBA: 7 };
+            merged.sort((a, b) => {
+                const da = dayOrder[a.days[0]] ?? 8, db2 = dayOrder[b.days[0]] ?? 8;
+                if (da !== db2) return da - db2;
+                return safeToMinsLocal(a) - safeToMinsLocal(b);
+            });
+            currentSessionRows = merged;
+            const countEl = document.getElementById('sessCount');
+            if (countEl) countEl.textContent = merged.length;
+            const list = document.getElementById('sessionsList');
+            if (!list) return;
+            if (merged.length === 0) { list.innerHTML = `<div class="empty-events">No class sessions</div>`; return; }
+
+            list.innerHTML = merged.map((c, idx) => {
+                const d = dirtySessions[idx];
+                const dayVal = d ? d.day : (isTBA(c) ? 'TBA' : c.days[0]);
+                const pad2 = n => String(n).padStart(2, '0');
+                const startVal = d
+                    ? (d.startH === '' || d.startH === undefined ? '' : `${pad2(d.startH)}:${pad2(d.startM)}`)
+                    : (isTBA(c) ? '' : `${pad2(c.startH)}:${pad2(c.startM)}`);
+                const endVal = d
+                    ? (d.endH === '' || d.endH === undefined ? '' : `${pad2(d.endH)}:${pad2(d.endM)}`)
+                    : (isTBA(c) ? '' : `${pad2(c.endH)}:${pad2(c.endM)}`);
+                const roomVal = d ? d.room : c.room;
+                const hiddenVal = d ? d.hidden : false;
+                const dirtyCls = d ? ' dirty-row' : '';
+                const badgeLabel = c._custom ? 'custom' : (c._overridden ? 'edited' : 'built-in');
+                const actions = c._overridden
+                    ? `<button class="icon-btn del-btn" onclick="revertSessionOverride('${c._docId}')" title="Revert to built-in">↺</button>`
+                    : c._custom
+                        ? `<button class="icon-btn del-btn" onclick="deleteCustomSession('${c._docId}')" title="Delete">✕</button>`
+                        : '';
+                const dayOptsHtml = DAY_OPTIONS.concat('TBA').map(dd => `<option value="${dd}" ${dd === dayVal ? 'selected' : ''}>${dd === 'TBA' ? 'Time TBA' : dd}</option>`).join('');
+                return `<div class="subject-item${dirtyCls}" data-sess-row="${idx}" style="${hiddenVal ? 'opacity:.45' : ''}">
+  <div class="event-bar" style="background:${c.color}"></div>
+  <div class="event-body">
+    <div class="event-top">
+      <div class="event-name">${esc(c.id)} <span style="color:var(--muted);font-weight:500">— ${esc(c.desc)}</span></div>
+      <div class="event-type-badge">${badgeLabel}</div>
+      ${hiddenVal ? `<div class="event-type-badge" style="color:#ff8080">cancelled</div>` : ''}
+    </div>
+    <div class="subj-field-row">
+      <div>
+        <select class="form-select" style="font-size:10px;padding:5px 7px" onchange="onSessDayChange(${idx},this.value)">${dayOptsHtml}</select>
+      </div>
+      <div>
+        <input class="subj-inline-input" placeholder="Room" value="${esc(roomVal)}" oninput="onSessRoomChange(${idx},this.value)">
+      </div>
+    </div>
+    <div class="subj-field-row">
+      <div>
+        <input type="time" class="subj-inline-input" value="${startVal}" ${dayVal === 'TBA' ? 'disabled' : ''} onchange="onSessStartChange(${idx},this.value)">
+      </div>
+      <div>
+        <input type="time" class="subj-inline-input" value="${endVal}" ${dayVal === 'TBA' ? 'disabled' : ''} onchange="onSessEndChange(${idx},this.value)">
+      </div>
+    </div>
+    <label style="display:flex;align-items:center;gap:5px;margin-top:5px;font-size:9px;color:var(--muted);cursor:pointer">
+      <input type="checkbox" ${hiddenVal ? 'checked' : ''} onchange="toggleSessHidden(${idx},this.checked)"> Cancel this session (hide from schedule)
+    </label>
+  </div>
+  <div class="event-actions">${actions}</div>
+</div>`;
+            }).join('');
+        }
+        window.renderSessionsList = renderSessionsList;
 
         // ── Init ──
         populateSubjects();
