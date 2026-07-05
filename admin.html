@@ -39,12 +39,26 @@
             --warn: #f0a500
         }
 
-        * { font-family: 'Inter', sans-serif; color: var(--text) }
+        * {
+            font-family: 'Inter', sans-serif;
+            color: var(--text)
+        }
 
-        body { background: var(--bg); min-height: 100vh; display: flex; flex-direction: column }
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
 
-        a { color: var(--muted); text-decoration: none }
-        a:hover { color: var(--text) }
+        a {
+            color: var(--muted);
+            text-decoration: none
+        }
+
+        a:hover {
+            color: var(--text)
+        }
 
         .adm-header {
             background: var(--header);
@@ -58,8 +72,17 @@
             z-index: 100
         }
 
-        .adm-title { font-size: 15px; font-weight: 800; letter-spacing: .3px }
-        .adm-subtitle { font-size: 10px; color: var(--muted); margin-top: 1px }
+        .adm-title {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: .3px
+        }
+
+        .adm-subtitle {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 1px
+        }
 
         .back-btn {
             font-size: 10px;
@@ -75,7 +98,10 @@
             transition: background .15s, color .15s
         }
 
-        .back-btn:hover { background: rgba(255, 255, 255, .15); color: var(--text) }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, .15);
+            color: var(--text)
+        }
 
         .adm-body {
             flex: 1;
@@ -104,8 +130,16 @@
             padding: 14px
         }
 
-        .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px }
-        .form-row:last-child { margin-bottom: 0 }
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px
+        }
+
+        .form-row:last-child {
+            margin-bottom: 0
+        }
 
         .form-label {
             font-size: 10px;
@@ -131,13 +165,26 @@
 
         .form-input:focus,
         .form-select:focus,
-        .form-textarea:focus { border-color: rgba(255, 255, 255, .35) }
+        .form-textarea:focus {
+            border-color: rgba(255, 255, 255, .35)
+        }
 
-        .form-select option { background: #0a1428; color: var(--text) }
+        .form-select option {
+            background: #0a1428;
+            color: var(--text)
+        }
 
-        .form-textarea { resize: vertical; min-height: 60px; line-height: 1.5 }
+        .form-textarea {
+            resize: vertical;
+            min-height: 60px;
+            line-height: 1.5
+        }
 
-        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
 
         .submit-btn {
             width: 100%;
@@ -152,11 +199,25 @@
             margin-top: 4px
         }
 
-        .submit-btn:active { transform: scale(.98) }
-        .submit-btn.add { background: var(--accent); color: #050a15 }
-        .submit-btn.edit { background: #3a7bd5; color: #fff }
+        .submit-btn:active {
+            transform: scale(.98)
+        }
 
-        .type-tabs { display: flex; gap: 6px; margin-bottom: 12px }
+        .submit-btn.add {
+            background: var(--accent);
+            color: #050a15
+        }
+
+        .submit-btn.edit {
+            background: #3a7bd5;
+            color: #fff
+        }
+
+        .type-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px
+        }
 
         .type-tab {
             flex: 1;
@@ -180,7 +241,11 @@
             border-color: rgba(255, 255, 255, .3)
         }
 
-        .events-list { display: flex; flex-direction: column; gap: 6px }
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
 
         .event-item {
             background: var(--card);
@@ -193,11 +258,21 @@
             transition: border-color .15s
         }
 
-        .event-item:hover { border-color: rgba(255, 255, 255, .2) }
+        .event-item:hover {
+            border-color: rgba(255, 255, 255, .2)
+        }
 
-        .event-bar { width: 3px; border-radius: 3px; align-self: stretch; flex-shrink: 0 }
+        .event-bar {
+            width: 3px;
+            border-radius: 3px;
+            align-self: stretch;
+            flex-shrink: 0
+        }
 
-        .event-body { flex: 1; min-width: 0 }
+        .event-body {
+            flex: 1;
+            min-width: 0
+        }
 
         .event-top {
             display: flex;
@@ -207,7 +282,11 @@
             flex-wrap: wrap
         }
 
-        .event-name { font-size: 12px; font-weight: 700; color: var(--text) }
+        .event-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text)
+        }
 
         .event-subject-badge {
             font-size: 8px;
@@ -253,7 +332,12 @@
             border-radius: 3px
         }
 
-        .event-actions { display: flex; gap: 5px; flex-shrink: 0; margin-top: 1px }
+        .event-actions {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
 
         .icon-btn {
             background: rgba(255, 255, 255, .06);
@@ -267,12 +351,31 @@
             line-height: 1
         }
 
-        .icon-btn:hover.edit-btn { background: rgba(58, 123, 213, .2); color: #7ab3ff; border-color: rgba(58, 123, 213, .4) }
-        .icon-btn:hover.del-btn { background: rgba(255, 82, 82, .15); color: #ff8080; border-color: rgba(255, 82, 82, .3) }
+        .icon-btn:hover.edit-btn {
+            background: rgba(58, 123, 213, .2);
+            color: #7ab3ff;
+            border-color: rgba(58, 123, 213, .4)
+        }
 
-        .empty-events { font-size: 11px; color: var(--muted); opacity: .5; text-align: center; padding: 24px 0 }
+        .icon-btn:hover.del-btn {
+            background: rgba(255, 82, 82, .15);
+            color: #ff8080;
+            border-color: rgba(255, 82, 82, .3)
+        }
 
-        .filter-bar { display: flex; gap: 5px; flex-wrap: wrap }
+        .empty-events {
+            font-size: 11px;
+            color: var(--muted);
+            opacity: .5;
+            text-align: center;
+            padding: 24px 0
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap
+        }
 
         .filter-chip {
             font-size: 9px;
@@ -312,7 +415,10 @@
             white-space: nowrap
         }
 
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1 }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1
+        }
 
         .cancel-btn {
             width: 100%;
@@ -328,7 +434,9 @@
             transition: background .15s
         }
 
-        .cancel-btn:hover { background: rgba(255, 255, 255, .06) }
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, .06)
+        }
 
         .count-badge {
             display: inline-flex;
@@ -382,11 +490,20 @@
             background: currentColor
         }
 
-        .db-status.connected .db-dot { animation: dbPulse 2s ease-in-out infinite }
+        .db-status.connected .db-dot {
+            animation: dbPulse 2s ease-in-out infinite
+        }
 
         @keyframes dbPulse {
-            0%, 100% { opacity: 1 }
-            50% { opacity: .4 }
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
         }
 
         .loading-overlay {
@@ -403,18 +520,234 @@
             color: var(--muted)
         }
 
-        .loading-overlay.show { display: flex }
+        .loading-overlay.show {
+            display: flex
+        }
 
         .spinner {
             width: 24px;
             height: 24px;
-            border: 2px solid rgba(255,255,255,.1);
+            border: 2px solid rgba(255, 255, 255, .1);
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin .7s linear infinite
         }
 
-        @keyframes spin { to { transform: rotate(360deg) } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .top-tabs {
+            display: flex;
+            gap: 6px
+        }
+
+        .top-tab {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: var(--card);
+            color: var(--muted);
+            text-align: center;
+            transition: all .15s
+        }
+
+        .top-tab.active {
+            background: rgba(255, 255, 255, .14);
+            color: var(--text);
+            border-color: rgba(255, 255, 255, .35)
+        }
+
+        .color-swatch-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 2px
+        }
+
+        .color-swatch {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color .12s, transform .1s
+        }
+
+        .color-swatch.selected {
+            border-color: #fff;
+            transform: scale(1.1)
+        }
+
+        .session-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 10px;
+            margin-bottom: 5px
+        }
+
+        .session-chip .sc-info {
+            flex: 1;
+            color: var(--muted)
+        }
+
+        .session-chip .sc-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0 2px
+        }
+
+        .subject-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px
+        }
+
+        .subject-item .event-bar {
+            width: 3px;
+            border-radius: 3px;
+            align-self: stretch;
+            flex-shrink: 0
+        }
+
+        .subject-sessions {
+            font-size: 9px;
+            color: var(--muted);
+            margin-top: 3px;
+            line-height: 1.5
+        }
+
+        .tba-note {
+            font-size: 9px;
+            color: var(--muted);
+            opacity: .6;
+            margin-top: 4px;
+            line-height: 1.4
+        }
+
+        /* ── Bulk subjects editor additions ── */
+        .subj-toolbar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px
+        }
+
+        .subj-toolbar-left {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .btn-sm {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            border-radius: 6px;
+            padding: 5px 9px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .08);
+            color: var(--muted);
+            transition: .15s
+        }
+
+        .btn-sm:hover {
+            background: rgba(255, 255, 255, .16);
+            color: var(--text)
+        }
+
+        .btn-sm.primary {
+            background: var(--accent);
+            color: #050a15;
+            border-color: var(--accent)
+        }
+
+        .btn-sm.primary:hover {
+            opacity: .85
+        }
+
+        .btn-sm:disabled {
+            opacity: .35;
+            cursor: not-allowed
+        }
+
+        .dirty-note {
+            font-size: 9px;
+            color: var(--warn);
+            font-weight: 700;
+            letter-spacing: .4px
+        }
+
+        .subj-inline-input {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 5px 7px;
+            font-size: 10px;
+            color: var(--text);
+            outline: none;
+            width: 100%;
+            transition: border-color .15s
+        }
+
+        .subj-inline-input:focus {
+            border-color: rgba(255, 255, 255, .35)
+        }
+
+        .subject-item.dirty-row {
+            border-color: rgba(240, 165, 0, .4)
+        }
+
+        .subj-field-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 5px
+        }
+
+        .subj-field-row>div {
+            flex: 1
+        }
+
+        .subj-color-mini-row {
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+
+        .subj-color-input {
+            width: 26px;
+            height: 24px;
+            padding: 0;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: none;
+            cursor: pointer;
+            flex-shrink: 0
+        }
     </style>
 </head>
 
@@ -436,90 +769,222 @@
 
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <div>Saving to Firebase…</div>
+        <div id="loadingOverlayText">Saving to Firebase…</div>
     </div>
 
     <div class="adm-body">
 
-        <!-- ADD / EDIT FORM -->
-        <div>
-            <div class="section-label" id="formSectionLabel">Add new item</div>
-            <div class="form-card" id="formCard">
+        <div class="top-tabs">
+            <div class="top-tab active" id="pageTab-items" onclick="switchPage('items')">📋 Items</div>
+            <div class="top-tab" id="pageTab-subjects" onclick="switchPage('subjects')">🎓 Subjects</div>
+        </div>
 
-                <div class="type-tabs">
-                    <div class="type-tab active" id="tab-assignment" onclick="switchType('assignment')">📋 Assignment</div>
-                    <div class="type-tab" id="tab-event" onclick="switchType('event')">📅 Event</div>
-                </div>
+        <!-- ══════════ ITEMS PAGE ══════════ -->
+        <div id="page-items">
 
-                <input type="hidden" id="editId">
+            <!-- ADD / EDIT FORM -->
+            <div>
+                <div class="section-label" id="formSectionLabel">Add new item</div>
+                <div class="form-card" id="formCard">
 
-                <!-- Assignment fields -->
-                <div id="assignmentFields">
-                    <div class="form-row">
-                        <label class="form-label">Subject</label>
-                        <select class="form-select" id="subjectSelect">
-                            <option value="">— Select subject —</option>
-                        </select>
+                    <div class="type-tabs">
+                        <div class="type-tab active" id="tab-assignment" onclick="switchType('assignment')">📋
+                            Assignment</div>
+                        <div class="type-tab" id="tab-event" onclick="switchType('event')">📅 Event</div>
+                        <div class="type-tab" id="tab-reminder" onclick="switchType('reminder')">🎒 Bring/Review</div>
                     </div>
-                    <div class="form-row">
-                        <label class="form-label">Assignment name</label>
-                        <input class="form-input" type="text" id="assignName" placeholder="e.g. Lab Report #3">
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label">Description (optional)</label>
-                        <textarea class="form-textarea" id="assignDesc" placeholder="Details, instructions…"></textarea>
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label">Deadline</label>
-                        <input class="form-input" type="date" id="assignDeadline">
-                    </div>
-                </div>
 
-                <!-- Event fields -->
-                <div id="eventFields" style="display:none">
-                    <div class="form-row">
-                        <label class="form-label">Event name</label>
-                        <input class="form-input" type="text" id="eventName" placeholder="e.g. Aviation Club Meeting">
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label">Description (optional)</label>
-                        <textarea class="form-textarea" id="eventDesc" placeholder="What's happening?"></textarea>
-                    </div>
-                    <div class="form-row-2">
-                        <div class="form-row" style="margin-bottom:0">
-                            <label class="form-label">Date</label>
-                            <input class="form-input" type="date" id="eventDate">
+                    <input type="hidden" id="editId">
+
+                    <!-- Assignment fields -->
+                    <div id="assignmentFields">
+                        <div class="form-row">
+                            <label class="form-label">Subject</label>
+                            <select class="form-select" id="subjectSelect" onchange="onSubjectChange('assign')">
+                                <option value="">— Select subject —</option>
+                            </select>
                         </div>
-                        <div class="form-row" style="margin-bottom:0">
-                            <label class="form-label">Subject (optional)</label>
-                            <select class="form-select" id="eventSubject">
-                                <option value="">None</option>
+                        <div class="form-row">
+                            <label class="form-label">Schedule / session (optional)</label>
+                            <select class="form-select" id="assignSession">
+                                <option value="">All sessions of this subject</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Assignment name</label>
+                            <input class="form-input" type="text" id="assignName" placeholder="e.g. Lab Report #3">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Description (optional)</label>
+                            <textarea class="form-textarea" id="assignDesc"
+                                placeholder="Details, instructions…"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Deadline</label>
+                            <input class="form-input" type="date" id="assignDeadline">
+                        </div>
+                    </div>
+
+                    <!-- Event fields -->
+                    <div id="eventFields" style="display:none">
+                        <div class="form-row">
+                            <label class="form-label">Event name</label>
+                            <input class="form-input" type="text" id="eventName"
+                                placeholder="e.g. Aviation Club Meeting">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Description (optional)</label>
+                            <textarea class="form-textarea" id="eventDesc" placeholder="What's happening?"></textarea>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="form-row" style="margin-bottom:0">
+                                <label class="form-label">Date</label>
+                                <input class="form-input" type="date" id="eventDate">
+                            </div>
+                            <div class="form-row" style="margin-bottom:0">
+                                <label class="form-label">Subject (optional)</label>
+                                <select class="form-select" id="eventSubject" onchange="onSubjectChange('event')">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Schedule / session (optional)</label>
+                            <select class="form-select" id="eventSession">
+                                <option value="">All sessions of this subject</option>
                             </select>
                         </div>
                     </div>
+
+                    <!-- Reminder fields (bring an item / review-study) -->
+                    <div id="reminderFields" style="display:none">
+                        <div class="form-row">
+                            <label class="form-label">Kind</label>
+                            <select class="form-select" id="reminderKind">
+                                <option value="bring">🎒 Bring an item</option>
+                                <option value="review">📖 Review / Advance study</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Subject</label>
+                            <select class="form-select" id="reminderSubject" onchange="onSubjectChange('reminder')">
+                                <option value="">— Select subject —</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Schedule / session (optional)</label>
+                            <select class="form-select" id="reminderSession">
+                                <option value="">All sessions of this subject</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">What to bring / study</label>
+                            <input class="form-input" type="text" id="reminderName"
+                                placeholder="e.g. Torque wrench set / Ch.4 Hydraulics">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Notes (optional)</label>
+                            <textarea class="form-textarea" id="reminderDesc" placeholder="Extra details…"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Needed by (date)</label>
+                            <input class="form-input" type="date" id="reminderDeadline">
+                        </div>
+                    </div>
+
+                    <button class="submit-btn add" id="submitBtn" onclick="submitForm()">Add Assignment</button>
+                    <button class="cancel-btn" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Cancel
+                        edit</button>
+                </div>
+            </div>
+
+            <!-- EVENTS LIST -->
+            <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                    <div class="section-label" style="margin-bottom:0">All items <span class="count-badge"
+                            id="totalCount">0</span></div>
+                </div>
+                <div class="filter-bar" style="margin-bottom:10px">
+                    <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
+                    <button class="filter-chip" onclick="setFilter('assignment',this)">Assignments</button>
+                    <button class="filter-chip" onclick="setFilter('event',this)">Events</button>
+                    <button class="filter-chip" onclick="setFilter('reminder',this)">Bring/Review</button>
+                    <button class="filter-chip" onclick="setFilter('upcoming',this)">Upcoming</button>
+                    <button class="filter-chip" onclick="setFilter('overdue',this)">Overdue</button>
+                </div>
+                <div class="events-list" id="eventsList">
+                    <div class="empty-events">Connecting to Firebase…</div>
+                </div>
+            </div>
+
+        </div>
+        <!-- ══════════ /ITEMS PAGE ══════════ -->
+
+        <!-- ══════════ SUBJECTS PAGE ══════════ -->
+        <div id="page-subjects" style="display:none">
+
+            <div>
+                <div class="section-label" id="subjFormLabel">Add / edit subject</div>
+                <div class="form-card">
+                    <div class="form-row">
+                        <label class="form-label">Subject ID</label>
+                        <input class="form-input" type="text" id="subjId"
+                            placeholder="e.g. AMT1105 (must match timetable code, or a new one)">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Description / subject title</label>
+                        <input class="form-input" type="text" id="subjDesc" placeholder="e.g. Aircraft Powerplant 1">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Instructor name</label>
+                        <input class="form-input" type="text" id="subjInstructor"
+                            placeholder="e.g. Engr. Juan Dela Cruz">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Color</label>
+                        <div class="color-swatch-row" id="colorSwatchRow"></div>
+                    </div>
+                    <div class="tba-note">Editing an ID that already exists in the timetable overrides its description,
+                        color and adds the instructor name shown on the schedule. Adding a brand-new ID makes it
+                        available to tag on assignments/events even before it has a timetable slot.</div>
+                    <button class="submit-btn add" id="subjSubmitBtn" onclick="submitSubject()"
+                        style="margin-top:10px">Save Subject</button>
+                    <button class="cancel-btn" id="subjCancelBtn" style="display:none"
+                        onclick="cancelSubjectEdit()">Cancel edit</button>
+                </div>
+            </div>
+
+            <div>
+                <div
+                    style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:8px">
+                    <div class="section-label" style="margin-bottom:0">All subjects <span class="count-badge"
+                            id="subjCount">0</span></div>
+                    <span class="dirty-note" id="subjDirtyNote" style="display:none">● unsaved changes</span>
                 </div>
 
-                <button class="submit-btn add" id="submitBtn" onclick="submitForm()">Add Assignment</button>
-                <button class="cancel-btn" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Cancel edit</button>
-            </div>
-        </div>
+                <div class="subj-toolbar">
+                    <div class="subj-toolbar-left">
+                        <button class="btn-sm" onclick="migrateBuiltinSubjects()" id="migrateBtn">⇩ Transfer built-ins
+                            to Firebase</button>
+                        <button class="btn-sm" onclick="exportSubjectsJSON()">⬇ Export JSON</button>
+                        <button class="btn-sm" onclick="document.getElementById('importSubjFile').click()">⬆ Import
+                            JSON</button>
+                        <input type="file" id="importSubjFile" accept=".json" style="display:none"
+                            onchange="importSubjectsJSON(event)">
+                    </div>
+                    <button class="btn-sm primary" id="saveAllSubjBtn" onclick="saveAllSubjectEdits()" disabled>💾 Save
+                        all edits</button>
+                </div>
+                <div class="tba-note" style="margin-bottom:8px">"Transfer built-ins to Firebase" creates a real
+                    Firestore document for every built-in timetable subject that doesn't have one yet, using its current
+                    name/color — after that they behave exactly like any other Firestore subject and can be edited
+                    inline below.</div>
 
-        <!-- EVENTS LIST -->
-        <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                <div class="section-label" style="margin-bottom:0">All items <span class="count-badge" id="totalCount">0</span></div>
+                <div class="events-list" id="subjectsList"></div>
             </div>
-            <div class="filter-bar" style="margin-bottom:10px">
-                <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
-                <button class="filter-chip" onclick="setFilter('assignment',this)">Assignments</button>
-                <button class="filter-chip" onclick="setFilter('event',this)">Events</button>
-                <button class="filter-chip" onclick="setFilter('upcoming',this)">Upcoming</button>
-                <button class="filter-chip" onclick="setFilter('overdue',this)">Overdue</button>
-            </div>
-            <div class="events-list" id="eventsList">
-                <div class="empty-events">Connecting to Firebase…</div>
-            </div>
+
         </div>
+        <!-- ══════════ /SUBJECTS PAGE ══════════ -->
 
     </div>
 
@@ -539,7 +1004,8 @@
             onSnapshot,
             query,
             orderBy,
-            serverTimestamp
+            serverTimestamp,
+            writeBatch
         } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
         // ── Firebase config ──
@@ -556,9 +1022,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const COLLECTION = "events"; // Firestore collection name
+        const SUBJ_COLLECTION = "subjects";
 
         // ── Expose db + helpers to global scope so non-module functions can call them ──
-        window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, COLLECTION };
+        window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION };
 
         // ── Real-time listener: update list whenever Firestore changes ──
         const q = query(collection(db, COLLECTION), orderBy("createdAt", "asc"));
@@ -569,6 +1036,16 @@
         }, (err) => {
             console.error("Firestore error:", err);
             setDbStatus('error', err.message);
+        });
+
+        // ── Subjects listener ──
+        const qSub = query(collection(db, SUBJ_COLLECTION), orderBy("courseId", "asc"));
+        onSnapshot(qSub, (snapshot) => {
+            window._allSubjects = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (typeof populateSubjects === 'function') populateSubjects();
+            if (typeof renderSubjectsList === 'function') renderSubjectsList();
+        }, (err) => {
+            console.error("Firestore subjects error:", err);
         });
 
         function setDbStatus(state, msg) {
@@ -583,31 +1060,58 @@
     <!-- ── App logic (non-module, uses window._fb) ── -->
     <script>
         // Exposed from module above
-        // window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, COLLECTION }
-        // window._allEvents = [] — kept in sync by onSnapshot
+        // window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION }
+        // window._allEvents / window._allSubjects — kept in sync by onSnapshot
 
         window._allEvents = window._allEvents || [];
+        window._allSubjects = window._allSubjects || [];
 
+        // Full built-in timetable, used to compute per-subject session options
+        // (a subject can meet more than once on the same day, e.g. morning + evening).
         const scheduleData = {
             courses: [
-                { id: "AMT1106", desc: "Maintenance Forms and Publications", color: "#3a7bd5" },
-                { id: "AMT1105", desc: "Aircraft Powerplant 1", color: "#e05a9a" },
-                { id: "DRAW1101", desc: "Aircraft Drawing", color: "#2ec27e" },
-                { id: "AMT1104", desc: "Aircraft Handtools and Equipment", color: "#e8702a" },
-                { id: "AMT1103", desc: "Aircraft Propeller", color: "#9c6ade" },
-                { id: "AMT1101", desc: "Aviation Safety", color: "#00bcd4" },
-                { id: "AMT1102", desc: "Aircraft Flight Control", color: "#ff5722" },
-                { id: "GEC1106", desc: "Mathematics in the Modern World", color: "#4caf50" },
-                { id: "PATHFIT1", desc: "Movement Competency Training", color: "#ffc107" },
-                { id: "ROTC", desc: "Reserve Officers' Training Corps", color: "#556B2F" }
+                { id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Simulation Lab", color: "#3a7bd5", days: ["Mon"], startH: 13, startM: 0, endH: 16, endM: 0 },
+                { id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Aero Room", color: "#3a7bd5", days: ["Mon"], startH: 18, startM: 30, endH: 20, endM: 0 },
+                { id: "AMT1106", desc: "Maintenance Forms and Publications", room: "Aero Room", color: "#3a7bd5", days: ["Wed"], startH: 18, startM: 30, endH: 20, endM: 0 },
+                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "PP Lab", color: "#e05a9a", days: ["Mon"], startH: 10, startM: 0, endH: 13, endM: 0 },
+                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "Aero Room", color: "#e05a9a", days: ["Tue"], startH: 16, startM: 0, endH: 17, endM: 30 },
+                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "PP Lab", color: "#e05a9a", days: ["Wed"], startH: 14, startM: 0, endH: 17, endM: 0 },
+                { id: "AMT1105", desc: "Aircraft Powerplant 1", room: "Aero Room", color: "#e05a9a", days: ["Thu"], startH: 16, startM: 0, endH: 17, endM: 30 },
+                { id: "DRAW1101", desc: "Aircraft Drawing", room: "DR1", color: "#2ec27e", days: ["Tue"], startH: 9, startM: 0, endH: 12, endM: 0 },
+                { id: "AMT1104", desc: "Aircraft Handtools and Equipment", room: "Aero Room", color: "#e8702a", days: ["Tue"], startH: 18, startM: 0, endH: 19, endM: 0 },
+                { id: "AMT1104", desc: "Aircraft Handtools and Equipment", room: "Fabrication Lab", color: "#e8702a", days: ["Thu"], startH: 10, startM: 0, endH: 13, endM: 0 },
+                { id: "AMT1103", desc: "Aircraft Propeller", room: "P/P Lab", color: "#9c6ade", days: ["Tue"], startH: 13, startM: 30, endH: 15, endM: 0 },
+                { id: "AMT1103", desc: "Aircraft Propeller", room: "Aero Room", color: "#9c6ade", days: ["Thu"], startH: 18, startM: 0, endH: 19, endM: 0 },
+                { id: "AMT1103", desc: "Aircraft Propeller", room: "P/P Lab", color: "#9c6ade", days: ["Thu"], startH: 13, startM: 30, endH: 15, endM: 0 },
+                { id: "AMT1101", desc: "Aviation Safety", room: "Aero Room", color: "#00bcd4", days: ["Tue"], startH: 15, startM: 0, endH: 16, endM: 0 },
+                { id: "AMT1101", desc: "Aviation Safety", room: "Aero Room", color: "#00bcd4", days: ["Thu"], startH: 15, startM: 0, endH: 16, endM: 0 },
+                { id: "AMT1102", desc: "Aircraft Flight Control", room: "Hangar Table 1", color: "#ff5722", days: ["Tue"], startH: 19, startM: 0, endH: 20, endM: 30 },
+                { id: "AMT1102", desc: "Aircraft Flight Control", room: "Hangar Table 1", color: "#ff5722", days: ["Thu"], startH: 19, startM: 0, endH: 20, endM: 30 },
+                { id: "AMT1102", desc: "Aircraft Flight Control", room: "Aero Room", color: "#ff5722", days: ["Fri"], startH: 18, startM: 0, endH: 19, endM: 0 },
+                { id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Mon"], startH: 17, startM: 0, endH: 18, endM: 0 },
+                { id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Wed"], startH: 17, startM: 0, endH: 18, endM: 0 },
+                { id: "GEC1106", desc: "Mathematics in the Modern World", room: "Aero Room", color: "#4caf50", days: ["Fri"], startH: 17, startM: 0, endH: 18, endM: 0 },
+                { id: "PATHFIT1", desc: "Movement Competency Training", room: "TBA", color: "#ffc107", days: ["Wed"], startH: 12, startM: 0, endH: 14, endM: 0 },
+                { id: "ROTC", desc: "Reserve Officers' Training Corps", room: "TBA", color: "#556B2F", days: ["Sat"], startH: "TBA", startM: "TBA", endH: "TBA", endM: "TBA" }
             ]
         }
+
+        const SWATCHES = ['#3a7bd5', '#e05a9a', '#2ec27e', '#e8702a', '#9c6ade', '#00bcd4', '#ff5722', '#4caf50', '#ffc107', '#556B2F', '#f0a500', '#ff5252', '#7ab3ff', '#8099cc'];
 
         let currentType = 'assignment'
         let editMode = false
         let activeFilter = 'all'
+        let currentPage = 'items'
+        let subjEditId = null
+        let selectedColor = SWATCHES[0]
+
+        // ── Bulk subject-edit state ──
+        // dirtySubjects[courseId] = { desc, instructor, color, _docId (or null) }
+        let dirtySubjects = {};
 
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
+        function fmt12(h, m) { const a = h < 12 ? 'AM' : 'PM'; const h2 = h % 12 === 0 ? 12 : h % 12; return `${h2}:${String(m).padStart(2, '0')} ${a}` }
+        function isTBA(c) { return c.startH === 'TBA' || c.startH === undefined || c.startH === null }
 
         function showToast(msg, color) {
             color = color || 'var(--success)';
@@ -619,41 +1123,91 @@
             setTimeout(() => t.classList.remove('show'), 2200);
         }
 
-        function showLoading(v) {
+        function showLoading(v, text) {
             document.getElementById('loadingOverlay').classList.toggle('show', v);
+            if (text) document.getElementById('loadingOverlayText').textContent = text;
         }
 
-        function getSubjectColor(id) { const c = scheduleData.courses.find(x => x.id === id); return c ? c.color : '#8099cc' }
-        function getSubjectDesc(id) { const c = scheduleData.courses.find(x => x.id === id); return c ? c.desc : '' }
+        function switchPage(page) {
+            currentPage = page;
+            document.getElementById('page-items').style.display = page === 'items' ? '' : 'none';
+            document.getElementById('page-subjects').style.display = page === 'subjects' ? '' : 'none';
+            document.getElementById('pageTab-items').classList.toggle('active', page === 'items');
+            document.getElementById('pageTab-subjects').classList.toggle('active', page === 'subjects');
+            if (page === 'subjects') renderSubjectsList();
+        }
 
-        function urgencyClass(dl) {
+        /* ── Unified subject catalog: built-in timetable ids + Firestore overrides/new subjects ── */
+        function getAllSubjectIds() {
+            const ids = new Set(scheduleData.courses.map(c => c.id));
+            (window._allSubjects || []).forEach(s => ids.add(s.courseId));
+            return Array.from(ids).sort();
+        }
+        function getSubjectOverride(id) { return (window._allSubjects || []).find(s => s.courseId === id) }
+        function getSubjectDesc(id) { const o = getSubjectOverride(id); if (o && o.desc) return o.desc; const c = scheduleData.courses.find(x => x.id === id); return c ? c.desc : '' }
+        function getSubjectColor(id) { const o = getSubjectOverride(id); if (o && o.color) return o.color; const c = scheduleData.courses.find(x => x.id === id); return c ? c.color : '#8099cc' }
+        function getSubjectInstructor(id) { const o = getSubjectOverride(id); return (o && o.instructor) || '' }
+        function getSubjectSessions(id) {
+            return scheduleData.courses
+                .filter(c => c.id === id && !isTBA(c))
+                .map(c => ({
+                    key: `${c.days[0]}|${c.startH}:${c.startM}`,
+                    label: `${c.days[0]} · ${fmt12(c.startH, c.startM)}–${fmt12(c.endH, c.endM)} · ${c.room}`
+                }));
+        }
+
+        function urgencyClassLocal(dl) {
             if (!dl) return 'ok';
-            const d = new Date(dl + ' 23:59'); const diff = (d - new Date()) / 86400000;
+            const parts = dl.split('-'); const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+            const now = new Date(); const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const diff = Math.round((d - nowMid) / 86400000);
             if (diff < 0) return 'overdue'; if (diff <= 3) return 'soon'; if (diff <= 7) return 'later'; return 'ok'
         }
-        function urgencyLabel(dl) {
+        function urgencyLabelLocal(dl) {
             if (!dl) return '';
-            const d = new Date(dl + ' 23:59'); const diff = Math.ceil((d - new Date()) / 86400000);
+            const parts = dl.split('-'); const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+            const now = new Date(); const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const diff = Math.round((d - nowMid) / 86400000);
             if (diff < 0) return 'OVERDUE'; if (diff === 0) return 'DUE TODAY'; if (diff === 1) return 'DUE TOMORROW'; return `Due in ${diff} days`
         }
         function urgencyColor(uc) { return uc === 'overdue' ? '#ff5252' : uc === 'soon' ? '#ff8a65' : uc === 'later' ? '#f0a500' : '#2ec27e' }
 
         function populateSubjects() {
-            ['subjectSelect', 'eventSubject'].forEach(id => {
-                const el = document.getElementById(id);
-                const isEvent = id === 'eventSubject';
-                el.innerHTML = (isEvent ? '<option value="">None</option>' : '<option value="">— Select subject —</option>') +
-                    scheduleData.courses.map(c => `<option value="${c.id}">${c.id} — ${c.desc}</option>`).join('');
+            const ids = getAllSubjectIds();
+            ['subjectSelect', 'eventSubject', 'reminderSubject'].forEach(elId => {
+                const el = document.getElementById(elId);
+                if (!el) return;
+                const isOptional = elId === 'eventSubject';
+                const currentVal = el.value;
+                el.innerHTML = (isOptional ? '<option value="">None</option>' : '<option value="">— Select subject —</option>') +
+                    ids.map(id => `<option value="${id}">${id} — ${esc(getSubjectDesc(id))}</option>`).join('');
+                if (ids.includes(currentVal)) el.value = currentVal;
             });
+        }
+
+        function populateSessionSelect(selectId, subjectId) {
+            const el = document.getElementById(selectId);
+            if (!el) return;
+            const sessions = subjectId ? getSubjectSessions(subjectId) : [];
+            el.innerHTML = '<option value="">All sessions of this subject</option>' +
+                sessions.map(s => `<option value="${esc(s.key)}">${esc(s.label)}</option>`).join('');
+        }
+
+        function onSubjectChange(kind) {
+            if (kind === 'assign') populateSessionSelect('assignSession', document.getElementById('subjectSelect').value);
+            else if (kind === 'event') populateSessionSelect('eventSession', document.getElementById('eventSubject').value);
+            else if (kind === 'reminder') populateSessionSelect('reminderSession', document.getElementById('reminderSubject').value);
         }
 
         function switchType(type) {
             currentType = type;
             document.getElementById('assignmentFields').style.display = type === 'assignment' ? '' : 'none';
             document.getElementById('eventFields').style.display = type === 'event' ? '' : 'none';
+            document.getElementById('reminderFields').style.display = type === 'reminder' ? '' : 'none';
             document.getElementById('tab-assignment').classList.toggle('active', type === 'assignment');
             document.getElementById('tab-event').classList.toggle('active', type === 'event');
-            if (!editMode) document.getElementById('submitBtn').textContent = type === 'assignment' ? 'Add Assignment' : 'Add Event';
+            document.getElementById('tab-reminder').classList.toggle('active', type === 'reminder');
+            if (!editMode) document.getElementById('submitBtn').textContent = type === 'assignment' ? 'Add Assignment' : type === 'event' ? 'Add Event' : 'Add Reminder';
         }
 
         function setFilter(f, btn) {
@@ -669,6 +1223,7 @@
 
             if (currentType === 'assignment') {
                 const subjectId = document.getElementById('subjectSelect').value;
+                const sessionKey = document.getElementById('assignSession').value;
                 const name = document.getElementById('assignName').value.trim();
                 const desc = document.getElementById('assignDesc').value.trim();
                 const deadline = document.getElementById('assignDeadline').value;
@@ -676,55 +1231,63 @@
                 if (!name) { showToast('Please enter a name', '#ff5252'); return }
                 if (!deadline) { showToast('Please set a deadline', '#ff5252'); return }
 
-                const data = { type: 'assignment', subjectId, name, description: desc, deadline };
-                showLoading(true);
-                try {
-                    if (editMode) {
-                        const id = document.getElementById('editId').value;
-                        await fb.updateDoc(fb.doc(fb.db, fb.COLLECTION, id), data);
-                        showToast('Assignment updated ✓');
-                        cancelEdit();
-                    } else {
-                        data.createdAt = fb.serverTimestamp();
-                        await fb.addDoc(fb.collection(fb.db, fb.COLLECTION), data);
-                        showToast('Assignment added ✓');
-                        clearForm();
-                    }
-                } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-                showLoading(false);
+                const data = { type: 'assignment', subjectId, sessionKey: sessionKey || null, name, description: desc, deadline };
+                await saveDoc(data, 'Assignment');
 
-            } else {
+            } else if (currentType === 'event') {
                 const name = document.getElementById('eventName').value.trim();
                 const desc = document.getElementById('eventDesc').value.trim();
                 const eventDate = document.getElementById('eventDate').value;
                 const subjectId = document.getElementById('eventSubject').value;
+                const sessionKey = document.getElementById('eventSession').value;
                 if (!name) { showToast('Please enter an event name', '#ff5252'); return }
                 if (!eventDate) { showToast('Please set a date', '#ff5252'); return }
 
-                const data = { type: 'event', subjectId, name, description: desc, eventDate };
-                showLoading(true);
-                try {
-                    if (editMode) {
-                        const id = document.getElementById('editId').value;
-                        await fb.updateDoc(fb.doc(fb.db, fb.COLLECTION, id), data);
-                        showToast('Event updated ✓');
-                        cancelEdit();
-                    } else {
-                        data.createdAt = fb.serverTimestamp();
-                        await fb.addDoc(fb.collection(fb.db, fb.COLLECTION), data);
-                        showToast('Event added ✓');
-                        clearForm();
-                    }
-                } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-                showLoading(false);
+                const data = { type: 'event', subjectId, sessionKey: sessionKey || null, name, description: desc, eventDate };
+                await saveDoc(data, 'Event');
+
+            } else {
+                const kind = document.getElementById('reminderKind').value;
+                const subjectId = document.getElementById('reminderSubject').value;
+                const sessionKey = document.getElementById('reminderSession').value;
+                const name = document.getElementById('reminderName').value.trim();
+                const desc = document.getElementById('reminderDesc').value.trim();
+                const deadline = document.getElementById('reminderDeadline').value;
+                if (!subjectId) { showToast('Please select a subject', '#ff5252'); return }
+                if (!name) { showToast('Please enter what to bring/study', '#ff5252'); return }
+                if (!deadline) { showToast('Please set a date', '#ff5252'); return }
+
+                const data = { type: 'reminder', reminderKind: kind, subjectId, sessionKey: sessionKey || null, name, description: desc, deadline };
+                await saveDoc(data, kind === 'bring' ? 'Bring reminder' : 'Review reminder');
             }
         }
 
+        async function saveDoc(data, label) {
+            const fb = window._fb;
+            showLoading(true, 'Saving to Firebase…');
+            try {
+                if (editMode) {
+                    const id = document.getElementById('editId').value;
+                    await fb.updateDoc(fb.doc(fb.db, fb.COLLECTION, id), data);
+                    showToast(label + ' updated ✓');
+                    cancelEdit();
+                } else {
+                    data.createdAt = fb.serverTimestamp();
+                    await fb.addDoc(fb.collection(fb.db, fb.COLLECTION), data);
+                    showToast(label + ' added ✓');
+                    clearForm();
+                }
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+            showLoading(false);
+        }
+
         function clearForm() {
-            ['subjectSelect', 'assignName', 'assignDesc', 'assignDeadline',
-             'eventName', 'eventDesc', 'eventDate', 'eventSubject'].forEach(id => {
-                const el = document.getElementById(id); if (el) el.value = '';
-            });
+            ['subjectSelect', 'assignName', 'assignDesc', 'assignDeadline', 'assignSession',
+                'eventName', 'eventDesc', 'eventDate', 'eventSubject', 'eventSession',
+                'reminderSubject', 'reminderName', 'reminderDesc', 'reminderDeadline', 'reminderSession'].forEach(id => {
+                    const el = document.getElementById(id); if (el) el.value = '';
+                });
+            document.getElementById('reminderKind').value = 'bring';
             document.getElementById('editId').value = '';
         }
 
@@ -733,20 +1296,32 @@
             editMode = true;
             document.getElementById('editId').value = id;
             document.getElementById('formSectionLabel').textContent = 'Editing item';
-            document.getElementById('submitBtn').textContent = 'Save changes';
             document.getElementById('submitBtn').className = 'submit-btn edit';
             document.getElementById('cancelEditBtn').style.display = '';
             switchType(e.type);
+            document.getElementById('submitBtn').textContent = 'Save changes';
             if (e.type === 'assignment') {
                 document.getElementById('subjectSelect').value = e.subjectId || '';
+                populateSessionSelect('assignSession', e.subjectId || '');
+                document.getElementById('assignSession').value = e.sessionKey || '';
                 document.getElementById('assignName').value = e.name || '';
                 document.getElementById('assignDesc').value = e.description || '';
                 document.getElementById('assignDeadline').value = e.deadline || '';
-            } else {
+            } else if (e.type === 'event') {
                 document.getElementById('eventName').value = e.name || '';
                 document.getElementById('eventDesc').value = e.description || '';
                 document.getElementById('eventDate').value = e.eventDate || '';
                 document.getElementById('eventSubject').value = e.subjectId || '';
+                populateSessionSelect('eventSession', e.subjectId || '');
+                document.getElementById('eventSession').value = e.sessionKey || '';
+            } else {
+                document.getElementById('reminderKind').value = e.reminderKind || 'bring';
+                document.getElementById('reminderSubject').value = e.subjectId || '';
+                populateSessionSelect('reminderSession', e.subjectId || '');
+                document.getElementById('reminderSession').value = e.sessionKey || '';
+                document.getElementById('reminderName').value = e.name || '';
+                document.getElementById('reminderDesc').value = e.description || '';
+                document.getElementById('reminderDeadline').value = e.deadline || '';
             }
             document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -755,7 +1330,7 @@
             editMode = false; clearForm();
             document.getElementById('editId').value = '';
             document.getElementById('formSectionLabel').textContent = 'Add new item';
-            document.getElementById('submitBtn').textContent = currentType === 'assignment' ? 'Add Assignment' : 'Add Event';
+            document.getElementById('submitBtn').textContent = currentType === 'assignment' ? 'Add Assignment' : currentType === 'event' ? 'Add Event' : 'Add Reminder';
             document.getElementById('submitBtn').className = 'submit-btn add';
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
@@ -763,12 +1338,18 @@
         async function deleteEvent(id) {
             if (!confirm('Delete this item?')) return;
             const fb = window._fb;
-            showLoading(true);
+            showLoading(true, 'Deleting…');
             try {
                 await fb.deleteDoc(fb.doc(fb.db, fb.COLLECTION, id));
                 showToast('Deleted', '#ff8080');
             } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
             showLoading(false);
+        }
+
+        function typeBadgeLabel(e) {
+            if (e.type === 'assignment') return '📋 assignment';
+            if (e.type === 'reminder') return e.reminderKind === 'bring' ? '🎒 bring' : '📖 review';
+            return '📅 event';
         }
 
         function renderList() {
@@ -777,6 +1358,7 @@
             let filtered = [...events];
             if (activeFilter === 'assignment') filtered = events.filter(e => e.type === 'assignment');
             else if (activeFilter === 'event') filtered = events.filter(e => e.type === 'event');
+            else if (activeFilter === 'reminder') filtered = events.filter(e => e.type === 'reminder');
             else if (activeFilter === 'upcoming') filtered = events.filter(e => { const dl = e.deadline || e.eventDate; return dl && new Date(dl + ' 23:59') >= now });
             else if (activeFilter === 'overdue') filtered = events.filter(e => e.deadline && new Date(e.deadline + ' 23:59') < now);
 
@@ -790,32 +1372,33 @@
             const list = document.getElementById('eventsList');
 
             if (filtered.length === 0) {
-                list.innerHTML = `<div class="empty-events">${
-                    activeFilter === 'overdue' ? 'No overdue items 🎉' :
+                list.innerHTML = `<div class="empty-events">${activeFilter === 'overdue' ? 'No overdue items 🎉' :
                     activeFilter === 'upcoming' ? 'No upcoming items' :
-                    'No items yet — add one above'
-                }</div>`;
+                        'No items yet — add one above'
+                    }</div>`;
                 return;
             }
 
             list.innerHTML = filtered.map(e => {
                 const col = e.subjectId ? getSubjectColor(e.subjectId) : '#8099cc';
                 const dl = e.deadline || e.eventDate;
-                const uc = urgencyClass(e.deadline || '');
+                const uc = urgencyClassLocal(e.deadline || '');
                 const ucol = urgencyColor(uc);
                 const deadlineText = dl ? new Date(dl).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                const urgLabel = e.type === 'assignment' ? urgencyLabel(e.deadline || '') : '';
+                const urgLabel = (e.type === 'assignment' || e.type === 'reminder') ? urgencyLabelLocal(e.deadline || '') : '';
+                const sessionText = e.sessionKey ? e.sessionKey.replace('|', ' · ') : '';
                 return `<div class="event-item">
   <div class="event-bar" style="background:${col}"></div>
   <div class="event-body">
     <div class="event-top">
       <div class="event-name">${esc(e.name)}</div>
       ${e.subjectId ? `<div class="event-subject-badge" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
-      <div class="event-type-badge">${e.type === 'assignment' ? '📋' : '📅'} ${esc(e.type)}</div>
+      <div class="event-type-badge">${typeBadgeLabel(e)}</div>
     </div>
     ${e.description ? `<div class="event-desc">${esc(e.description)}</div>` : ''}
     <div class="event-meta">
-      ${deadlineText ? `<span>${e.type === 'assignment' ? 'Deadline' : 'Date'}: ${deadlineText}</span>` : ''}
+      ${deadlineText ? `<span>${e.type === 'event' ? 'Date' : 'Deadline'}: ${deadlineText}</span>` : ''}
+      ${sessionText ? `<span>Session: ${esc(sessionText)}</span>` : ''}
       ${urgLabel ? `<span class="event-deadline-chip" style="background:${ucol}22;color:${ucol}">${urgLabel}</span>` : ''}
     </div>
   </div>
@@ -827,12 +1410,293 @@
             }).join('');
         }
 
+        /* ══════════ Subjects page logic ══════════ */
+
+        function renderColorSwatches() {
+            const row = document.getElementById('colorSwatchRow');
+            row.innerHTML = SWATCHES.map(c => `<div class="color-swatch ${c === selectedColor ? 'selected' : ''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');
+        }
+        function pickColor(c) { selectedColor = c; renderColorSwatches(); }
+
+        async function submitSubject() {
+            const fb = window._fb;
+            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
+            const courseId = document.getElementById('subjId').value.trim().toUpperCase();
+            const desc = document.getElementById('subjDesc').value.trim();
+            const instructor = document.getElementById('subjInstructor').value.trim();
+            if (!courseId) { showToast('Please enter a subject ID', '#ff5252'); return }
+
+            const data = { courseId, desc, instructor, color: selectedColor };
+            showLoading(true, 'Saving to Firebase…');
+            try {
+                if (subjEditId) {
+                    await fb.updateDoc(fb.doc(fb.db, fb.SUBJ_COLLECTION, subjEditId), data);
+                    showToast('Subject updated ✓');
+                } else {
+                    await fb.addDoc(fb.collection(fb.db, fb.SUBJ_COLLECTION), data);
+                    showToast('Subject added ✓');
+                }
+                cancelSubjectEdit();
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+            showLoading(false);
+        }
+
+        function editSubject(id) {
+            const s = (window._allSubjects || []).find(x => x.id === id); if (!s) return;
+            subjEditId = id;
+            document.getElementById('subjId').value = s.courseId || '';
+            document.getElementById('subjDesc').value = s.desc || '';
+            document.getElementById('subjInstructor').value = s.instructor || '';
+            selectedColor = s.color || SWATCHES[0];
+            renderColorSwatches();
+            document.getElementById('subjFormLabel').textContent = 'Editing subject';
+            document.getElementById('subjSubmitBtn').textContent = 'Save changes';
+            document.getElementById('subjSubmitBtn').className = 'submit-btn edit';
+            document.getElementById('subjCancelBtn').style.display = '';
+            document.getElementById('subjId').closest('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function editBuiltinSubject(courseId) {
+            // Pre-fill the form from the hardcoded timetable so it's easy to add an
+            // instructor name / override color for a subject with no Firestore doc yet.
+            subjEditId = null;
+            document.getElementById('subjId').value = courseId;
+            document.getElementById('subjDesc').value = getSubjectDesc(courseId);
+            document.getElementById('subjInstructor').value = '';
+            selectedColor = getSubjectColor(courseId);
+            renderColorSwatches();
+            document.getElementById('subjFormLabel').textContent = 'Add / edit subject';
+            document.getElementById('subjSubmitBtn').textContent = 'Save Subject';
+            document.getElementById('subjSubmitBtn').className = 'submit-btn add';
+            document.getElementById('subjCancelBtn').style.display = 'none';
+            document.getElementById('subjId').closest('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelSubjectEdit() {
+            subjEditId = null;
+            document.getElementById('subjId').value = '';
+            document.getElementById('subjDesc').value = '';
+            document.getElementById('subjInstructor').value = '';
+            selectedColor = SWATCHES[0];
+            renderColorSwatches();
+            document.getElementById('subjFormLabel').textContent = 'Add / edit subject';
+            document.getElementById('subjSubmitBtn').textContent = 'Save Subject';
+            document.getElementById('subjSubmitBtn').className = 'submit-btn add';
+            document.getElementById('subjCancelBtn').style.display = 'none';
+        }
+
+        async function deleteSubjectOverride(id) {
+            if (!confirm('Remove this subject override? (Built-in timetable subjects will fall back to their default name/color.)')) return;
+            const fb = window._fb;
+            showLoading(true, 'Removing…');
+            try {
+                await fb.deleteDoc(fb.doc(fb.db, fb.SUBJ_COLLECTION, id));
+                showToast('Subject override removed', '#ff8080');
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
+            showLoading(false);
+        }
+
+        /* ── Bulk inline editing helpers ── */
+        function updateSubjDirtyUI() {
+            const n = Object.keys(dirtySubjects).length;
+            document.getElementById('subjDirtyNote').style.display = n ? '' : 'none';
+            document.getElementById('saveAllSubjBtn').disabled = n === 0;
+        }
+
+        function ensureDirtySubject(id) {
+            if (!dirtySubjects[id]) {
+                const override = getSubjectOverride(id);
+                dirtySubjects[id] = {
+                    desc: getSubjectDesc(id),
+                    instructor: getSubjectInstructor(id),
+                    color: getSubjectColor(id),
+                    _docId: override ? override.id : null
+                };
+            }
+            return dirtySubjects[id];
+        }
+
+        function onSubjInlineChange(id, field, value) {
+            const d = ensureDirtySubject(id);
+            d[field] = value;
+            const row = document.querySelector(`[data-subj-row="${id}"]`);
+            if (row) row.classList.add('dirty-row');
+            updateSubjDirtyUI();
+        }
+        window.onSubjInlineChange = onSubjInlineChange;
+
+        function onSubjColorChange(id, value) {
+            const d = ensureDirtySubject(id);
+            d.color = value;
+            const row = document.querySelector(`[data-subj-row="${id}"]`);
+            if (row) {
+                row.classList.add('dirty-row');
+                const bar = row.querySelector('.event-bar'); if (bar) bar.style.background = value;
+                const colorInput = row.querySelector('.subj-color-input'); if (colorInput) colorInput.value = /^#[0-9a-fA-F]{6}$/.test(value) ? value : '#8099cc';
+                const colorText = row.querySelector('.subj-color-text'); if (colorText) colorText.value = value;
+            }
+            updateSubjDirtyUI();
+        }
+        window.onSubjColorChange = onSubjColorChange;
+
+        async function saveAllSubjectEdits() {
+            const fb = window._fb;
+            const ids = Object.keys(dirtySubjects);
+            if (ids.length === 0) return;
+            showLoading(true, `Saving ${ids.length} subject change${ids.length > 1 ? 's' : ''}…`);
+            try {
+                const batch = fb.writeBatch(fb.db);
+                ids.forEach(id => {
+                    const d = dirtySubjects[id];
+                    const payload = { courseId: id, desc: d.desc, instructor: d.instructor, color: d.color };
+                    if (d._docId) {
+                        batch.update(fb.doc(fb.db, fb.SUBJ_COLLECTION, d._docId), payload);
+                    } else {
+                        const newRef = fb.doc(fb.collection(fb.db, fb.SUBJ_COLLECTION));
+                        batch.set(newRef, payload);
+                    }
+                });
+                await batch.commit();
+                dirtySubjects = {};
+                showToast(`Saved ${ids.length} subject change${ids.length > 1 ? 's' : ''} ✓`);
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+            showLoading(false);
+            updateSubjDirtyUI();
+        }
+        window.saveAllSubjectEdits = saveAllSubjectEdits;
+
+        /* ── Transfer / migrate built-in subjects into Firestore ── */
+        async function migrateBuiltinSubjects() {
+            const fb = window._fb;
+            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
+            const builtinIds = Array.from(new Set(scheduleData.courses.map(c => c.id)));
+            const missing = builtinIds.filter(id => !getSubjectOverride(id));
+            if (missing.length === 0) { showToast('All built-in subjects already exist in Firebase'); return; }
+            if (!confirm(`Create ${missing.length} Firestore document${missing.length > 1 ? 's' : ''} for built-in subject${missing.length > 1 ? 's' : ''} (${missing.join(', ')})? This copies their current name/color so you can edit them going forward.`)) return;
+
+            showLoading(true, `Transferring ${missing.length} subject${missing.length > 1 ? 's' : ''}…`);
+            try {
+                const batch = fb.writeBatch(fb.db);
+                missing.forEach(id => {
+                    const newRef = fb.doc(fb.collection(fb.db, fb.SUBJ_COLLECTION));
+                    batch.set(newRef, {
+                        courseId: id,
+                        desc: getSubjectDesc(id),
+                        instructor: '',
+                        color: getSubjectColor(id)
+                    });
+                });
+                await batch.commit();
+                showToast(`Transferred ${missing.length} subject${missing.length > 1 ? 's' : ''} to Firebase ✓`);
+            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
+            showLoading(false);
+        }
+        window.migrateBuiltinSubjects = migrateBuiltinSubjects;
+
+        function exportSubjectsJSON() {
+            const ids = getAllSubjectIds();
+            const data = ids.map(id => ({
+                courseId: id,
+                desc: getSubjectDesc(id),
+                instructor: getSubjectInstructor(id),
+                color: getSubjectColor(id)
+            }));
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'subjects_export.json'; a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exported subjects_export.json');
+        }
+        window.exportSubjectsJSON = exportSubjectsJSON;
+
+        function importSubjectsJSON(evt) {
+            const file = evt.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const data = JSON.parse(reader.result);
+                    if (!Array.isArray(data)) throw new Error('JSON must be an array');
+                    data.forEach(item => {
+                        if (!item.courseId) return;
+                        const id = String(item.courseId).trim().toUpperCase();
+                        const override = getSubjectOverride(id);
+                        dirtySubjects[id] = {
+                            desc: item.desc || '',
+                            instructor: item.instructor || '',
+                            color: item.color || '#8099cc',
+                            _docId: override ? override.id : null
+                        };
+                    });
+                    renderSubjectsList();
+                    updateSubjDirtyUI();
+                    showToast(`Loaded ${data.length} rows — review then Save all edits`, '#f0a500');
+                } catch (e) { showToast('Import error: ' + e.message, '#ff5252'); }
+                evt.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+        window.importSubjectsJSON = importSubjectsJSON;
+
+        function renderSubjectsList() {
+            const list = document.getElementById('subjectsList');
+            const ids = getAllSubjectIds();
+            document.getElementById('subjCount').textContent = ids.length;
+            if (ids.length === 0) { list.innerHTML = `<div class="empty-events">No subjects yet</div>`; return; }
+
+            list.innerHTML = ids.map(id => {
+                const override = getSubjectOverride(id);
+                const d = dirtySubjects[id];
+                const col = d ? d.color : getSubjectColor(id);
+                const desc = d ? d.desc : getSubjectDesc(id);
+                const instructor = d ? d.instructor : getSubjectInstructor(id);
+                const sessions = getSubjectSessions(id);
+                const sessionsHtml = sessions.length
+                    ? `<div class="subject-sessions">${sessions.map(s => esc(s.label)).join('<br>')}</div>`
+                    : `<div class="subject-sessions" style="opacity:.5">No timetable slot yet — tag-only subject</div>`;
+                const actions = override
+                    ? `<button class="icon-btn del-btn" onclick="deleteSubjectOverride('${override.id}')" title="Remove override">✕</button>`
+                    : '';
+                const dirtyCls = d ? ' dirty-row' : '';
+                const safeColorHex = /^#[0-9a-fA-F]{6}$/.test(col) ? col : '#8099cc';
+                return `<div class="subject-item${dirtyCls}" data-subj-row="${id}">
+  <div class="event-bar" style="background:${col}"></div>
+  <div class="event-body">
+    <div class="event-top">
+      <div class="event-name">${esc(id)}</div>
+      ${!override ? `<div class="event-type-badge">built-in</div>` : `<div class="event-type-badge">firebase</div>`}
+    </div>
+    <div class="subj-field-row">
+      <div>
+        <input class="subj-inline-input" value="${esc(desc)}" placeholder="Subject title" oninput="onSubjInlineChange('${id}','desc',this.value)">
+      </div>
+      <div>
+        <input class="subj-inline-input" value="${esc(instructor)}" placeholder="Instructor name" oninput="onSubjInlineChange('${id}','instructor',this.value)">
+      </div>
+    </div>
+    <div class="subj-field-row">
+      <div class="subj-color-mini-row">
+        <input type="color" class="subj-color-input" value="${safeColorHex}" oninput="onSubjColorChange('${id}',this.value)">
+        <input class="subj-inline-input subj-color-text" value="${esc(col)}" oninput="onSubjColorChange('${id}',this.value)">
+      </div>
+    </div>
+    ${sessionsHtml}
+  </div>
+  <div class="event-actions">${actions}</div>
+</div>`;
+            }).join('');
+        }
+
         // ── Init ──
         populateSubjects();
+        renderColorSwatches();
         const d = new Date(); d.setDate(d.getDate() + 7);
         document.getElementById('assignDeadline').value = d.toISOString().split('T')[0];
+        document.getElementById('reminderDeadline').value = d.toISOString().split('T')[0];
         document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
     </script>
 
 </body>
+
 </html>
