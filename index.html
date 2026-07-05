@@ -424,6 +424,14 @@
             text-overflow: ellipsis
         }
 
+        .card-instructor {
+            font-size: 10px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
         .card-dur {
             font-size: 9px;
             font-weight: 600;
@@ -1156,8 +1164,8 @@
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
                 { "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "TBA", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
-                { "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "TBA", "color": "#556B2F", "days": ["Sat"], "startH": "TBA", "startM": "TBA", "endH": "TBA", "endM": "TBA" }
+                { "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "Gymnasium", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
+                { "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "Covered Court", "color": "#556B2F", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0 }
             ]
         }
 
@@ -1190,19 +1198,47 @@
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
         function dateKey(y, mo, d) { return `${y}-${String(mo + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}` }
 
-        function getSubjectColor(subjectId) {
-            const c = scheduleData.courses.find(x => x.id === subjectId); return c ? c.color : '#8099cc'
+        function loadSubjects() { return window._fbSubjects || [] }
+        /* Firestore "subjects" docs can override desc/color and add an instructor
+           name for any subject id, and can also introduce a brand-new subject
+           that has no schedule slot yet (used just for tagging). */
+        function getSubjectMeta(subjectId) {
+            const override = loadSubjects().find(s => (s.courseId || s.id) === subjectId);
+            const base = scheduleData.courses.find(x => x.id === subjectId);
+            return {
+                desc: (override && override.desc) || (base && base.desc) || subjectId,
+                color: (override && override.color) || (base && base.color) || '#8099cc',
+                instructor: (override && override.instructor) || ''
+            }
         }
+        function getSubjectColor(subjectId) { return getSubjectMeta(subjectId).color }
         function getEventsForDate(dk) { return loadEvents().filter(e => e.deadline === dk || e.eventDate === dk) }
-        function getEventsForSubject(subjectId) {
+        /* sessionKey identifies one specific class meeting, e.g. "Thu|13:30", so
+           that a subject meeting twice on the same day (morning + evening) can
+           have an assignment/reminder tagged to just one of the sessions.
+           When an item has no sessionKey it applies to every session of that subject. */
+        function getEventsForSubject(subjectId, sessionKey) {
             const events = loadEvents();
             const now = new Date();
-            return events.filter(e => e.subjectId === subjectId && e.deadline && new Date(e.deadline + ' 23:59') >= now)
+            return events.filter(e =>
+                e.subjectId === subjectId &&
+                (e.type === 'assignment' || e.type === 'reminder') &&
+                e.deadline && new Date(e.deadline + ' 23:59') >= now &&
+                (!e.sessionKey || e.sessionKey === sessionKey)
+            )
+        }
+        /* Calendar-day difference (ignores time-of-day) so "due tomorrow" never
+           gets bumped to "2 days" depending on what time it currently is. */
+        function daysUntil(deadlineStr) {
+            const parts = deadlineStr.split('-');
+            const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+            const now = new Date();
+            const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            return Math.round((d - nowMid) / 86400000);
         }
         function urgencyClass(deadlineStr) {
             if (!deadlineStr) return 'due-ok';
-            const d = new Date(deadlineStr + ' 23:59'); const now = new Date();
-            const diff = (d - now) / 86400000;
+            const diff = daysUntil(deadlineStr);
             if (diff < 0) return 'due-soon';
             if (diff <= 3) return 'due-soon';
             if (diff <= 7) return 'due-later';
@@ -1210,8 +1246,7 @@
         }
         function urgencyLabel(deadlineStr) {
             if (!deadlineStr) return '';
-            const d = new Date(deadlineStr + ' 23:59'); const now = new Date();
-            const diff = Math.ceil((d - now) / 86400000);
+            const diff = daysUntil(deadlineStr);
             if (diff < 0) return 'OVERDUE';
             if (diff === 0) return 'DUE TODAY';
             if (diff === 1) return 'DUE TMRW';
@@ -1320,11 +1355,13 @@
             if (dayEvents.length === 0 && dayClasses.length === 0) { html += `<div style="font-size:10px;color:var(--muted);opacity:.5;padding:6px 0">No events or classes</div>`; panel.innerHTML = html; return; }
             dayEvents.forEach(e => {
                 const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
-                const urg = e.type === 'assignment' ? urgencyClass(e.deadline) : '';
-                const label = e.type === 'assignment' ? urgencyLabel(e.deadline) : '';
+                const hasDeadline = e.type === 'assignment' || e.type === 'reminder';
+                const urg = hasDeadline ? urgencyClass(e.deadline) : '';
+                const label = hasDeadline ? urgencyLabel(e.deadline) : '';
+                const typeLabel = e.type === 'assignment' ? '📋 Assignment' : e.type === 'reminder' ? (e.reminderKind === 'bring' ? '🎒 Bring' : '📖 Review/Study') : '📅 Event';
                 html += `<div class="cal-event-item" style="border-left:3px solid ${col}">
       ${e.subjectId ? `<div class="cal-event-subject" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
-      <div class="cal-event-type" style="color:${col}">${esc(e.type === 'assignment' ? '📋 Assignment' : '📅 Event')}</div>
+      <div class="cal-event-type" style="color:${col}">${esc(typeLabel)}</div>
       <div class="cal-event-name">${esc(e.name)}</div>
       ${e.description ? `<div class="cal-event-desc">${esc(e.description)}</div>` : ''}
       ${label ? `<div class="cal-event-deadline" style="color:${urg === 'due-soon' ? '#ff6b6b' : urg === 'due-later' ? '#f0a500' : '#2ec27e'}">${label}</div>` : ''}
@@ -1360,7 +1397,8 @@
                     if (startSlot < 0 || startSlot >= slots.length || span <= 0) return;
                     const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2);
                     for (let i = startSlot; i < startSlot + span && i < slots.length; i++) covered[i] = true;
-                    const subjectEvents = getEventsForSubject(c.id);
+                    const sessKey = `${day}|${c.startH}:${c.startM}`;
+                    const subjectEvents = getEventsForSubject(c.id, sessKey);
                     const hasOverdue = subjectEvents.some(e => urgencyClass(e.deadline) === 'due-soon');
                     const hasWarn = !hasOverdue && subjectEvents.some(e => urgencyClass(e.deadline) === 'due-later');
                     const dotColor = hasOverdue ? '#ff5252' : hasWarn ? '#f0a500' : '#2ec27e';
@@ -1434,7 +1472,7 @@
             else { badge.innerHTML = ''; }
             const wrap = document.getElementById('currentWrap');
             if (!isViewingToday) { wrap.innerHTML = ''; }
-            else if (current) { const sM = toMins(current.startH, current.startM), eM = toMins(current.endH, current.endM); const pct = Math.min(100, Math.max(0, ((nowM - sM) / (eM - sM)) * 100)), left = eM - nowM; wrap.innerHTML = `<div class="current-banner" style="color:${current.color};margin:10px 10px 0"><div class="current-dot" style="background:${current.color}"></div><div class="current-info"><div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(left)} left</div><div class="current-id" style="color:${current.color}">${esc(current.id)}</div><div class="current-desc">${esc(current.desc)}</div></div><div class="current-time" style="color:${current.color}">${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${current.color}"></div></div>`; }
+            else if (current) { const sM = toMins(current.startH, current.startM), eM = toMins(current.endH, current.endM); const pct = Math.min(100, Math.max(0, ((nowM - sM) / (eM - sM)) * 100)), left = eM - nowM; const curMeta = getSubjectMeta(current.id); const curDesc = curMeta.instructor ? `${esc(current.desc)} · ${esc(curMeta.instructor)}` : esc(current.desc); wrap.innerHTML = `<div class="current-banner" style="color:${current.color};margin:10px 10px 0"><div class="current-dot" style="background:${current.color}"></div><div class="current-info"><div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(left)} left</div><div class="current-id" style="color:${current.color}">${esc(current.id)}</div><div class="current-desc">${curDesc}</div></div><div class="current-time" style="color:${current.color}">${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${current.color}"></div></div>`; }
             else if (vacantNow) { const pct = Math.min(100, Math.max(0, ((nowM - vacantNow.startMin) / (vacantNow.endMin - vacantNow.startMin)) * 100)), left = vacantNow.endMin - nowM; wrap.innerHTML = `<div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0"><div class="current-dot" style="background:var(--muted)"></div><div class="current-info"><div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(left)} left</div><div class="current-id" style="color:var(--muted)">VACANT</div><div class="current-desc">No class scheduled</div></div><div class="current-time" style="color:var(--muted)">${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div></div>`; }
             else { wrap.innerHTML = ''; }
 
@@ -1471,16 +1509,23 @@
                 const c = item;
                 const isNow = current && c === current;
                 const isPast = isViewingToday && !isTBA(c) && toMins(c.endH, c.endM) <= nowM;
-                const assigns = getEventsForSubject(c.id);
+                const meta = getSubjectMeta(c.id);
+                const sessKey = isTBA(c) ? null : `${viewDay}|${c.startH}:${c.startM}`;
+                const assigns = getEventsForSubject(c.id, sessKey);
                 let badges = '';
-                assigns.forEach(e => { const uc = urgencyClass(e.deadline); const ul = urgencyLabel(e.deadline); badges += `<span class="assign-badge ${uc}" title="${esc(e.name)} — ${ul}"><span class="assign-dot"></span>${esc(e.name.length > 12 ? e.name.slice(0, 11) + '…' : e.name)}</span>`; });
+                assigns.forEach(e => {
+                    const uc = urgencyClass(e.deadline); const ul = urgencyLabel(e.deadline);
+                    const icon = e.type === 'reminder' ? (e.reminderKind === 'bring' ? '🎒' : '📖') : '📋';
+                    badges += `<span class="assign-badge ${uc}" title="${esc(e.name)} — ${ul}"><span class="assign-dot"></span>${icon} ${esc(e.name.length > 12 ? e.name.slice(0, 11) + '…' : e.name)}</span>`;
+                });
                 const assignRow = badges ? `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${badges}</div>` : '';
                 /* TBA-specific time display */
                 const timeDisplay = isTBA(c)
                     ? `<span class="tba-badge">⏳ Time TBA</span>`
                     : `<div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div>`;
                 const durDisplay = fmtDur(c);
-                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div><div class="card-dur">${durDisplay}</div></div>${assignRow}</div></div>`;
+                const instructorHtml = meta.instructor ? `<div class="card-instructor"><span style="font-weight:bold">Instructor: </span>${esc(meta.instructor)}</div>` : '';
+                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta" style="flex-wrap:wrap;row-gap:2px"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div>${instructorHtml}<div class="card-dur">${durDisplay}</div></div>${assignRow}</div></div>`;
             }).join('');
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule';
         }
@@ -1523,15 +1568,27 @@
 
         // Keep a live-synced copy of all events in window._fbEvents
         window._fbEvents = [];
+        window._fbSubjects = [];
 
         const q = query(collection(db, "events"), orderBy("createdAt", "asc"));
         onSnapshot(q, (snapshot) => {
             window._fbEvents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             // Re-render the schedule list whenever Firestore data changes
             if (typeof refresh === 'function') refresh();
+            if (typeof renderWeekGrid === 'function') renderWeekGrid();
             if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
         }, (err) => {
             console.warn("Firestore sync error:", err.message);
+        });
+
+        // Subjects collection: lets admin.html override desc/color and add instructor info
+        const qSub = query(collection(db, "subjects"), orderBy("courseId", "asc"));
+        onSnapshot(qSub, (snapshot) => {
+            window._fbSubjects = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (typeof refresh === 'function') refresh();
+            if (typeof renderWeekGrid === 'function') renderWeekGrid();
+        }, (err) => {
+            console.warn("Firestore subjects sync error:", err.message);
         });
     </script>
 </body>
