@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script>(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
     <title>Naap Schedule</title>
     <link rel="icon" type="image/png" href="new_main_icon_RAW.png">
     <link rel="manifest" href="manifest_index.json">
@@ -33,7 +34,111 @@
             --grid: #374d86;
             --cell: #0a1428;
             --card: #0f1e42;
-            --radius: 16px
+            --radius: 16px;
+            --ov: 255, 255, 255;
+            --on-accent: #050a15
+        }
+
+        :root[data-theme="light"] {
+            color-scheme: light;
+            --bg: #eef2f9;
+            --header: #ffffff;
+            --accent: #2563eb;
+            --text: #0f1d38;
+            --muted: #5b6b8c;
+            --grid: #c3cee4;
+            --cell: #ffffff;
+            --card: #ffffff;
+            --ov: 15, 29, 56;
+            --on-accent: #ffffff
+        }
+
+        :root[data-theme="light"] .widget {
+            box-shadow: 0 8px 32px rgba(15, 29, 56, .15), inset 0 0 0 1px rgba(15, 29, 56, .08)
+        }
+
+        .theme-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(var(--ov), .18);
+            background: linear-gradient(135deg, #1b2a5c, #0b1430);
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 0;
+            transition: background .35s, border-color .35s
+        }
+
+        .theme-switch::before,
+        .theme-switch::after {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 9px;
+            line-height: 1;
+            opacity: .75
+        }
+
+        .theme-switch::before {
+            content: "✦";
+            right: 8px;
+            color: #cfe0ff
+        }
+
+        .theme-switch::after {
+            content: "";
+        }
+
+        :root[data-theme="light"] .theme-switch {
+            background: linear-gradient(135deg, #8ccbff, #dff0ff);
+            border-color: rgba(37, 99, 235, .35)
+        }
+
+        :root[data-theme="light"] .theme-switch::before {
+            content: "☁";
+            color: #fff
+        }
+
+        .ts-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #e8f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            line-height: 1;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+            transition: transform .35s cubic-bezier(.4, 1.4, .5, 1), background .35s
+        }
+
+        :root[data-theme="light"] .ts-knob {
+            transform: translateX(24px);
+            background: #fff
+        }
+
+        .theme-switch:active .ts-knob {
+            width: 22px
+        }
+
+        :root[data-theme="light"] .theme-switch:active .ts-knob {
+            transform: translateX(20px)
+        }
+
+        .offline-pill {
+            display: none;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, .5);
+            border-radius: 4px;
+            padding: 2px 5px
         }
 
         html,
@@ -59,7 +164,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(255, 255, 255, .07)
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(var(--ov), .07)
         }
 
         .widget-header {
@@ -232,7 +337,7 @@
         .progress-bar-wrap {
             margin: 6px 10px 0;
             height: 3px;
-            background: rgba(255, 255, 255, .06);
+            background: rgba(var(--ov), .06);
             border-radius: 3px;
             overflow: hidden;
             flex-shrink: 0
@@ -263,24 +368,24 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: background .15s, color .15s, transform .1s;
-            background: rgba(255, 255, 255, .06);
+            background: rgba(var(--ov), .06);
             color: var(--muted)
         }
 
         .day-tab:hover {
-            background: rgba(255, 255, 255, .12);
+            background: rgba(var(--ov), .12);
             color: var(--text)
         }
 
         .day-tab.active-today {
-            background: rgba(255, 255, 255, .16);
+            background: rgba(var(--ov), .16);
             color: var(--text);
-            outline: 1px solid rgba(255, 255, 255, .25)
+            outline: 1px solid rgba(var(--ov), .25)
         }
 
         .day-tab.selected {
             background: var(--accent);
-            color: #050a15
+            color: var(--on-accent)
         }
 
         .day-tab:active {
@@ -290,7 +395,7 @@
         .viewing-banner {
             margin: 4px 10px 0;
             padding: 4px 10px;
-            background: rgba(255, 255, 255, .05);
+            background: rgba(var(--ov), .05);
             border-radius: 6px;
             font-size: 10px;
             font-weight: 600;
@@ -348,7 +453,7 @@
             border-radius: 10px;
             overflow: hidden;
             background: var(--card);
-            border: 1px solid rgba(255, 255, 255, .06);
+            border: 1px solid rgba(var(--ov), .06);
             flex-shrink: 0;
             transition: opacity .2s
         }
@@ -358,7 +463,7 @@
         }
 
         .class-card.now {
-            border-color: rgba(255, 255, 255, .15);
+            border-color: rgba(var(--ov), .15);
             box-shadow: 0 0 0 1px var(--color) inset
         }
 
@@ -442,7 +547,7 @@
         }
 
         .class-card.vacant-card {
-            background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .035) 0px, rgba(255, 255, 255, .035) 4px, transparent 4px, transparent 8px), var(--card);
+            background: repeating-linear-gradient(135deg, rgba(var(--ov), .035) 0px, rgba(var(--ov), .035) 4px, transparent 4px, transparent 8px), var(--card);
             border-style: dashed
         }
 
@@ -483,7 +588,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-top: 1px solid rgba(255, 255, 255, .05);
+            border-top: 1px solid rgba(var(--ov), .05);
             flex-shrink: 0
         }
 
@@ -548,7 +653,7 @@
 
         .week-grid-wrap {
             padding: 0 10px 10px;
-            border-top: 1px solid rgba(255, 255, 255, .05);
+            border-top: 1px solid rgba(var(--ov), .05);
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -626,7 +731,7 @@
 
         .grid-cell {
             border-radius: 3px;
-            background: rgba(255, 255, 255, .04);
+            background: rgba(var(--ov), .04);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -635,13 +740,13 @@
 
         .grid-head {
             font-weight: 700;
-            background: rgba(255, 255, 255, .08);
+            background: rgba(var(--ov), .08);
             cursor: pointer;
             transition: background .15s, color .15s
         }
 
         .grid-head:hover {
-            background: rgba(255, 255, 255, .18);
+            background: rgba(var(--ov), .18);
             color: var(--text)
         }
 
@@ -679,18 +784,18 @@
         }
 
         .grid-class.grid-today {
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, .35) inset;
+            box-shadow: 0 0 0 1px rgba(var(--ov), .35) inset;
             filter: saturate(1.15)
         }
 
         .grid-class.now-block {
-            box-shadow: 0 0 0 1.5px #fff inset, 0 0 6px rgba(255, 255, 255, .55);
+            box-shadow: 0 0 0 1.5px #fff inset, 0 0 6px rgba(var(--ov), .55);
             animation: nowPulse 1.6s ease-in-out infinite;
             z-index: 2
         }
 
         .grid-vacant {
-            background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .035) 0px, rgba(255, 255, 255, .035) 4px, transparent 4px, transparent 8px);
+            background: repeating-linear-gradient(135deg, rgba(var(--ov), .035) 0px, rgba(var(--ov), .035) 4px, transparent 4px, transparent 8px);
             color: var(--muted);
             font-size: 8px;
             font-weight: 700;
@@ -700,13 +805,13 @@
         }
 
         .grid-selected-day.grid-head {
-            background: rgba(255, 255, 255, .28);
-            color: #050a15;
+            background: rgba(var(--ov), .28);
+            color: var(--on-accent);
             outline: 1px solid #fff
         }
 
         .grid-cell.grid-selected-day:not(.grid-class):not(.grid-head) {
-            background: rgba(255, 255, 255, .04)
+            background: rgba(var(--ov), .04)
         }
 
         @keyframes nowPulse {
@@ -733,8 +838,8 @@
         }
 
         .view-toggle-btn {
-            background: rgba(255, 255, 255, .08);
-            border: 1px solid rgba(255, 255, 255, .15);
+            background: rgba(var(--ov), .08);
+            border: 1px solid rgba(var(--ov), .15);
             color: var(--text);
             border-radius: 6px;
             font-family: 'Inter', sans-serif;
@@ -749,12 +854,12 @@
         }
 
         .view-toggle-btn:hover {
-            background: rgba(255, 255, 255, .16)
+            background: rgba(var(--ov), .16)
         }
 
         .view-toggle-btn.active {
             background: var(--accent);
-            color: #050a15;
+            color: var(--on-accent);
             border-color: var(--accent)
         }
 
@@ -784,7 +889,7 @@
 
         .cal-nav-btn {
             background: none;
-            border: 1px solid rgba(255, 255, 255, .12);
+            border: 1px solid rgba(var(--ov), .12);
             color: var(--muted);
             border-radius: 5px;
             font-size: 14px;
@@ -795,7 +900,7 @@
         }
 
         .cal-nav-btn:hover {
-            background: rgba(255, 255, 255, .1);
+            background: rgba(var(--ov), .1);
             color: var(--text)
         }
 
@@ -843,8 +948,8 @@
 
         .cal-day {
             border-radius: 6px;
-            background: rgba(255, 255, 255, .04);
-            border: 1px solid rgba(255, 255, 255, .04);
+            background: rgba(var(--ov), .04);
+            border: 1px solid rgba(var(--ov), .04);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -856,17 +961,17 @@
         }
 
         .cal-day:hover {
-            background: rgba(255, 255, 255, .1);
-            border-color: rgba(255, 255, 255, .15)
+            background: rgba(var(--ov), .1);
+            border-color: rgba(var(--ov), .15)
         }
 
         .cal-day.today {
             border-color: var(--accent);
-            background: rgba(255, 255, 255, .08)
+            background: rgba(var(--ov), .08)
         }
 
         .cal-day.selected {
-            background: rgba(255, 255, 255, .18);
+            background: rgba(var(--ov), .18);
             border-color: var(--accent)
         }
 
@@ -939,7 +1044,7 @@
             border-radius: 8px;
             padding: 8px 10px;
             margin-bottom: 5px;
-            border: 1px solid rgba(255, 255, 255, .07)
+            border: 1px solid rgba(var(--ov), .07)
         }
 
         .cal-event-type {
@@ -1134,6 +1239,8 @@
         <div class="widget-footer">
             <div class="footer-title" id="footerTitle"></div>
             <div style="display:flex;gap:8px;align-items:center">
+                <span class="offline-pill" id="offlinePill">OFFLINE</span>
+                <button class="theme-switch" id="themeBtn" role="switch" aria-label="Toggle light/dark mode" title="Toggle light/dark mode"><span class="ts-knob" id="themeKnob"></span></button>
                 <button class="reload-btn" onclick="manualRefresh()">↻ refresh</button>
             </div>
         </div>
@@ -1141,31 +1248,31 @@
 
     <script>
         const scheduleData = {
-            "title": "AAMT 1-3 SCHEDULE", "subtitle": "A.Y. 2026 – 2027",
+            "title": "AAMT 1-3 SCHEDULE", "subtitle": "2nd Semester · A.Y. 2026 – 2027",
             "courses": [
-                { "slotId": "s0", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Simulation Lab", "color": "#3a7bd5", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 16, "endM": 0 },
-                { "slotId": "s1", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Mon"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
-                { "slotId": "s2", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Wed"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
-                { "slotId": "s3", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
-                { "slotId": "s4", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Tue"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
-                { "slotId": "s5", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Wed"], "startH": 14, "startM": 0, "endH": 17, "endM": 0 },
-                { "slotId": "s6", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Thu"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
-                { "slotId": "s7", "id": "DRAW1101", "desc": "Aircraft Drawing", "room": "DR1", "color": "#2ec27e", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 12, "endM": 0 },
-                { "slotId": "s8", "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Aero Room", "color": "#e8702a", "days": ["Tue"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
-                { "slotId": "s9", "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Fabrication Lab", "color": "#e8702a", "days": ["Thu"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
-                { "slotId": "s10", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Tue"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
-                { "slotId": "s11", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "Aero Room", "color": "#9c6ade", "days": ["Thu"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
-                { "slotId": "s12", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Thu"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
-                { "slotId": "s13", "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
-                { "slotId": "s14", "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
-                { "slotId": "s15", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Tue"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
-                { "slotId": "s16", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Thu"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
-                { "slotId": "s17", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Aero Room", "color": "#ff5722", "days": ["Fri"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
-                { "slotId": "s18", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "slotId": "s19", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "slotId": "s20", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "slotId": "s21", "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "Gymnasium", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
-                { "slotId": "s22", "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "Covered Court", "color": "#556B2F", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0 }
+                {"slotId": "s2_0", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
+                {"slotId": "s2_1", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
+                {"slotId": "s2_2", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Chem Lab 1", "days": ["Mon"], "startH": 8, "startM": 30, "endH": 10, "endM": 0},
+                {"slotId": "s2_3", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
+                {"slotId": "s2_4", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Chem Lab 1", "days": ["Wed"], "startH": 8, "startM": 30, "endH": 10, "endM": 0},
+                {"slotId": "s2_5", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Wed"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
+                {"slotId": "s2_6", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Fri"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
+                {"slotId": "s2_7", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 15, "endM": 0},
+                {"slotId": "s2_8", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Mon"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
+                {"slotId": "s2_9", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 11, "endM": 0},
+                {"slotId": "s2_10", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Wed"], "startH": 13, "startM": 0, "endH": 15, "endM": 0},
+                {"slotId": "s2_11", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Wed"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
+                {"slotId": "s2_12", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Fri"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
+                {"slotId": "s2_13", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Mon"], "startH": 11, "startM": 0, "endH": 13, "endM": 0},
+                {"slotId": "s2_14", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Wed"], "startH": 11, "startM": 0, "endH": 13, "endM": 0},
+                {"slotId": "s2_15", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Aero Room", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
+                {"slotId": "s2_16", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Thu"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
+                {"slotId": "s2_17", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Simulation Lab", "days": ["Tue"], "startH": 17, "startM": 0, "endH": 20, "endM": 0},
+                {"slotId": "s2_18", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Aero Room", "days": ["Fri"], "startH": 13, "startM": 0, "endH": 14, "endM": 0},
+                {"slotId": "s2_19", "id": "AMT1211", "desc": "Aircraft Maintenance Organization & Management (FAB)", "color": "#00bcd4", "room": "Aero Room", "days": ["Mon"], "startH": 19, "startM": 0, "endH": 20, "endM": 0},
+                {"slotId": "s2_20", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Aero Room", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
+                {"slotId": "s2_21", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Tue"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
+                {"slotId": "s2_22", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Thu"], "startH": 11, "startM": 0, "endH": 14, "endM": 0}
             ]
         }
 
@@ -1569,6 +1676,20 @@
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule';
         }
 
+        /* ── Theme + offline indicator ── */
+        function applyTheme(t) {
+            document.documentElement.dataset.theme = t;
+            const b = document.getElementById('themeBtn'), k = document.getElementById('themeKnob'); if (k) k.textContent = t === 'light' ? '☀️' : '🌙'; if (b) b.setAttribute('aria-checked', t === 'light');
+            const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'light' ? '#ffffff' : '#0f1d38';
+        }
+        applyTheme(document.documentElement.dataset.theme || 'dark');
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            const t = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+            applyTheme(t); try { localStorage.setItem('theme', t); } catch (e) { }
+        });
+        function updateOnline() { document.getElementById('offlinePill').style.display = navigator.onLine ? 'none' : 'inline-block'; }
+        window.addEventListener('online', updateOnline); window.addEventListener('offline', updateOnline); updateOnline();
+
         /* ── Init ── */
         updateClock(); setInterval(updateClock, 1000);
         buildTabs(); setBottomView('timetable');
@@ -1590,7 +1711,7 @@
     <!-- ── Firebase: real-time events sync ── -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBzDOE3BMZ_pPHDbq3i4PLmYYzfur_AgJ0",
@@ -1603,7 +1724,8 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        // Local cache: events/subjects/sessions stay available with no internet
+        const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
 
         // Keep a live-synced copy of all events in window._fbEvents
         window._fbEvents = [];
