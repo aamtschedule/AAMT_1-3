@@ -1705,7 +1705,11 @@
         setInterval(tick, 1000);
         document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick(); });
         window.addEventListener('focus', () => tick());
-        if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("./service_worker.js").then(() => console.log("PWA Ready")).catch(err => console.error(err)); }); }
+        if ("serviceWorker" in navigator) {
+            /* When a new service worker takes over, reload once so the newest page shows (no stale old schedule) */
+            const hadController = !!navigator.serviceWorker.controller; let reloaded = false;
+            navigator.serviceWorker.addEventListener("controllerchange", () => { if (!hadController || reloaded) return; reloaded = true; location.reload(); });
+            window.addEventListener("load", () => { navigator.serviceWorker.register("./service_worker.js").then(() => console.log("PWA Ready")).catch(err => console.error(err)); }); }
     </script>
 
     <!-- ── Firebase: real-time events sync ── -->
