@@ -196,6 +196,42 @@
             margin-bottom: 6px
         }
 
+        .subtitle-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px
+        }
+
+        .subtitle-row .schedule-subtitle {
+            margin-bottom: 0
+        }
+
+        .sem-switch {
+            display: inline-flex;
+            gap: 1px;
+            padding: 1px;
+            border: 1px solid rgba(128, 128, 128, .35);
+            border-radius: 999px
+        }
+
+        .sem-btn {
+            font: inherit;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer
+        }
+
+        .sem-btn.active {
+            background: var(--text);
+            color: var(--bg)
+        }
+
         .day-label {
             font-size: 10px;
             font-weight: 700;
@@ -1146,7 +1182,8 @@
         <div class="widget-header">
             <div class="header-left">
                 <div class="schedule-title" id="scheduleTitle"></div>
-                <div class="schedule-subtitle" id="scheduleSubtitle"></div>
+                <div class="subtitle-row"><div class="schedule-subtitle" id="scheduleSubtitle"></div>
+                <div class="sem-switch" role="tablist" aria-label="Semester"><button class="sem-btn" data-sem="1" onclick="setSemester(1)">1st Sem</button><button class="sem-btn active" data-sem="2" onclick="setSemester(2)">2nd Sem</button></div></div>
                 <div class="day-label" id="hdrDay"></div>
                 <div class="date-label" id="hdrDate"></div>
                 <div id="hdrBadge"></div>
@@ -1247,7 +1284,7 @@
     </div>
 
     <script>
-        const scheduleData = {
+        const SEM2_DATA = {
             "title": "AAMT 1-3 SCHEDULE", "subtitle": "2nd Semester · A.Y. 2026 – 2027",
             "courses": [
                 {"slotId": "s2_0", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
@@ -1269,11 +1306,55 @@
                 {"slotId": "s2_16", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Thu"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
                 {"slotId": "s2_17", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Simulation Lab", "days": ["Tue"], "startH": 17, "startM": 0, "endH": 20, "endM": 0},
                 {"slotId": "s2_18", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Aero Room", "days": ["Fri"], "startH": 13, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_19", "id": "AMT1211", "desc": "Aircraft Maintenance Organization & Management (FAB)", "color": "#00bcd4", "room": "Aero Room", "days": ["Mon"], "startH": 19, "startM": 0, "endH": 20, "endM": 0},
+                {"slotId": "s2_19", "id": "AMT1211", "desc": "Aircraft Maintenance Organization & Management", "color": "#00bcd4", "room": "Aero Room", "days": ["Mon"], "startH": 19, "startM": 0, "endH": 20, "endM": 0},
                 {"slotId": "s2_20", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Aero Room", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
                 {"slotId": "s2_21", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Tue"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_22", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Thu"], "startH": 11, "startM": 0, "endH": 14, "endM": 0}
+                {"slotId": "s2_22", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Thu"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
+                {"slotId": "s2_23", "id": "PATHFIT2", "desc": "Exercise-Based Fitness Activities", "color": "#ff5722", "room": "Covered Court", "days": ["Thu"], "startH": 9, "startM": 0, "endH": 11, "endM": 0},
+                {"slotId": "s2_24", "id": "NSTP2", "desc": "National Service Training Program II", "color": "#4caf50", "room": "TBA", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0}
             ]
+        }
+
+        const SEM1_DATA = {
+            "title": "AAMT 1-3 SCHEDULE", "subtitle": "1st Semester · A.Y. 2026 – 2027",
+            "courses": [
+                { "slotId": "s0", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Simulation Lab", "color": "#3a7bd5", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 16, "endM": 0 },
+                { "slotId": "s1", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Mon"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
+                { "slotId": "s2", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Wed"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
+                { "slotId": "s3", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
+                { "slotId": "s4", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Tue"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
+                { "slotId": "s5", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Wed"], "startH": 14, "startM": 0, "endH": 17, "endM": 0 },
+                { "slotId": "s6", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Thu"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
+                { "slotId": "s7", "id": "DRAW1101", "desc": "Aircraft Drawing", "room": "DR1", "color": "#2ec27e", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 12, "endM": 0 },
+                { "slotId": "s8", "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Aero Room", "color": "#e8702a", "days": ["Tue"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
+                { "slotId": "s9", "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Fabrication Lab", "color": "#e8702a", "days": ["Thu"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
+                { "slotId": "s10", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Tue"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
+                { "slotId": "s11", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "Aero Room", "color": "#9c6ade", "days": ["Thu"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
+                { "slotId": "s12", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Thu"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
+                { "slotId": "s13", "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
+                { "slotId": "s14", "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
+                { "slotId": "s15", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Tue"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
+                { "slotId": "s16", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Thu"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
+                { "slotId": "s17", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Aero Room", "color": "#ff5722", "days": ["Fri"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
+                { "slotId": "s18", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
+                { "slotId": "s19", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
+                { "slotId": "s20", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
+                { "slotId": "s21", "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "Gymnasium", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
+                { "slotId": "s22", "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "Covered Court", "color": "#556B2F", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0 }
+            ]
+        }
+
+        /* Semester switcher: 2nd sem is the default every time the app opens */
+        const SEMESTERS = { 1: SEM1_DATA, 2: SEM2_DATA };
+        let currentSem = 2;
+        let scheduleData = SEMESTERS[currentSem];
+        function setSemester(n) {
+            if (!SEMESTERS[n] || n === currentSem) return;
+            currentSem = n; scheduleData = SEMESTERS[n];
+            document.querySelectorAll('.sem-btn').forEach(b => b.classList.toggle('active', +b.dataset.sem === n));
+            buildTabs(); refresh(); renderWeekGrid();
+            if (bottomView !== 'timetable') renderCalendar2();
+            requestAnimationFrame(() => scrollToNow(true));
         }
 
         const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -1428,7 +1509,9 @@
             const MIN_H = 80, MAX_H = 600, DEFAULT_H = 210;
             let startY = 0, startH = 0, dragging = false;
             function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
-            function setHeight(h) { wrap.style.height = clamp(h, MIN_H, MAX_H) + 'px' }
+            function maxH() { const g = document.getElementById('weekGrid'); const content = g ? g.scrollHeight : 0; return content ? Math.min(MAX_H, handle.offsetHeight + content + 12) : MAX_H }
+            function setHeight(h) { wrap.style.height = clamp(h, MIN_H, Math.max(MIN_H, maxH())) + 'px' }
+            window.fitWeekPanel = function () { setHeight(wrap.offsetHeight || DEFAULT_H) };
             const saved = parseInt(localStorage.getItem('wgHeight'), 10); setHeight(isNaN(saved) ? DEFAULT_H : saved);
             function onStart(y) { startY = y; startH = wrap.offsetHeight; dragging = true; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none' }
             function onMove(y) { if (!dragging) return; setHeight(startH + (startY - y)) }
@@ -1523,10 +1606,15 @@
         }
 
         /* ── Week grid ── */
+        let gridSlotCount = 28;
         function renderWeekGrid() {
             const grid = document.getElementById('weekGrid'); const today = todayKey(); const activeDay = selectedDay || today;
             const effectiveCourses = getEffectiveCourses();
-            const slots = []; for (let h = 7; h <= 20; h++) { slots.push({ h, m: 0 }); slots.push({ h, m: 30 }) }
+            let lastEnd = 17 * 60; /* grid ends at the last class (min 5 PM) so there is no empty space below it */
+            effectiveCourses.forEach(c => { if (!isTBA(c)) lastEnd = Math.max(lastEnd, toMins(c.endH, c.endM)) });
+            gridSlotCount = Math.min(28, Math.ceil((lastEnd - 420) / 30));
+            const slots = []; for (let i = 0; i < gridSlotCount; i++) { slots.push({ h: 7 + Math.floor(i / 2), m: (i % 2) * 30 }) }
+            grid.style.gridTemplateRows = `20px repeat(${gridSlotCount}, 16px)`;
             let html = '';
             html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
             WEEKDAYS.forEach((day, dIdx) => { const isToday = day === today; const isSelected = day === activeDay; const cls = isSelected ? 'grid-cell grid-head grid-selected-day' : (isToday ? 'grid-cell grid-head grid-today' : 'grid-cell grid-head'); html += `<div class="${cls}" style="grid-row:1;grid-column:${dIdx + 2};cursor:pointer" onclick="selectDay('${day}')" title="View ${day}">${day}</div>`; });
@@ -1565,6 +1653,7 @@
                 }
             });
             grid.innerHTML = html;
+            if (window.fitWeekPanel) window.fitWeekPanel();
             const line = document.createElement('div'); line.id = 'nowLine'; line.className = 'now-line'; grid.appendChild(line);
             updateNowLine();
         }
@@ -1574,8 +1663,8 @@
             const now = new Date(), today = todayKey(), nowM = toMins(now.getHours(), now.getMinutes());
             grid.querySelectorAll('.grid-class').forEach(el => { const isNow = el.dataset.day === today && nowM >= parseInt(el.dataset.start, 10) && nowM < parseInt(el.dataset.end, 10); el.classList.toggle('now-block', isNow); });
             grid.querySelectorAll('.grid-time').forEach(el => el.classList.remove('now-time'));
-            const inRange = nowM >= 420 && nowM < 1260; if (!inRange) { line.style.display = 'none'; return; }
-            const slotFloat = (nowM - 420) / 30, flooredIdx = Math.max(0, Math.min(27, Math.floor(slotFloat))), frac = slotFloat - Math.floor(slotFloat);
+            const inRange = nowM >= 420 && nowM < 420 + gridSlotCount * 30; if (!inRange) { line.style.display = 'none'; return; }
+            const slotFloat = (nowM - 420) / 30, flooredIdx = Math.max(0, Math.min(gridSlotCount - 1, Math.floor(slotFloat))), frac = slotFloat - Math.floor(slotFloat);
             const cellEl = grid.querySelector(`.grid-time[data-slot="${flooredIdx}"]`); if (!cellEl) { line.style.display = 'none'; return; }
             cellEl.classList.add('now-time'); line.style.top = `${cellEl.offsetTop + frac * cellEl.offsetHeight}px`; line.style.display = 'block';
         }
@@ -1583,7 +1672,7 @@
         function scrollToNow(instant) {
             const wrap = document.getElementById('weekGridScroll'), grid = document.getElementById('weekGrid'); if (!wrap || !grid) return;
             const now = new Date(), nowM = toMins(now.getHours(), now.getMinutes());
-            const clamped = Math.min(1259, Math.max(420, nowM)), slotIdx = Math.max(0, Math.min(27, Math.floor((clamped - 420) / 30)));
+            const clamped = Math.min(419 + gridSlotCount * 30, Math.max(420, nowM)), slotIdx = Math.max(0, Math.min(gridSlotCount - 1, Math.floor((clamped - 420) / 30)));
             const cellEl = grid.querySelector(`.grid-time[data-slot="${slotIdx}"]`); if (!cellEl) return;
             wrap.scrollTo({ top: Math.max(0, cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2)), behavior: instant ? 'auto' : 'smooth' });
         }
