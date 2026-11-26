@@ -75,6 +75,7 @@ body{background:var(--bs-tertiary-bg)}
   <li class="nav-item"><button class="nav-link" data-page="items"><i class="bi bi-journal-check"></i> Tasks &amp; Events</button></li>
   <li class="nav-item"><button class="nav-link" data-page="subj"><i class="bi bi-mortarboard"></i> Subjects</button></li>
   <li class="nav-item"><button class="nav-link" data-page="sess"><i class="bi bi-clock-history"></i> Timetable</button></li>
+  <li class="nav-item"><button class="nav-link" data-page="exams"><i class="bi bi-mortarboard"></i> Exams</button></li>
  </ul></aside><div class="col-lg-10">
 
  <section id="p-dash">
@@ -138,6 +139,25 @@ body{background:var(--bs-tertiary-bg)}
   <div id="sessList"></div>
   <div class="sticky-save text-end"><button class="btn btn-success shadow" id="saveSess" disabled onclick="saveSessions()"><i class="bi bi-check2-circle"></i> Save changes</button></div>
  </section>
+ <section id="p-exams" class="d-none">
+  <div class="hero mb-3"><div><div class="section-kicker">Academic milestones</div><h4 class="fw-bold m-0">Exam schedule</h4><div class="small opacity-75">Set the official dates for Prelim, Midterm, and Final examinations. Students will see live countdowns.</div></div></div>
+  <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-plus-circle me-1"></i> Add or update an exam</div><div class="card-body">
+   <input type="hidden" id="examEditId">
+   <div class="row g-2 align-items-end">
+    <div class="col-6 col-md-2"><label class="form-label small">Exam period</label><select class="form-select form-select-sm" id="examType"><option>Prelim</option><option>Midterm</option><option>Final</option></select></div>
+    <div class="col-6 col-md-2"><label class="form-label small">Semester</label><select class="form-select form-select-sm" id="examSemester"><option value="1">1st Semester</option><option value="2" selected>2nd Semester</option></select></div>
+    <div class="col-12 col-md-3"><label class="form-label small">Display name</label><input class="form-control form-control-sm" id="examName" placeholder="e.g. Midterm Examination"></div>
+    <div class="col-6 col-md-2"><label class="form-label small">Exam date</label><input type="date" class="form-control form-control-sm" id="examDate"></div>
+    <div class="col-6 col-md-1"><label class="form-label small">Time</label><input type="time" class="form-control form-control-sm" id="examTime" value="08:00"></div>
+    <div class="col-6 col-md-2"><label class="form-label small">Room</label><input class="form-control form-control-sm" id="examRoom" placeholder="Room TBA"></div>
+    <div class="col-12"><label class="form-label small">Notes (optional)</label><input class="form-control form-control-sm" id="examNote" placeholder="Coverage, reminders, or other details"></div>
+    <div class="col-12 d-flex gap-2"><button class="btn btn-primary btn-sm" id="saveExamBtn" onclick="saveExam()"><i class="bi bi-check2"></i> Save exam</button><button class="btn btn-outline-secondary btn-sm d-none" id="cancelExamEdit" onclick="resetExamForm()">Cancel edit</button></div>
+   </div>
+   <div class="form-text mt-2">Countdowns use the selected local exam time. If you leave the time at 08:00, the countdown targets 8:00 AM.</div>
+  </div></div>
+  <div class="d-flex align-items-center justify-content-between mb-2"><strong>Configured exams</strong><span class="small text-secondary" id="examCount"></span></div>
+  <div id="examList" class="d-grid gap-2"></div>
+ </section>
 </div></div></main>
 
 <div class="modal fade" id="itemModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">
@@ -190,15 +210,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/fireba
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 const app = initializeApp({apiKey: "AIzaSyDk3u5hfhqe-X76lbWqDX-HIJVvrCHW0",authDomain: "schedule-3f07b.firebaseapp.com",projectId: "schedule-3f07b",storageBucket: "schedule-3f07b.firebasestorage.app",messagingSenderId: "1018047030276",appId: "1:1018047030276:web:c88062d54ce42c77c60151",measurementId: "G-KCWEX6G7QF"});
 const db = initializeFirestore(app, {localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});
-window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION:"events", SUBJ_COLLECTION:"subjects", SESSION_COLLECTION:"sessions", CANCEL_COLLECTION:"sessionCancellations", DAY_CLOSURE_COLLECTION:"dayClosures" };
+window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION:"events", SUBJ_COLLECTION:"subjects", SESSION_COLLECTION:"sessions", CANCEL_COLLECTION:"sessionCancellations", DAY_CLOSURE_COLLECTION:"dayClosures", EXAM_COLLECTION:"examDates" };
 const status=(s,m)=>{const e=document.getElementById('dbStatus');e.className='badge text-bg-'+(s==='ok'?'success':s==='err'?'danger':'secondary');e.innerHTML=s==='ok'?'<i class="bi bi-cloud-check"></i> Live':s==='err'?'<i class="bi bi-cloud-slash"></i> '+(m||'Error'):'<i class="bi bi-cloud"></i> Connecting'};
 const watch=(q,key,ok)=>onSnapshot(q,s=>{window[key]=s.docs.map(d=>({id:d.id,...d.data()}));try{localStorage.setItem('adminCache_'+key,JSON.stringify(window[key]))}catch(e){}if(ok)status('ok');window.renderAll&&renderAll()},e=>{console.error(e);status('err',e.message)});
-for(const k of ['_allEvents','_allSubjects','_allSessions','_allCancellations','_allDayClosures'])try{window[k]=JSON.parse(localStorage.getItem('adminCache_'+k)||'[]')}catch(e){window[k]=[]}
+for(const k of ['_allEvents','_allSubjects','_allSessions','_allCancellations','_allDayClosures','_allExams'])try{window[k]=JSON.parse(localStorage.getItem('adminCache_'+k)||'[]')}catch(e){window[k]=[]}
 watch(query(collection(db,"events"),orderBy("createdAt","asc")),'_allEvents',true);
 watch(query(collection(db,"subjects"),orderBy("courseId","asc")),'_allSubjects');
 watch(collection(db,"sessions"),'_allSessions');
 watch(collection(db,"sessionCancellations"),'_allCancellations');
 watch(collection(db,"dayClosures"),'_allDayClosures');
+watch(collection(db,"examDates"),'_allExams');
 </script>
 <script src="schedule-data.js"></script>
 <script src="vendor/bootstrap.bundle.min.js"></script>
@@ -208,7 +229,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const TYPES={assignment:{i:'bi-journal-text',n:'Assignment'},event:{i:'bi-calendar-event',n:'Event'},bring:{i:'bi-bag',n:'Bring'},review:{i:'bi-book',n:'Review'}};
 const BUILTIN=[...SEM1_DATA.courses.map(c=>({...c,sem:1})),...SEM2_DATA.courses.map(c=>({...c,sem:2}))];
-window._allEvents=[];window._allSubjects=[];window._allSessions=[];window._allCancellations=[];window._allDayClosures=[];
+window._allEvents=[];window._allSubjects=[];window._allSessions=[];window._allCancellations=[];window._allDayClosures=[];window._allExams=[];
 let page='dash',curType='assignment',editId=null,dirtyS={},dirtyT={},rowsByKey={},selected=new Set(),sem=2;
 
 const M={};const modal=id=>M[id]??=new bootstrap.Modal($(id));
@@ -252,7 +273,7 @@ function subSessions(id){return effective().filter(c=>c.id===id&&!c._hidden&&!is
 
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b)return;page=b.dataset.page;
  document.querySelectorAll('#tabs .nav-link').forEach(x=>x.classList.toggle('active',x===b));
- ['dash','items','subj','sess'].forEach(p=>$('p-'+p).classList.toggle('d-none',p!==page));renderAll()});
+ ['dash','items','subj','sess','exams'].forEach(p=>$('p-'+p).classList.toggle('d-none',p!==page));renderAll()});
 $('semSel').onchange=e=>{sem=+e.target.value;renderAll()};
 function themeIcon(){$('themeBtn').innerHTML='<i class="bi '+(document.documentElement.dataset.bsTheme==='light'?'bi-sun':'bi-moon-stars')+'"></i>'}
 $('themeBtn').onclick=()=>{const t=document.documentElement.dataset.bsTheme==='light'?'dark':'light';document.documentElement.dataset.bsTheme=t;try{localStorage.setItem('theme',t)}catch(e){}themeIcon()};themeIcon();
@@ -388,8 +409,13 @@ function updateClosureDateLabel(){const mode=$('closureRepeat').value,label=$('c
 async function addDayClosure(){const date=$('closureDate').value,reason=$('closureReason').value.trim()||'No classes',repeat=$('closureRepeat').value,until=$('closureUntil').value;if(!date)return toast('Choose a start date first',1);if(repeat==='range'&&!until)return toast('Choose an end date for the range',1);if(until&&until<date)return toast('End date must be on or after the start date',1);if((_allDayClosures||[]).some(x=>x.date===date&&x.repeat===repeat&&(repeat==='range'?x.endDate===until:repeat==='weekly'?x.repeatUntil===(until||null):true)))return toast('A matching closure already exists');const f=_fb;const data={date,reason,repeat:repeat==='weekly'?'weekly':repeat==='range'?'range':'none',repeatUntil:repeat==='weekly'?(until||null):null,endDate:repeat==='range'?until:null,createdAt:f.serverTimestamp()};await run((repeat==='range'?'No-classes range saved: '+date+' to '+until:'No-classes schedule saved for '+date),()=>f.addDoc(f.collection(f.db,f.DAY_CLOSURE_COLLECTION),data));$('closureReason').value='';$('closureUntil').value='';$('closureRepeat').value='none';updateClosureDateLabel()}
 async function removeDayClosure(id){if(!await ask('Restore the normal timetable for this date?'))return;const f=_fb;await run('School day restored',()=>f.deleteDoc(f.doc(f.db,f.DAY_CLOSURE_COLLECTION,id)))}
 function renderClosures(){const list=$('closureList');if(!list)return;const rows=[...(_allDayClosures||[])].sort((a,b)=>(a.date||'').localeCompare(b.date||''));list.innerHTML=rows.length?rows.map(x=>{const range=x.repeat==='range'&&x.endDate;const dateLabel=range?esc(x.date)+' – '+esc(x.endDate):esc(x.date);const type=x.repeat==='weekly'?'Weekly'+(x.repeatUntil?' until '+esc(x.repeatUntil):''):range?'Date range':'One-time';return `<div class="d-flex flex-wrap align-items-center gap-2 border rounded-3 p-2 mb-2"><span class="badge text-bg-secondary">${dateLabel}</span><span class="badge text-bg-${x.repeat==='weekly'?'info':range?'warning':'light'}">${type}</span><span class="flex-grow-1 small fw-semibold">${esc(x.reason||'No classes')}</span><button class="btn btn-sm btn-outline-success" onclick="removeDayClosure('${x.id}')"><i class="bi bi-arrow-counterclockwise"></i> Restore day</button></div>`}).join(''):'<div class="small text-secondary">No whole-day closures scheduled.</div>'}
+function resetExamForm(){['examEditId','examName','examDate','examRoom','examNote'].forEach(id=>$(id).value='');$('examType').value='Prelim';$('examSemester').value=String(sem);$('examTime').value='08:00';$('saveExamBtn').innerHTML='<i class="bi bi-check2"></i> Save exam';$('cancelExamEdit').classList.add('d-none')}
+function editExam(id){const e=(_allExams||[]).find(x=>x.id===id);if(!e)return;$('examEditId').value=e.id;$('examType').value=e.examType||'Prelim';$('examSemester').value=String(e.semester||2);$('examName').value=e.name||'';$('examDate').value=e.date||'';$('examTime').value=e.time||'08:00';$('examRoom').value=e.room||'';$('examNote').value=e.note||'';$('saveExamBtn').innerHTML='<i class="bi bi-check2"></i> Update exam';$('cancelExamEdit').classList.remove('d-none');window.scrollTo({top:0,behavior:'smooth'})}
+async function saveExam(){const id=$('examEditId').value,type=$('examType').value,semester=+$('examSemester').value,date=$('examDate').value,time=$('examTime').value||'08:00',name=$('examName').value.trim()||type+' Examination';if(!date)return toast('Choose the exam date first',1);const f=_fb,data={examType:type,semester,date,time,name,room:$('examRoom').value.trim()||'Room TBA',note:$('examNote').value.trim(),color:type==='Prelim'?'#4f9cf9':type==='Midterm'?'#b58af5':'#f0a500',updatedAt:f.serverTimestamp()};const duplicate=(_allExams||[]).find(x=>x.id!==id&&x.examType===type&&+x.semester===semester);if(duplicate&&!await ask('An exam of this type already exists for this semester. Save another one anyway?'))return;await run(id?'Exam updated':'Exam date saved',()=>id?f.updateDoc(f.doc(f.db,f.EXAM_COLLECTION,id),data):f.addDoc(f.collection(f.db,f.EXAM_COLLECTION),{...data,createdAt:f.serverTimestamp()}));resetExamForm()}
+async function deleteExam(id){if(!await ask('Delete this exam date and its countdown?'))return;const f=_fb;await run('Exam deleted',()=>f.deleteDoc(f.doc(f.db,f.EXAM_COLLECTION,id)));if($('examEditId').value===id)resetExamForm()}
+function renderExams(){const list=$('examList');if(!list)return;const rows=[...(_allExams||[])].sort((a,b)=>(a.date||'').localeCompare(b.date||''));$('examCount').textContent=rows.length+' exam'+(rows.length===1?'':'s');list.innerHTML=rows.length?rows.map(x=>{const dleftExam=x.date?Math.ceil((new Date(x.date+'T'+(x.time||'08:00')+':00')-new Date())/86400000):null;return `<div class="card"><div class="card-body d-flex flex-wrap align-items-center gap-3"><span class="badge" style="background:${x.color||'#4f9cf9'};color:#fff">${esc(x.examType||'Exam')}</span><div class="flex-grow-1"><div class="fw-semibold">${esc(x.name||x.examType+' Examination')}</div><div class="small text-secondary">${esc(x.date)} · ${esc(x.time||'08:00')} · ${esc(x.room||'Room TBA')} · ${+(x.semester||2)===1?'1st':'2nd'} Semester</div>${x.note?`<div class="small text-secondary mt-1">${esc(x.note)}</div>`:''}</div><span class="small ${dleftExam!==null&&dleftExam<0?'text-secondary':'text-primary'}">${dleftExam===null?'Date not set':dleftExam<0?'Passed':dleftExam===0?'Today':dleftExam+' days left'}</span><button class="btn btn-sm btn-outline-primary" onclick="editExam('${x.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteExam('${x.id}')"><i class="bi bi-trash"></i></button></div></div>`}).join(''):'<div class="text-secondary small text-center py-4">No exam dates configured yet.</div>'}
 function renderAll(){const cur=$('fsub').value;$('fsub').innerHTML=subOptions('All subjects');$('fsub').value=cur;
- if(page==='dash')renderDash();else if(page==='items')renderItems();else if(page==='subj')renderSubjects();else {renderClosures();renderSess()}}
+ if(page==='dash')renderDash();else if(page==='items')renderItems();else if(page==='subj')renderSubjects();else if(page==='exams')renderExams();else {renderClosures();renderSess()}}
 updateClosureDateLabel();
 renderAll();
 </script>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <script>(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;document.documentElement.dataset.bsTheme=t}catch(e){document.documentElement.dataset.theme='dark';document.documentElement.dataset.bsTheme='dark'}})();</script>
     <title>Naap Schedule</title>
     <link rel="icon" type="image/png" href="new_main_icon-RAW.png">
@@ -1149,6 +1149,89 @@
         .day-tab{border-radius:10px;padding:7px 2px}
         .sem-btn{padding:3px 10px;font-size:10px}
         .dm-item{border-radius:12px}
+
+        .exam-countdown-section{padding:10px 12px 9px;background:var(--surface,rgba(128,128,128,.06));border-bottom:1px solid rgba(var(--ov),.09);flex-shrink:0}
+        .exam-countdown-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+        .exam-countdown-kicker{font-size:8px;font-weight:800;letter-spacing:1.25px;color:var(--muted)}
+        .exam-countdown-title{font-size:12px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
+        .exam-countdown-title .bi{color:var(--accent)}
+        .exam-countdown-sem{font-size:9px;font-weight:700;color:var(--muted);border:1px solid rgba(var(--ov),.15);padding:3px 7px;border-radius:999px;white-space:nowrap}
+        .exam-countdown-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+        .exam-countdown-card{min-width:0;border:1px solid color-mix(in srgb,var(--exam-color,#f0a500) 40%,transparent);border-top:2px solid var(--exam-color,#f0a500);border-radius:9px;padding:8px 9px;background:color-mix(in srgb,var(--exam-color,#f0a500) 7%,var(--card,transparent))}
+        .exam-countdown-type{font-size:8px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--exam-color,#f0a500)}
+        .exam-countdown-name{font-size:10px;font-weight:750;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+        .exam-countdown-time{font:800 13px 'JetBrains Mono',monospace;color:var(--text);margin-top:5px;white-space:nowrap}
+        .exam-countdown-meta{font-size:8px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .exam-countdown-empty{grid-column:1/-1;padding:10px;border:1px dashed rgba(var(--ov),.18);border-radius:8px;color:var(--muted);font-size:10px;text-align:center}
+        @media(max-width:420px){.exam-countdown-section{padding:8px 9px}.exam-countdown-cards{gap:5px}.exam-countdown-card{padding:7px 6px}.exam-countdown-time{font-size:11px}.exam-countdown-meta{font-size:7px}.exam-countdown-name{font-size:9px}}
+        @media(max-width:340px){.exam-countdown-cards{grid-template-columns:1fr}.exam-countdown-card{display:grid;grid-template-columns:1fr auto;align-items:center}.exam-countdown-time{grid-column:2;grid-row:1/4;margin:0}.exam-countdown-meta{grid-column:1}}
+    
+        /* ── Mobile polish + collapsible panels ── */
+        .exam-bar{padding:0;margin:8px 10px 0;border:1px solid color-mix(in srgb,var(--exam-color,#f0a500) 45%,transparent);border-left:3px solid var(--exam-color,#f0a500);border-radius:10px;background:color-mix(in srgb,var(--exam-color,#f0a500) 8%,var(--card,transparent));border-bottom:1px solid color-mix(in srgb,var(--exam-color,#f0a500) 45%,transparent);overflow:hidden}
+        .exam-bar-main{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:7px;padding:7px 10px;cursor:pointer;font-family:'Inter',sans-serif}
+        .exam-bar-icon{color:var(--exam-color,#f0a500);font-size:13px}
+        .exam-bar-phase{font-size:9px;font-weight:800;letter-spacing:.8px;color:var(--exam-color,#f0a500);flex-shrink:0}
+        .exam-bar-name{flex:1;min-width:0;font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .exam-bar-time{font:800 12px 'JetBrains Mono',monospace;color:var(--text);white-space:nowrap;flex-shrink:0}
+        .exam-bar-chev{font-size:11px;color:var(--muted);transition:transform .2s}
+        .exam-bar.open .exam-bar-chev{transform:rotate(180deg)}
+        .exam-bar .exam-countdown-cards{display:none;padding:0 8px 8px}
+        .exam-bar.open .exam-countdown-cards{display:flex}
+        .exam-bar .exam-countdown-card{min-width:132px}
+        .wg-collapse{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:34px;height:28px;border-radius:8px;background:rgba(var(--ov),.08);color:var(--muted);cursor:pointer;flex-shrink:0}
+        .wg-collapse i{transition:transform .2s;font-size:13px}
+        .week-grid-wrap.collapsed .wg-collapse i{transform:rotate(180deg)}
+        .week-grid-wrap.collapsed{height:auto!important}
+        .week-grid-wrap.collapsed #bottomContent{display:none!important}
+        .week-grid-wrap.collapsed .week-grid-handle{cursor:pointer}
+        .week-grid-handle{gap:6px}
+        .week-grid-topbar{min-width:0;margin-left:0!important}
+        .week-grid-title{display:none}
+        .week-grid-topbar>div:last-child{margin-left:auto;overflow-x:auto;scrollbar-width:none}
+        .widget-header{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+        .widget-footer{padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))}
+        @media(max-width:480px){
+            .widget-header{padding-left:12px;padding-right:12px;gap:8px}
+            .schedule-title{font-size:14px}
+            .date-label{font-size:16px}
+            .time-now .time-main{font-size:13px}
+            .time-now .time-secs{display:none}
+            .header-right{gap:6px;min-width:112px}
+            .sem-btn{padding:3px 8px;font-size:9px}
+            .header-right .alarm-open-btn{padding:5px 8px;font-size:9px}
+            .current-banner{padding:8px 10px;margin-top:8px!important}
+            .day-tabs{padding-top:6px}
+            .classes-label{padding:6px 12px 3px}
+            .footer-title{display:none}
+        }
+        @media(max-width:360px){.header-right .alarm-open-btn span{display:none}.exam-bar-phase{display:none}}
+    
+        /* ── Calendar v2 (fixed-size, no layout shift, details in popup) ── */
+        .cal2-head{display:flex;align-items:center;gap:8px;padding:2px 2px 6px;flex-shrink:0}
+        .cal2-nav{all:unset;box-sizing:border-box;width:34px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:rgba(var(--ov),.07);color:var(--text);cursor:pointer;font-size:13px}
+        .cal2-nav:active{background:rgba(var(--ov),.16)}
+        .cal2-title{all:unset;box-sizing:border-box;flex:1;text-align:center;font:800 13px 'Inter',sans-serif;color:var(--text);cursor:pointer;letter-spacing:.2px}
+        .cal2-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;touch-action:pan-y}
+        .cal2-body::-webkit-scrollbar{display:none}
+        .cal2-dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-bottom:3px}
+        .cal2-dow span{text-align:center;font-size:9px;font-weight:800;color:var(--muted);padding:2px 0}
+        .cal2-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:40px;gap:3px}
+        .cal2-grid .cal-day{height:40px;min-height:0;padding:0;justify-content:center;gap:3px;border-radius:9px;-webkit-tap-highlight-color:transparent}
+        .cal2-grid .cal-day-num{font-size:11px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+        .cal2-grid .cal-day.today{background:rgba(var(--ov),.06);border-color:transparent}
+        .cal2-grid .cal-day.today .cal-day-num{background:var(--accent);color:var(--on-accent)}
+        .cal2-grid .cal-day.selected{border-color:var(--accent);background:rgba(var(--ov),.12)}
+        .cal2-grid .cal-day.has-class{border-color:rgba(var(--ov),.06)}
+        .cal2-grid .cal-day.other-month{opacity:.28}
+        .cal2-grid .cal-day.day-closed{background:rgba(130,136,146,.2)}
+        .cal2-grid .cal-day-dots{height:6px;margin:0;max-width:100%;flex-wrap:nowrap;gap:2px;align-items:center;overflow:hidden}
+        .cal2-grid .cal-assign-dot{box-shadow:none;width:5px;height:5px}
+        .cal2-legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:6px 4px 0;font-size:8px;color:var(--muted);flex-shrink:0}
+        .cal2-legend span{display:inline-flex;align-items:center;gap:4px}
+        .cal2-legend i{width:6px;height:6px;border-radius:50%;display:inline-block}
+        .cal2-legend em{margin-left:auto;font-style:normal;opacity:.7}
+        .cal-popup .cal-event-item{margin-bottom:8px}
+        @media(max-width:380px){.cal2-legend em{display:none}.cal2-grid{grid-auto-rows:36px}.cal2-grid .cal-day{height:36px}}
     </style>
 </head>
 
@@ -1157,20 +1240,34 @@
         <div class="widget-header">
             <div class="header-left">
                 <div class="schedule-title" id="scheduleTitle"></div>
-                <div class="subtitle-row"><div class="schedule-subtitle" id="scheduleSubtitle"></div>
-                <div class="sem-switch" role="tablist" aria-label="Semester"><button class="sem-btn" data-sem="1" onclick="setSemester(1)">1st Sem</button><button class="sem-btn active" data-sem="2" onclick="setSemester(2)">2nd Sem</button></div></div>
+                <div class="schedule-subtitle" id="scheduleSubtitle"></div>
                 <div class="day-label" id="hdrDay"></div>
                 <div class="date-label" id="hdrDate"></div>
-                <div id="hdrBadge"></div>
-                <div id="hdrStats"></div>
+                <div class="hdr-chips"><div id="hdrBadge"></div><div id="hdrStats"></div></div>
             </div>
-            <div class="time-now" id="hdrTime">
-                <span class="time-main" id="timeMain"></span>
-                <span class="time-secs" id="timeSecs"></span>
+            <div class="header-right">
+                <div class="time-now" id="hdrTime">
+                    <span class="time-main" id="timeMain"></span>
+                    <span class="time-secs" id="timeSecs"></span>
+                </div>
+                <div class="sem-switch" role="tablist" aria-label="Semester"><button class="sem-btn" data-sem="1" onclick="setSemester(1)">1st Sem</button><button class="sem-btn active" data-sem="2" onclick="setSemester(2)">2nd Sem</button></div>
+                <button class="alarm-open-btn" id="openAlarmSettings" type="button" aria-label="Subject alarm settings" title="Subject alarms">
+                    <i class="bi bi-bell-fill"></i><span>ALARMS</span>
+                </button>
             </div>
         </div>
-
         <div id="currentWrap"></div>
+
+        <section id="examCountdownSection" class="exam-bar" aria-label="Upcoming examinations" style="display:none">
+            <button type="button" class="exam-bar-main" id="examBarToggle" aria-expanded="false" onclick="toggleExamStrip()">
+                <i class="bi bi-mortarboard-fill exam-bar-icon"></i>
+                <span class="exam-bar-phase" id="examBarPhase">PRELIM</span>
+                <span class="exam-bar-name" id="examBarName"></span>
+                <span class="exam-bar-time" id="examBarTime"></span>
+                <i class="bi bi-chevron-down exam-bar-chev"></i>
+            </button>
+            <div id="examCountdownCards" class="exam-countdown-cards"></div>
+        </section>
 
         <div class="day-tabs" id="dayTabs"></div>
         <div id="viewingBanner" style="display:none" class="viewing-banner">
@@ -1207,7 +1304,7 @@
 
         <div class="week-grid-wrap" id="weekGridWrap">
             <div class="week-grid-handle" id="weekGridHandle">
-                <div class="handle-bar"></div>
+                <button type="button" class="wg-collapse" id="wgCollapseBtn" aria-label="Collapse or expand panel" title="Collapse / expand" onclick="toggleBottomPanel()"><i class="bi bi-chevron-down"></i></button>
                 <div class="week-grid-topbar" style="flex:1;margin-left:8px">
                     <div class="week-grid-title">Weekly Timetable</div>
                     <div style="display:flex;gap:5px;align-items:center">
@@ -1216,6 +1313,7 @@
                         <button class="view-toggle-btn" id="calendarToggle"
                             onclick="setBottomView('calendar')">Calendar</button>
                         <button class="view-toggle-btn" id="tasksToggle" onclick="setBottomView('tasks')">Tasks</button>
+                        <button class="view-toggle-btn" id="examsToggle" onclick="setBottomView('exams')">Exams</button>
                     </div>
                 </div>
             </div>
@@ -1224,28 +1322,18 @@
                     <div id="weekGrid" class="week-grid"></div>
                 </div>
                 <div id="tasksInner" class="tasks-scroll" style="display:none"></div>
+                <div id="examsInner" class="tasks-scroll" style="display:none"></div>
                 <div id="calendarInner" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
-                    <div class="cal-header" style="padding:4px 4px 4px">
-                        <button class="cal-nav-btn" onclick="calPrev()"><i class="bi bi-chevron-left"></i></button>
-                        <div class="cal-month-label" id="calMonthLabel2"></div>
-                        <button class="cal-nav-btn" onclick="calNext()"><i class="bi bi-chevron-right"></i></button>
+                    <div class="cal2-head">
+                        <button class="cal2-nav" onclick="calPrev()" aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
+                        <button class="cal2-title" onclick="calGoToday()" id="calMonthLabel2" title="Jump to today"></button>
+                        <button class="cal2-nav" onclick="calNext()" aria-label="Next month"><i class="bi bi-chevron-right"></i></button>
                     </div>
-                    <div
-                        style="padding:0 4px 4px;flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden">
-                        <div class="cal-dow-row">
-                            <div class="cal-dow">Sun</div>
-                            <div class="cal-dow">Mon</div>
-                            <div class="cal-dow">Tue</div>
-                            <div class="cal-dow">Wed</div>
-                            <div class="cal-dow">Thu</div>
-                            <div class="cal-dow">Fri</div>
-                            <div class="cal-dow">Sat</div>
-                        </div>
-                        <div class="cal-days-grid" id="calDaysGrid2" style="min-height:0;flex:1"></div>
+                    <div class="cal2-body" id="cal2Body">
+                        <div class="cal2-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+                        <div class="cal2-grid" id="calDaysGrid2"></div>
                     </div>
-                    <div class="cal-day-panel" id="calDayPanel2" style="max-height:200px;flex-shrink:0">
-                        <div style="color:var(--muted);font-size:10px;text-align:center;padding:8px 0;opacity:.5">Select
-                            a date to view events</div>
+                    <div class="cal2-legend"><span><i style="background:#8099cc"></i>Class</span><span><i style="background:#f0a500"></i>Task / event</span><span><i style="background:#ff6b6b"></i>Exam</span><span><i style="background:#9299a3"></i>No classes</span><em>Tap a date for details</em></div>
                     </div>
                 </div>
             </div>
@@ -1269,13 +1357,13 @@
         const SEMESTERS = { 1: SEM1_DATA, 2: SEM2_DATA };
         let currentSem = 2;
         let scheduleData = SEMESTERS[currentSem];
-        try { window._fbEvents = JSON.parse(localStorage.getItem('cachedEvents') || '[]'); window._fbSubjects = JSON.parse(localStorage.getItem('cachedSubjects') || '[]'); window._fbSessions = JSON.parse(localStorage.getItem('cachedSessions') || '[]'); window._fbCancellations = JSON.parse(localStorage.getItem('cachedCancellations') || '[]'); window._fbDayClosures = JSON.parse(localStorage.getItem('cachedDayClosures') || '[]'); } catch(e) {}
+        try { window._fbEvents = JSON.parse(localStorage.getItem('cachedEvents') || '[]'); window._fbSubjects = JSON.parse(localStorage.getItem('cachedSubjects') || '[]'); window._fbSessions = JSON.parse(localStorage.getItem('cachedSessions') || '[]'); window._fbCancellations = JSON.parse(localStorage.getItem('cachedCancellations') || '[]'); window._fbDayClosures = JSON.parse(localStorage.getItem('cachedDayClosures') || '[]'); window._fbExams = JSON.parse(localStorage.getItem('cachedExams') || '[]'); } catch(e) { window._fbExams=[]; }
         function setSemester(n) {
             if (!SEMESTERS[n] || n === currentSem) return;
             currentSem = n; scheduleData = SEMESTERS[n];
             document.querySelectorAll('.sem-btn').forEach(b => b.classList.toggle('active', +b.dataset.sem === n));
             buildTabs(); refresh(); renderWeekGrid();
-            if (bottomView === 'calendar') renderCalendar2(); renderTasks();
+            renderExamCountdowns(); if (bottomView === 'calendar') renderCalendar2(); if (bottomView === 'exams') renderExams(); renderTasks();
             requestAnimationFrame(() => scrollToNow(true));
         }
 
@@ -1302,7 +1390,37 @@
         function inSem(e) { return !e.subjectId || !semIds(currentSem === 1 ? 2 : 1).has(e.subjectId) }
         function loadEvents() { return (window._fbEvents || JSON.parse(localStorage.getItem('cachedEvents') || '[]')).filter(inSem) }
         function loadSessions() { return window._fbSessions || JSON.parse(localStorage.getItem('cachedSessions') || '[]') }
+        function loadExams() { return (window._fbExams || JSON.parse(localStorage.getItem('cachedExams') || '[]')).filter(e => !e.semester || +e.semester === currentSem).sort((a,b) => (a.date||'').localeCompare(b.date||'')); }
+        function examDateTime(e) { const [y,m,d]=(e.date||'').split('-').map(Number), [h,mi]=(e.time||'08:00').split(':').map(Number); return new Date(y,m-1,d,h||0,mi||0,0,0); }
+        function examRemaining(e) { const ms=examDateTime(e)-new Date(); if(ms<=0)return null; const total=Math.floor(ms/1000),days=Math.floor(total/86400),hours=Math.floor(total%86400/3600),mins=Math.floor(total%3600/60),secs=total%60; return {days,hours,mins,secs}; }
+        function renderExams() { const box=document.getElementById('examsInner'); if(!box)return; const exams=loadExams().sort((a,b)=>{const da=examDateTime(a)-new Date(),db=examDateTime(b)-new Date();if(da>0&&db<=0)return -1;if(da<=0&&db>0)return 1;return da>0?da-db:db-da;}); if(!exams.length){box.innerHTML='<div class="text-center" style="color:var(--muted);padding:28px 8px;font-size:12px"><i class="bi bi-mortarboard" style="font-size:28px;display:block;margin-bottom:8px"></i>No exam dates have been added yet.</div>';return;} box.innerHTML=exams.map(e=>{const r=examRemaining(e),passed=!r;return `<div class="dm-item" style="--c:${e.color||'#f0a500'};margin-bottom:9px"><div style="padding:10px 12px"><div style="display:flex;align-items:center;gap:8px"><span class="u-chip" style="background:${e.color||'#f0a500'}22;color:${e.color||'#f0a500'}">${esc(e.examType||'Exam')}</span><span style="margin-left:auto;font-size:10px;color:var(--muted)">${esc(fmtDate(e.date))}</span></div><div style="font-size:14px;font-weight:800;margin-top:5px">${esc(e.name||((e.examType||'')+' Examination'))}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${esc((e.time||'08:00')+' · '+(e.room||'Room TBA'))}</div>${e.note?`<div style="font-size:10px;color:var(--muted);margin-top:5px">${esc(e.note)}</div>`:''}<div style="display:flex;gap:8px;align-items:baseline;margin-top:9px">${passed?'<strong style="color:var(--muted)">Exam time reached</strong>':`<strong style="font-family:JetBrains Mono,monospace;font-size:17px;color:${e.color||'var(--accent)'}">${r.days}d ${String(r.hours).padStart(2,'0')}h ${String(r.mins).padStart(2,'0')}m</strong><span style="font-size:9px;color:var(--muted)">${String(r.secs).padStart(2,'0')}s remaining</span>`}</div></div></div>`}).join(''); }
 
+
+        let examStripOpen = false; try { examStripOpen = localStorage.getItem('examStripOpen') === '1'; } catch (e) { }
+        function toggleExamStrip() { examStripOpen = !examStripOpen; try { localStorage.setItem('examStripOpen', examStripOpen ? '1' : '0'); } catch (e) { } renderExamCountdowns(); }
+        function renderExamCountdowns() {
+            const sec = document.getElementById('examCountdownSection'), box = document.getElementById('examCountdownCards');
+            if (!sec || !box) return;
+            const nowD = new Date();
+            /* Only the current exam phase: the exam type of the very next upcoming exam (Prelim -> Midterm -> ...). */
+            const future = loadExams().filter(e => e.date && examDateTime(e) > nowD).sort((a, b) => examDateTime(a) - examDateTime(b));
+            if (!future.length) { sec.style.display = 'none'; return; }
+            const phase = (future[0].examType || 'Exam');
+            const list = future.filter(e => (e.examType || 'Exam') === phase);
+            sec.style.display = ''; sec.classList.toggle('open', examStripOpen);
+            const first = list[0], r0 = examRemaining(first), color0 = first.color || '#f0a500';
+            const fmt = r => r ? (r.days > 0 ? `${r.days}d ${String(r.hours).padStart(2, '0')}h ${String(r.mins).padStart(2, '0')}m` : `${String(r.hours).padStart(2, '0')}:${String(r.mins).padStart(2, '0')}:${String(r.secs).padStart(2, '0')}`) : 'Now';
+            sec.style.setProperty('--exam-color', color0);
+            document.getElementById('examBarPhase').textContent = phase.toUpperCase();
+            document.getElementById('examBarName').textContent = (first.name || (phase + ' Examination')) + (list.length > 1 ? ` +${list.length - 1}` : '');
+            document.getElementById('examBarTime').textContent = fmt(r0);
+            document.getElementById('examBarToggle').setAttribute('aria-expanded', examStripOpen);
+            if (!examStripOpen) { if (box.innerHTML) box.innerHTML = ''; return; }
+            box.innerHTML = list.map((e, i) => {
+                const r = examRemaining(e), color = e.color || '#f0a500', nm = esc(e.name || (phase + ' Examination'));
+                return `<article class="exam-countdown-card${i === 0 ? ' is-next' : ''}" style="--exam-color:${color}"><div class="exam-countdown-name" title="${nm}">${nm}</div><div class="exam-countdown-time">${fmt(r)}</div><div class="exam-countdown-meta"><i class="bi bi-calendar3"></i> ${esc(fmtDate(e.date))} · ${esc(e.time || '08:00')}</div></article>`;
+            }).join('');
+        }
         /* ── Merge built-in timetable with Firestore session overrides/custom sessions/cancellations ── */
         function getEffectiveCourses(forDate = null) {
             const overridesBySlot = {};
@@ -1417,11 +1535,12 @@
         function selectDay(day) { selectedDay = (day === todayKey()) ? null : day; buildTabs(); refresh(); renderWeekGrid() }
 
         function setBottomView(v) {
-            bottomView = v;
-            const disp = { timetable: '', calendar: 'flex', tasks: 'block' }, ids = { timetable: 'weekGridScroll', calendar: 'calendarInner', tasks: 'tasksInner' };
+            bottomView = v; if (window.setBottomCollapsed && !window._initView) setBottomCollapsed(false);
+            const disp = { timetable: '', calendar: 'flex', tasks: 'block', exams: 'block' }, ids = { timetable: 'weekGridScroll', calendar: 'calendarInner', tasks: 'tasksInner', exams: 'examsInner' };
             Object.keys(ids).forEach(k => { document.getElementById(ids[k]).style.display = k === v ? disp[k] : 'none'; document.getElementById(k + 'Toggle').classList.toggle('active', k === v); });
             if (v === 'calendar') renderCalendar2();
             if (v === 'tasks') renderTasks();
+            if (v === 'exams') renderExams();
         }
 
         function buildTabs() {
@@ -1440,34 +1559,50 @@
         ; (function () {
             const handle = document.getElementById('weekGridHandle'), wrap = document.getElementById('weekGridWrap');
             const MIN_H = 80, MAX_H = 600, DEFAULT_H = 210;
-            let startY = 0, startH = 0, dragging = false;
+            let startY = 0, startH = 0, lastY = 0, dragging = false, tapTarget = null;
             function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
             function maxH() { const g = document.getElementById('weekGrid'); const content = g ? g.scrollHeight : 0; return content ? Math.min(MAX_H, handle.offsetHeight + content + 12) : MAX_H }
             function setHeight(h) { wrap.style.height = clamp(h, MIN_H, Math.max(MIN_H, maxH())) + 'px' }
             window.fitWeekPanel = function () { setHeight(wrap.offsetHeight || DEFAULT_H) };
             const saved = parseInt(localStorage.getItem('wgHeight'), 10); setHeight(isNaN(saved) ? DEFAULT_H : saved);
-            function onStart(y) { startY = y; startH = wrap.offsetHeight; dragging = true; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none' }
-            function onMove(y) { if (!dragging) return; setHeight(startH + (startY - y)) }
-            function onEnd() { if (!dragging) return; dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; localStorage.setItem('wgHeight', wrap.offsetHeight) }
-            handle.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientY) });
+            function onStart(y, t) { tapTarget = t || null; lastY = y; startY = y; startH = wrap.offsetHeight; dragging = true; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none' }
+            function onMove(y) { if (!dragging) return; lastY = y; setHeight(startH + (startY - y)) }
+            function onEnd() { if (!dragging) return; dragging = false; if (Math.abs(startY - lastY) < 6 && tapTarget && tapTarget.closest && !tapTarget.closest('button')) { toggleBottomPanel(); return; } document.body.style.cursor = ''; document.body.style.userSelect = ''; localStorage.setItem('wgHeight', wrap.offsetHeight) }
+            handle.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientY, e.target) });
             document.addEventListener('mousemove', e => onMove(e.clientY));
             document.addEventListener('mouseup', onEnd);
-            handle.addEventListener('touchstart', e => { onStart(e.touches[0].clientY) }, { passive: true });
+            handle.addEventListener('touchstart', e => { onStart(e.touches[0].clientY, e.target) }, { passive: true });
             document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientY) } }, { passive: false });
             document.addEventListener('touchend', onEnd);
         })();
 
+        function setBottomCollapsed(c) {
+            const wrap = document.getElementById('weekGridWrap'); if (!wrap) return;
+            wrap.classList.toggle('collapsed', !!c);
+            const b = document.getElementById('wgCollapseBtn'); if (b) b.setAttribute('aria-expanded', !c);
+            try { localStorage.setItem('wgCollapsed', c ? '1' : '0'); } catch (e) { }
+            if (!c && window.fitWeekPanel) window.fitWeekPanel();
+        }
+        function toggleBottomPanel() { setBottomCollapsed(!document.getElementById('weekGridWrap').classList.contains('collapsed')); }
         /* ── Calendar rendering ── */
         function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar2(); }
         function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar2(); }
-
+        function calGoToday() { const t = new Date(); calYear = t.getFullYear(); calMonth = t.getMonth(); renderCalendar2(); }
+        function calPick(dk) {
+            calSelectedDate = dk;
+            const p = dk.split('-'); if (+p[1] - 1 !== calMonth || +p[0] !== calYear) { calYear = +p[0]; calMonth = +p[1] - 1; }
+            renderCalendar2(); renderCalPanel2(dk);
+        }
         function renderCalendar2() {
             const lbl = document.getElementById('calMonthLabel2');
             if (lbl) lbl.textContent = `${MONTH_FULL[calMonth]} ${calYear}`;
-            renderCalGrid('calDaysGrid2', calYear, calMonth, function (dk) {
-                calSelectedDate = dk; renderCalPanel2(dk); renderCalGrid('calDaysGrid2', calYear, calMonth, function (dk2) { calSelectedDate = dk2; renderCalPanel2(dk2); });
-            });
+            renderCalGrid('calDaysGrid2', calYear, calMonth);
         }
+        (function () { /* swipe left/right to change month */
+            const body = document.getElementById('cal2Body'); if (!body) return; let x0 = null, y0 = null;
+            body.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY }, { passive: true });
+            body.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null; if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { dx < 0 ? calNext() : calPrev() } }, { passive: true });
+        })();
 
         function renderCalGrid(gridId, year, month, onSelect) {
             const grid = document.getElementById(gridId); if (!grid) return;
@@ -1479,7 +1614,7 @@
             const effectiveCourses = getEffectiveCourses();
             let html = '';
             let dayNum = 1, nextNum = 1;
-            const total = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            const total = 42;
             for (let i = 0; i < total; i++) {
                 let d, m2 = month, y2 = year, other = false;
                 if (i < firstDay) { d = daysInPrev - (firstDay - 1 - i); m2 = month - 1; if (m2 < 0) { m2 = 11; y2--; } other = true; }
@@ -1489,34 +1624,38 @@
                 const isToday = dk === todayDk;
                 const isSelected = dk === calSelectedDate;
                 const dayEvents = events.filter(e => e.deadline === dk || e.eventDate === dk);
+                const dayExams = loadExams().filter(e => e.date === dk);
                 const shortDay = DAY_MAP[new Date(y2, m2, d).getDay()];
                 const closure = getClosure(dk);
                 const hasCls = getEffectiveCourses(dk).some(c => c.days.includes(shortDay));
                 let dots = closure ? `<div class="cal-assign-dot" title="${esc(closure.reason || 'No classes')}" style="background:#9299a3"></div>` : '';
                 const seen = new Set();
+                dayExams.forEach(e => { const col=e.color||'#f0a500'; const key='exam-'+(e.examType||'exam'); if(!seen.has(key)){seen.add(key);dots += `<div class="cal-assign-dot" title="${esc(e.name||e.examType+' Exam')}" style="background:${col}"></div>`;} });
                 dayEvents.forEach(e => {
                     const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
                     const key = col + e.type;
                     if (!seen.has(key)) { seen.add(key); dots += `<div class="cal-assign-dot" style="color:${col};background:${col}"></div>`; }
                 });
-                if (hasCls && !other && !dots) { dots = `<div class="cal-dot" style="background:rgba(255,255,255,.25)"></div>`; }
+                if (hasCls && !other && !dots) { dots = `<div class="cal-dot" style="background:#8099cc"></div>`; }
                 const cls = ['cal-day', isToday ? 'today' : '', isSelected ? 'selected' : '', other ? 'other-month' : '', hasCls && !other ? 'has-class' : '', closure ? 'day-closed' : ''].filter(Boolean).join(' ');
-                html += `<div class="${cls}" onclick="(${onSelect.toString()})('${dk}')"><span class="cal-day-num">${d}</span><div class="cal-day-dots">${dots}</div></div>`;
+                html += `<div class="${cls}" onclick="calPick('${dk}')"><span class="cal-day-num">${d}</span><div class="cal-day-dots">${dots}</div></div>`;
             }
             grid.innerHTML = html;
         }
 
         function renderCalPanel2(dk) {
-            const panel = document.getElementById('calDayPanel2'); if (!panel) return;
+            let _html = ''; const _show = () => showModal(`<div><div class="dm-h" style="margin:0">${dk === dateKey(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) ? 'Today' : shortDay}</div><div style="font-weight:800;font-size:16px">${dayName}, ${monthName} ${d.getDate()}, ${d.getFullYear()}</div></div>`, `<div class="cal-popup">${_html}</div>`); const panel = { set innerHTML(h) { _html = h; } };
             const parts = dk.split('-'); const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
             const dayName = DAY_FULL[d.getDay()]; const monthName = MONTH_FULL[d.getMonth()];
             const dayEvents = loadEvents().filter(e => e.deadline === dk || e.eventDate === dk);
+            const dayExams = loadExams().filter(e => e.date === dk);
             const shortDay = DAY_MAP[d.getDay()];
             const dayClasses = getEffectiveCourses(dk).filter(c => c.days.includes(shortDay)).sort((a, b) => safeToMins(a) - safeToMins(b));
             const dayClosure = getClosure(dk);
-            let html = `<div class="cal-panel-header">${dayName}, ${monthName} ${d.getDate()}</div>`;
+            let html = '';
+            dayExams.forEach(e => { const col=e.color||'#f0a500'; html += `<div class="cal-event-item" style="border-left:3px solid ${col}"><div class="cal-event-type" style="color:${col}"><i class="bi bi-mortarboard"></i> ${esc(e.examType||'Exam')}</div><div class="cal-event-name">${esc(e.name||((e.examType||'')+' Examination'))}</div><div class="cal-event-desc">${esc((e.time||'08:00')+' · '+(e.room||'Room TBA'))}${e.note?' · '+esc(e.note):''}</div></div>`; });
             if (dayClosure) html += `<div class="p-2 mb-2 rounded-3" style="background:var(--surface-2,rgba(128,128,128,.12));border:1px solid var(--border-color,rgba(128,128,128,.2))"><div class="fw-bold"><i class="bi bi-calendar2-x me-1"></i> No classes</div><div class="small">${esc(dayClosure.reason || 'School day closed')}</div></div>`;
-            if (dayEvents.length === 0 && dayClasses.length === 0) { html += `<div style="font-size:10px;color:var(--muted);opacity:.5;padding:6px 0">No events or classes</div>`; panel.innerHTML = html; return; }
+            if (dayEvents.length === 0 && dayClasses.length === 0 && dayExams.length === 0) { html += `<div style="font-size:12px;color:var(--muted);padding:14px 0;text-align:center"><i class="bi bi-calendar2-check" style="font-size:24px;display:block;margin-bottom:6px;opacity:.6"></i>Nothing scheduled on this day</div>`; panel.innerHTML = html; _show(); return; }
             dayEvents.forEach(e => {
                 const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
                 const hasDeadline = e.type === 'assignment' || e.type === 'reminder';
@@ -1538,7 +1677,7 @@
                     html += `<div style="font-size:10px;color:var(--muted);padding:2px 0;display:flex;gap:6px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:${c.color};flex-shrink:0;display:inline-block"></span><span style="color:${c.color};font-weight:700">${esc(c.id)}</span> ${timeStr} · ${esc(c.room)}</div>`;
                 });
             }
-            panel.innerHTML = html;
+            panel.innerHTML = html; _show();
         }
 
         /* ── Week grid ── */
@@ -1650,6 +1789,7 @@
             if (!isViewingToday) { wrap.innerHTML = ''; }
             else if (current) { const sM = toMins(current.startH, current.startM), eM = toMins(current.endH, current.endM); const pct = Math.min(100, Math.max(0, ((nowM - sM) / (eM - sM)) * 100)), left = eM - nowM; const curMeta = getSubjectMeta(current.id); const curDesc = curMeta.instructor ? `${esc(current.desc)} · ${esc(curMeta.instructor)}` : esc(current.desc); wrap.innerHTML = `<div class="current-banner" style="color:${current.color};margin:10px 10px 0"><div class="current-dot" style="background:${current.color}"></div><div class="current-info"><div class="current-tag" style="color:${current.color}">NOW · ${minsToWords(left)} left</div><div class="current-id" style="color:${current.color}">${esc(current.id)}</div><div class="current-desc">${curDesc}</div></div><div class="current-time" style="color:${current.color}">${fmt12(current.startH, current.startM)}<br>– ${fmt12(current.endH, current.endM)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${current.color}"></div></div>`; }
             else if (vacantNow) { const pct = Math.min(100, Math.max(0, ((nowM - vacantNow.startMin) / (vacantNow.endMin - vacantNow.startMin)) * 100)), left = vacantNow.endMin - nowM; wrap.innerHTML = `<div class="current-banner vacant-banner" style="color:var(--muted);margin:10px 10px 0"><div class="current-dot" style="background:var(--muted)"></div><div class="current-info"><div class="current-tag" style="color:var(--muted)">ONGOING · ${minsToWords(left)} left</div><div class="current-id" style="color:var(--muted)">VACANT</div><div class="current-desc">No class scheduled</div></div><div class="current-time" style="color:var(--muted)">${fmt12(Math.floor(vacantNow.startMin / 60), vacantNow.startMin % 60)}<br>${fmt12(Math.floor(vacantNow.endMin / 60), vacantNow.endMin % 60)}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:var(--muted)"></div></div>`; }
+            else if (upcoming) { const uS = toMins(upcoming.startH, upcoming.startM), mu = uS - nowM; const secsLeft = Math.max(0, mu * 60 - new Date().getSeconds()); const hh = Math.floor(secsLeft / 3600), mm = Math.floor(secsLeft % 3600 / 60), ss = secsLeft % 60; const prevEnd = allDayCourses.filter(c => !isTBA(c) && toMins(c.endH, c.endM) <= uS && toMins(c.endH, c.endM) <= nowM).reduce((mx, c) => Math.max(mx, toMins(c.endH, c.endM)), 0); const base = prevEnd > 0 ? prevEnd : Math.max(0, uS - 180); const pct = Math.min(100, Math.max(0, ((nowM * 60 + new Date().getSeconds() - base * 60) / Math.max(1, (uS - base) * 60)) * 100)); const uMeta = getSubjectMeta(upcoming.id); const uDesc = uMeta.instructor ? `${esc(upcoming.desc)} · ${esc(uMeta.instructor)}` : esc(upcoming.desc); wrap.innerHTML = `<div class="current-banner upcoming-banner" style="color:${upcoming.color};margin:10px 10px 0"><div class="current-dot" style="background:${upcoming.color}"></div><div class="current-info"><div class="current-tag" style="color:${upcoming.color}">UP NEXT · ${fmt12(upcoming.startH, upcoming.startM)}</div><div class="current-id" style="color:${upcoming.color}">${esc(upcoming.id)}</div><div class="current-desc">${uDesc}${upcoming.room ? ' · ' + esc(upcoming.room) : ''}</div></div><div class="current-big" style="color:${upcoming.color}"><small>STARTS IN</small>${hh > 0 ? hh + ':' : ''}${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}</div></div><div class="progress-bar-wrap" style="margin:5px 10px 0"><div class="progress-bar" style="width:${pct}%;background:${upcoming.color};transition:none"></div></div>`; }
             else { wrap.innerHTML = ''; }
 
             const listLabel = document.getElementById('listLabel'), list = document.getElementById('classesList');
@@ -1810,10 +1950,10 @@
 
         /* ── Init ── */
         updateClock(); setInterval(updateClock, 1000);
-        buildTabs(); setBottomView('timetable');
+        buildTabs(); window._initView = true; setBottomView('timetable'); window._initView = false; try { if (localStorage.getItem('wgCollapsed') === '1') setBottomCollapsed(true); } catch (e) { }
         let lastRenderedDay = null;
         function tick() {
-            refresh(); const today = todayKey();
+            refresh(); if(bottomView==='exams') renderExams(); const today = todayKey();
             if (today !== lastRenderedDay) { lastRenderedDay = today; renderWeekGrid(); requestAnimationFrame(() => scrollToNow(true)); }
             else { updateNowLine(); }
             buildTabs();
@@ -1850,7 +1990,7 @@
         const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
 
         // Keep a live-synced copy of all events in window._fbEvents
-        try { window._fbEvents = JSON.parse(localStorage.getItem('cachedEvents') || '[]'); window._fbSubjects = JSON.parse(localStorage.getItem('cachedSubjects') || '[]'); window._fbSessions = JSON.parse(localStorage.getItem('cachedSessions') || '[]'); window._fbCancellations = JSON.parse(localStorage.getItem('cachedCancellations') || '[]'); window._fbDayClosures = JSON.parse(localStorage.getItem('cachedDayClosures') || '[]'); } catch(e) { window._fbEvents=[]; window._fbSubjects=[]; window._fbSessions=[]; window._fbCancellations=[]; window._fbDayClosures=[]; }
+        try { window._fbEvents = JSON.parse(localStorage.getItem('cachedEvents') || '[]'); window._fbSubjects = JSON.parse(localStorage.getItem('cachedSubjects') || '[]'); window._fbSessions = JSON.parse(localStorage.getItem('cachedSessions') || '[]'); window._fbCancellations = JSON.parse(localStorage.getItem('cachedCancellations') || '[]'); window._fbDayClosures = JSON.parse(localStorage.getItem('cachedDayClosures') || '[]'); window._fbExams=JSON.parse(localStorage.getItem('cachedExams')||'[]'); } catch(e) { window._fbEvents=[]; window._fbSubjects=[]; window._fbSessions=[]; window._fbCancellations=[]; window._fbDayClosures=[]; window._fbExams=[]; }
 
         const q = query(collection(db, "events"), orderBy("createdAt", "asc"));
         onSnapshot(q, (snapshot) => {
@@ -1901,6 +2041,14 @@
         }, (err) => console.warn("Firestore cancellation sync error:", err.message));
 
         // Whole-day closures (holidays / suspensions), date-scoped and non-recurring.
+        onSnapshot(collection(db, "examDates"), (snapshot) => {
+            window._fbExams=snapshot.docs.map(d=>({id:d.id,...d.data()}));
+            try { localStorage.setItem('cachedExams',JSON.stringify(window._fbExams||[])); } catch(e) {}
+            if(typeof renderExams==='function')renderExams();
+            if(typeof renderExamCountdowns==='function')renderExamCountdowns();
+            if(typeof renderCalGrid==='function' && typeof calMonth!=='undefined')renderCalendar2();
+        }, (err)=>console.warn('Firestore exam sync error:',err.message));
+
         onSnapshot(collection(db, "dayClosures"), (snapshot) => {
             window._fbDayClosures = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
             try { localStorage.setItem('cachedDayClosures', JSON.stringify(window._fbDayClosures || [])); } catch(e) {}
@@ -1908,7 +2056,82 @@
             if (typeof renderWeekGrid === 'function') renderWeekGrid();
             if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
         }, (err) => console.warn("Firestore day-closure sync error:", err.message));
+
+        // Keep the dashboard countdowns live, including when the Exams tab is closed.
+        renderExamCountdowns();
+        setInterval(() => { renderExamCountdowns(); if (bottomView === 'exams') renderExams(); }, 1000);
     </script>
+
+    <style>
+      .alarm-open-btn{align-self:flex-start;display:flex;align-items:center;gap:6px;border:1px solid rgba(128,153,204,.35);border-radius:9px;background:rgba(128,153,204,.12);color:var(--text);padding:7px 9px;font:700 10px Inter,sans-serif;letter-spacing:.04em;cursor:pointer}
+      .alarm-open-btn i{font-size:14px;color:#f0b84b}
+      .alarm-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:14px}
+      .alarm-overlay.open{display:flex}
+      .alarm-dialog{width:min(520px,100%);max-height:min(88vh,760px);overflow:auto;background:var(--header);color:var(--text);border:1px solid rgba(128,153,204,.25);border-radius:16px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+      .alarm-dialog h2{font-size:18px;font-weight:800;margin:0}.alarm-muted{color:var(--muted);font-size:12px;line-height:1.5}
+      .alarm-subject{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(128,153,204,.14)}
+      .alarm-subject:last-child{border-bottom:0}.alarm-subject-main{min-width:0;flex:1}.alarm-subject-code{font-size:12px;font-weight:800}.alarm-subject-desc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .alarm-subject input[type=checkbox]{width:18px;height:18px;accent-color:#f0b84b}
+      .alarm-subject select,.alarm-dialog select{background:var(--bg);color:var(--text);border:1px solid rgba(128,153,204,.3);border-radius:7px;padding:5px;font-size:12px}
+      .alarm-action{border:0;border-radius:9px;padding:9px 12px;font-weight:700;font-size:12px;cursor:pointer}
+      .alarm-primary{background:#f0b84b;color:#171717}.alarm-secondary{background:rgba(128,153,204,.15);color:var(--text)}
+      .alarm-status{padding:9px 10px;border-radius:9px;background:rgba(128,153,204,.1);font-size:11px;color:var(--muted);margin:10px 0}
+      @media(max-width:480px){.alarm-open-btn span{display:none}.alarm-open-btn{padding:7px 9px}.alarm-dialog{padding:14px}}
+    
+        /* ── Layout fixes ── */
+        .widget-header{align-items:flex-start;gap:10px}
+        .header-left{min-width:0;flex:1}
+        .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+        .hdr-chips{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:4px}
+        .hdr-chips:empty{display:none}
+        .hdr-chips .next-badge{margin-top:0}
+        .sem-switch{display:flex;width:100%;gap:0;padding:2px;border:1px solid rgba(var(--ov),.18);border-radius:999px;background:rgba(var(--ov),.05)}
+        .sem-btn{flex:1;font-size:10px;padding:4px 10px;white-space:nowrap;transition:background .15s,color .15s}
+        .sem-btn.active{background:var(--accent);color:var(--on-accent)}
+        .header-right .alarm-open-btn{align-self:stretch;justify-content:center;padding:6px 9px}
+        @media(max-width:480px){.header-right .alarm-open-btn span{display:inline}}
+        /* upcoming class banner */
+        .current-banner.upcoming-banner{border:1px dashed currentColor}
+        .current-banner.upcoming-banner .current-big{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;text-align:right;flex-shrink:0;line-height:1.2}
+        .current-banner.upcoming-banner .current-big small{display:block;font-size:8px;font-weight:700;letter-spacing:.8px;opacity:.7}
+        /* exam countdown: compact swipeable strip */
+        .exam-countdown-section{padding:7px 0 7px 10px}
+        .exam-countdown-heading{margin:0 10px 6px 0;margin-bottom:6px}
+        .exam-countdown-kicker{display:none}
+        .exam-countdown-title{font-size:11px}
+        .exam-countdown-cards{display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;padding:0 10px 2px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+        .exam-countdown-cards::-webkit-scrollbar{display:none}
+        .exam-countdown-card{flex:0 0 auto;min-width:138px;max-width:190px;scroll-snap-align:start;padding:6px 9px}
+        .exam-countdown-card.is-next{box-shadow:0 0 0 1px var(--exam-color)}
+        .exam-countdown-card.is-past{opacity:.5}
+        .exam-countdown-empty{flex:1}
+        .exam-countdown-time{font-size:12px;margin-top:4px}
+        .exam-countdown-card .ec-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
+        @media(max-width:420px){.exam-countdown-card{min-width:128px;padding:6px 8px}.exam-countdown-time{font-size:11px}.exam-countdown-name{font-size:10px}.exam-countdown-meta{font-size:8px}}
+        @media(max-width:340px){.exam-countdown-cards{display:flex}.exam-countdown-card{display:block}.exam-countdown-time{grid-column:auto;grid-row:auto;margin:4px 0 0}}
+    </style>
+    <div class="alarm-overlay" id="alarmOverlay" role="dialog" aria-modal="true" aria-labelledby="alarmTitle">
+      <div class="alarm-dialog">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div><h2 id="alarmTitle"><i class="bi bi-bell-fill" style="color:#f0b84b"></i> Subject alarms</h2><div class="alarm-muted">Choose which classes should remind you before they start.</div></div>
+          <button class="alarm-action alarm-secondary" id="closeAlarmSettings" type="button" aria-label="Close">✕</button>
+        </div>
+        <div class="alarm-status" id="alarmPermissionStatus">Notifications are not enabled yet.</div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0">
+          <label class="alarm-muted" for="defaultAlarmLead">Default reminder</label>
+          <select id="defaultAlarmLead"><option value="0">At class time</option><option value="5">5 minutes before</option><option value="10" selected>10 minutes before</option><option value="15">15 minutes before</option><option value="30">30 minutes before</option></select>
+          <button class="alarm-action alarm-secondary" id="applyDefaultLead" type="button">Apply to all</button>
+        </div>
+        <div id="alarmSubjectList"></div>
+        <div class="alarm-muted" style="margin-top:12px">Alarms and sound work while this schedule page is open. Mobile notifications while the app is closed require push delivery from a server; a service worker alone cannot reliably schedule future alarms.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+          <button class="alarm-action alarm-primary" id="enableAlarmNotifications" type="button"><i class="bi bi-bell"></i> Enable notifications</button>
+          <button class="alarm-action alarm-secondary" id="testAlarmSound" type="button"><i class="bi bi-volume-up"></i> Test sound</button>
+          <button class="alarm-action alarm-secondary" id="closeAlarmBottom" type="button" style="margin-left:auto">Done</button>
+        </div>
+      </div>
+    </div>
+    <script src="alarm.js"></script>
 </body>
 
 </html>
