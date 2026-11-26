@@ -1,0 +1,30 @@
+AAMT Schedule — Firebase project connection
+
+The application now points to the Firebase Web App configuration supplied for
+project schedule-3f07b.
+
+DATABASE TYPE
+The app uses Cloud Firestore collections: events, subjects, sessions,
+sessionCancellations, and dayClosures. The JSON rules with .read/.write are for
+Realtime Database, not Cloud Firestore.
+
+SETUP
+1. In Firebase Console > Build > Firestore Database, create a Cloud Firestore
+database if it does not already exist.
+2. Open Firestore Database > Rules and publish firestore.rules from this ZIP.
+3. IMPORTANT: These are starter rules: reads are public and writes are allowed
+for any authenticated Firebase user. This admin page does not yet include a
+Firebase Authentication sign-in flow. Do not enable general user sign-in or
+share access until admin authentication and an admin UID/custom-claim rule are
+implemented. Never use unrestricted public writes.
+4. Deploy the entire folder to your hosting origin (e.g. GitHub Pages).
+
+DATA MIGRATION
+Changing the Firebase destination does not copy the old project's Firestore
+data. The new project's collections will be empty until data is imported or
+re-entered. Exporting the old project requires old-project access or an existing
+authorized session/backup.
+
+OFFLINE
+The pages already initialize Firestore persistent local cache. Load each page
+while online once. Authorized pending writes can sync after reconnection.

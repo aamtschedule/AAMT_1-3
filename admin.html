@@ -1,2068 +1,395 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-bs-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Schedule Admin</title>
-    <link rel="icon" type="image/png" href="new_admin_icon_RAW.png">
-    <link rel="manifest" href="manifest_admin.json">
-    <meta name="theme-color" content="#dc2626">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Schedule">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
-
-        :root {
-            --bg: #050a15;
-            --surface: #0a1428;
-            --card: #0f1e42;
-            --header: #0f1d38;
-            --accent: #ffffff;
-            --text: #e8f0ff;
-            --muted: #8099cc;
-            --border: rgba(255, 255, 255, .1);
-            --radius: 10px;
-            --danger: #ff5252;
-            --success: #2ec27e;
-            --warn: #f0a500
-        }
-
-        * {
-            font-family: 'Inter', sans-serif;
-            color: var(--text)
-        }
-
-        body {
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column
-        }
-
-        a {
-            color: var(--muted);
-            text-decoration: none
-        }
-
-        a:hover {
-            color: var(--text)
-        }
-
-        .adm-header {
-            background: var(--header);
-            border-bottom: 2px solid var(--accent);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100
-        }
-
-        .adm-title {
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: .3px
-        }
-
-        .adm-subtitle {
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 1px
-        }
-
-        .back-btn {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .6px;
-            text-transform: uppercase;
-            background: rgba(255, 255, 255, .08);
-            border: 1px solid rgba(255, 255, 255, .15);
-            border-radius: 6px;
-            padding: 5px 10px;
-            cursor: pointer;
-            color: var(--muted);
-            transition: background .15s, color .15s
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, .15);
-            color: var(--text)
-        }
-
-        .adm-body {
-            flex: 1;
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px
-        }
-
-        .section-label {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 8px
-        }
-
-        .form-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px
-        }
-
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 10px
-        }
-
-        .form-row:last-child {
-            margin-bottom: 0
-        }
-
-        .form-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .6px;
-            text-transform: uppercase;
-            color: var(--muted)
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px 10px;
-            font-size: 12px;
-            color: var(--text);
-            outline: none;
-            transition: border-color .15s;
-            width: 100%
-        }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            border-color: rgba(255, 255, 255, .35)
-        }
-
-        .form-select option {
-            background: #0a1428;
-            color: var(--text)
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 60px;
-            line-height: 1.5
-        }
-
-        .form-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .4px;
-            cursor: pointer;
-            transition: opacity .15s, transform .1s;
-            margin-top: 4px
-        }
-
-        .submit-btn:active {
-            transform: scale(.98)
-        }
-
-        .submit-btn.add {
-            background: var(--accent);
-            color: #050a15
-        }
-
-        .submit-btn.edit {
-            background: #3a7bd5;
-            color: #fff
-        }
-
-        .type-tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px
-        }
-
-        .type-tab {
-            flex: 1;
-            padding: 6px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-            cursor: pointer;
-            background: transparent;
-            color: var(--muted);
-            transition: all .15s;
-            text-align: center
-        }
-
-        .type-tab.active {
-            background: rgba(255, 255, 255, .12);
-            color: var(--text);
-            border-color: rgba(255, 255, 255, .3)
-        }
-
-        .events-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px
-        }
-
-        .event-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 10px 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            transition: border-color .15s
-        }
-
-        .event-item:hover {
-            border-color: rgba(255, 255, 255, .2)
-        }
-
-        .event-bar {
-            width: 3px;
-            border-radius: 3px;
-            align-self: stretch;
-            flex-shrink: 0
-        }
-
-        .event-body {
-            flex: 1;
-            min-width: 0
-        }
-
-        .event-top {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-            margin-bottom: 2px;
-            flex-wrap: wrap
-        }
-
-        .event-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text)
-        }
-
-        .event-subject-badge {
-            font-size: 8px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-            padding: 1px 5px;
-            border-radius: 3px
-        }
-
-        .event-type-badge {
-            font-size: 8px;
-            font-weight: 700;
-            letter-spacing: .4px;
-            text-transform: uppercase;
-            padding: 1px 5px;
-            border-radius: 3px;
-            background: rgba(255, 255, 255, .08);
-            color: var(--muted)
-        }
-
-        .event-desc {
-            font-size: 10px;
-            color: var(--muted);
-            margin-bottom: 3px;
-            line-height: 1.4;
-            white-space: pre-wrap;
-            word-break: break-word
-        }
-
-        .event-meta {
-            font-size: 9px;
-            color: var(--muted);
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap
-        }
-
-        .event-deadline-chip {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 1px 5px;
-            border-radius: 3px
-        }
-
-        .event-actions {
-            display: flex;
-            gap: 5px;
-            flex-shrink: 0;
-            margin-top: 1px
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .1);
-            border-radius: 5px;
-            color: var(--muted);
-            font-size: 11px;
-            cursor: pointer;
-            padding: 4px 7px;
-            transition: background .12s, color .12s;
-            line-height: 1
-        }
-
-        .icon-btn:hover.edit-btn {
-            background: rgba(58, 123, 213, .2);
-            color: #7ab3ff;
-            border-color: rgba(58, 123, 213, .4)
-        }
-
-        .icon-btn:hover.del-btn {
-            background: rgba(255, 82, 82, .15);
-            color: #ff8080;
-            border-color: rgba(255, 82, 82, .3)
-        }
-
-        .empty-events {
-            font-size: 11px;
-            color: var(--muted);
-            opacity: .5;
-            text-align: center;
-            padding: 24px 0
-        }
-
-        .filter-bar {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap
-        }
-
-        .filter-chip {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--muted);
-            cursor: pointer;
-            transition: all .12s
-        }
-
-        .filter-chip.active {
-            background: rgba(255, 255, 255, .12);
-            color: var(--text);
-            border-color: rgba(255, 255, 255, .25)
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: #1a2a50;
-            border: 1px solid rgba(255, 255, 255, .2);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text);
-            z-index: 999;
-            transition: transform .25s ease, opacity .25s ease;
-            opacity: 0;
-            white-space: nowrap
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1
-        }
-
-        .cancel-btn {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            background: transparent;
-            color: var(--muted);
-            margin-top: 4px;
-            transition: background .15s
-        }
-
-        .cancel-btn:hover {
-            background: rgba(255, 255, 255, .06)
-        }
-
-        .count-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, .1);
-            border-radius: 99px;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 1px 6px;
-            color: var(--muted);
-            margin-left: 6px
-        }
-
-        /* ── Firebase status indicator ── */
-        .db-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid transparent
-        }
-
-        .db-status.connecting {
-            color: var(--warn);
-            border-color: rgba(240, 165, 0, .3);
-            background: rgba(240, 165, 0, .08)
-        }
-
-        .db-status.connected {
-            color: var(--success);
-            border-color: rgba(46, 194, 126, .3);
-            background: rgba(46, 194, 126, .08)
-        }
-
-        .db-status.error {
-            color: var(--danger);
-            border-color: rgba(255, 82, 82, .3);
-            background: rgba(255, 82, 82, .08)
-        }
-
-        .db-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: currentColor
-        }
-
-        .db-status.connected .db-dot {
-            animation: dbPulse 2s ease-in-out infinite
-        }
-
-        @keyframes dbPulse {
-
-            0%,
-            100% {
-                opacity: 1
-            }
-
-            50% {
-                opacity: .4
-            }
-        }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(5, 10, 21, .7);
-            z-index: 500;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 12px;
-            color: var(--muted)
-        }
-
-        .loading-overlay.show {
-            display: flex
-        }
-
-        .spinner {
-            width: 24px;
-            height: 24px;
-            border: 2px solid rgba(255, 255, 255, .1);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin .7s linear infinite
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg)
-            }
-        }
-
-        .top-tabs {
-            display: flex;
-            gap: 6px
-        }
-
-        .top-tab {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-            cursor: pointer;
-            background: var(--card);
-            color: var(--muted);
-            text-align: center;
-            transition: all .15s
-        }
-
-        .top-tab.active {
-            background: rgba(255, 255, 255, .14);
-            color: var(--text);
-            border-color: rgba(255, 255, 255, .35)
-        }
-
-        .color-swatch-row {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 2px
-        }
-
-        .color-swatch {
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color .12s, transform .1s
-        }
-
-        .color-swatch.selected {
-            border-color: #fff;
-            transform: scale(1.1)
-        }
-
-        .session-chip {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, .05);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 5px 8px;
-            font-size: 10px;
-            margin-bottom: 5px
-        }
-
-        .session-chip .sc-info {
-            flex: 1;
-            color: var(--muted)
-        }
-
-        .session-chip .sc-remove {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 12px;
-            padding: 0 2px
-        }
-
-        .subject-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 10px 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px
-        }
-
-        .subject-item .event-bar {
-            width: 3px;
-            border-radius: 3px;
-            align-self: stretch;
-            flex-shrink: 0
-        }
-
-        .subject-sessions {
-            font-size: 9px;
-            color: var(--muted);
-            margin-top: 3px;
-            line-height: 1.5
-        }
-
-        .tba-note {
-            font-size: 9px;
-            color: var(--muted);
-            opacity: .6;
-            margin-top: 4px;
-            line-height: 1.4
-        }
-
-        /* ── Bulk subjects editor additions ── */
-        .subj-toolbar {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px
-        }
-
-        .subj-toolbar-left {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap
-        }
-
-        .btn-sm {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-            border-radius: 6px;
-            padding: 5px 9px;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, .08);
-            color: var(--muted);
-            transition: .15s
-        }
-
-        .btn-sm:hover {
-            background: rgba(255, 255, 255, .16);
-            color: var(--text)
-        }
-
-        .btn-sm.primary {
-            background: var(--accent);
-            color: #050a15;
-            border-color: var(--accent)
-        }
-
-        .btn-sm.primary:hover {
-            opacity: .85
-        }
-
-        .btn-sm:disabled {
-            opacity: .35;
-            cursor: not-allowed
-        }
-
-        .dirty-note {
-            font-size: 9px;
-            color: var(--warn);
-            font-weight: 700;
-            letter-spacing: .4px
-        }
-
-        .subj-inline-input {
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            padding: 5px 7px;
-            font-size: 10px;
-            color: var(--text);
-            outline: none;
-            width: 100%;
-            transition: border-color .15s
-        }
-
-        .subj-inline-input:focus {
-            border-color: rgba(255, 255, 255, .35)
-        }
-
-        .subject-item.dirty-row {
-            border-color: rgba(240, 165, 0, .4)
-        }
-
-        .subj-field-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 5px
-        }
-
-        .subj-field-row>div {
-            flex: 1
-        }
-
-        .subj-color-mini-row {
-            display: flex;
-            align-items: center;
-            gap: 5px
-        }
-
-        .subj-color-input {
-            width: 26px;
-            height: 24px;
-            padding: 0;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            background: none;
-            cursor: pointer;
-            flex-shrink: 0
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{document.documentElement.dataset.bsTheme=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark')}catch(e){}</script>
+<title>Schedule Admin</title>
+<link rel="icon" type="image/png" href="new_admin_icon-RAW.png">
+<link rel="manifest" href="manifest_admin.json">
+<meta name="theme-color" content="#2563eb">
+<link rel="stylesheet" href="vendor/bootstrap.min.css">
+<link rel="stylesheet" href="vendor/bootstrap-icons.min.css">
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+:root{--grad:#294766;--admin-bg:#080f1c;--admin-panel:#111c2c;--admin-border:#29384b;--admin-muted:#98a7ba} body{font-family:Inter,system-ui,sans-serif;letter-spacing:-.01em}
+body{background:var(--bs-tertiary-bg)}
+:root[data-bs-theme="dark"]{--bs-body-bg:#050a15;--bs-body-color:#e8f0ff;--bs-tertiary-bg:#09152b;--bs-secondary-bg:#0f1e3b;--bs-border-color:#263b63;--bs-secondary-color:#91a7cf}
+:root[data-bs-theme="dark"] .card,:root[data-bs-theme="dark"] .modal-content{background:#0f1d38;border-color:#263b63}
+:root[data-bs-theme="dark"] .navbar{background:rgba(5,10,21,.9)!important;border-color:#263b63!important}
+:root[data-bs-theme="dark"] .form-control,:root[data-bs-theme="dark"] .form-select,:root[data-bs-theme="dark"] .input-group-text{background:#09152b;color:#e8f0ff;border-color:#30466e}
+:root[data-bs-theme="dark"] .list-group-item{background:transparent;color:#e8f0ff}
+.hero{background:var(--bs-secondary-bg);color:var(--bs-body-color);border:1px solid var(--bs-border-color)}
+.card{overflow:hidden}
+.section-kicker{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--bs-secondary-color)}
+.subject-mode{font-weight:600}
+.subject-prof-grid{display:grid;grid-template-columns:1fr;gap:.5rem}
+.mode-help{font-size:.75rem;color:var(--bs-secondary-color)}
+.session-type-pill{font-size:.68rem;font-weight:800;letter-spacing:.04em}
+.navbar{backdrop-filter:blur(8px);background:rgba(var(--bs-body-bg-rgb),.85)!important}
+.brand-ico{width:34px;height:34px;border-radius:10px;background:#294766;color:#fff;display:grid;place-items:center}
+.card{border:1px solid var(--bs-border-color-translucent);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px -12px rgba(0,0,0,.25)}
+.card-header{background:transparent;border-bottom:1px solid var(--bs-border-color-translucent);padding:.8rem 1rem}
+.hero{background:var(--bs-secondary-bg);color:var(--bs-body-color);border:1px solid var(--bs-border-color);border-radius:14px;padding:1.1rem 1.25rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;box-shadow:none}
+.hero .btn-light{--bs-btn-color:#182638;font-weight:600}.hero .btn-outline-light{--bs-btn-color:var(--bs-body-color);--bs-btn-border-color:var(--bs-border-color);font-weight:600}
+.stat{transition:transform .15s}.stat:hover{transform:translateY(-2px)}
+.stat .n{font-size:1.9rem;font-weight:800;line-height:1}.ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center}.ico .bi{font-size:1.3rem}
+.side-nav .nav-link{display:flex;align-items:center;gap:.6rem;color:var(--bs-body-color);border-radius:11px;padding:.6rem .85rem;font-weight:500;white-space:nowrap}
+.side-nav .nav-link:hover{background:var(--bs-secondary-bg)}
+.side-nav .nav-link.active{background:#294766;color:#fff;box-shadow:none}
+@media(min-width:992px){.side-nav{position:sticky;top:78px}}
+.list-group-item{background:transparent}
+.list-group-item+.list-group-item{border-top-color:var(--bs-border-color-translucent)}
+.wk{border-radius:12px;padding:.5rem .25rem;background:var(--bs-secondary-bg)}.wk.today{outline:2px solid #2563eb}.wk .c{font-weight:800;font-size:1.1rem}
+.btn-primary{background:#315879;border:1px solid #315879}.btn-primary:hover{background:#274965;border-color:#274965}
+.form-control,.form-select{border-radius:10px}
+.modal-content{border-radius:16px;border:0;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.toast-container{z-index:2000}.sticky-save{position:sticky;bottom:12px;z-index:50}
+.nav-pills{scrollbar-width:none}
+
+:root[data-bs-theme="light"]{--bs-body-bg:#f1f5fb;--bs-body-color:#101b32;--bs-tertiary-bg:#e8eef7;--bs-border-color:#c5d0e0;--bs-secondary-color:#52627d}
+:root[data-bs-theme="light"] .card,:root[data-bs-theme="light"] .modal-content{background:#fff;color:#101b32;border-color:#c5d0e0}
+:root[data-bs-theme="light"] .form-control,:root[data-bs-theme="light"] .form-select,:root[data-bs-theme="light"] .input-group-text{background:#fff;color:#101b32;border-color:#aebbd0}
+:root[data-bs-theme="light"] .list-group-item{color:#101b32}
+.admin-shell{max-width:1440px}
+</style>
 </head>
-
 <body>
-
-    <div class="adm-header">
-        <div>
-            <div class="adm-title">⚙ Schedule Admin</div>
-            <div class="adm-subtitle">Manage events &amp; assignments</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-            <div class="db-status connecting" id="dbStatus">
-                <div class="db-dot"></div>
-                <span id="dbStatusText">Connecting…</span>
-            </div>
-            <a href="index.html" class="back-btn">Back to Schedule</a>
-        </div>
-    </div>
-
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <div id="loadingOverlayText">Saving to Firebase…</div>
-    </div>
-
-    <div class="adm-body">
-
-        <div class="top-tabs">
-            <div class="top-tab active" id="pageTab-items" onclick="switchPage('items')">📋 Items</div>
-            <div class="top-tab" id="pageTab-subjects" onclick="switchPage('subjects')">🎓 Subjects</div>
-            <div class="top-tab" id="pageTab-sessions" onclick="switchPage('sessions')">🕐 Timetable</div>
-        </div>
-
-        <!-- ══════════ ITEMS PAGE ══════════ -->
-        <div id="page-items">
-
-            <!-- ADD / EDIT FORM -->
-            <div>
-                <div class="section-label" id="formSectionLabel">Add new item</div>
-                <div class="form-card" id="formCard">
-
-                    <div class="type-tabs">
-                        <div class="type-tab active" id="tab-assignment" onclick="switchType('assignment')">📋
-                            Assignment</div>
-                        <div class="type-tab" id="tab-event" onclick="switchType('event')">📅 Event</div>
-                        <div class="type-tab" id="tab-reminder" onclick="switchType('reminder')">🎒 Bring/Review</div>
-                    </div>
-
-                    <input type="hidden" id="editId">
-
-                    <!-- Assignment fields -->
-                    <div id="assignmentFields">
-                        <div class="form-row">
-                            <label class="form-label">Subject</label>
-                            <select class="form-select" id="subjectSelect" onchange="onSubjectChange('assign')">
-                                <option value="">— Select subject —</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Schedule / session (optional)</label>
-                            <select class="form-select" id="assignSession">
-                                <option value="">All sessions of this subject</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Assignment name</label>
-                            <input class="form-input" type="text" id="assignName" placeholder="e.g. Lab Report #3">
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Description (optional)</label>
-                            <textarea class="form-textarea" id="assignDesc"
-                                placeholder="Details, instructions…"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Deadline</label>
-                            <input class="form-input" type="date" id="assignDeadline">
-                        </div>
-                    </div>
-
-                    <!-- Event fields -->
-                    <div id="eventFields" style="display:none">
-                        <div class="form-row">
-                            <label class="form-label">Event name</label>
-                            <input class="form-input" type="text" id="eventName"
-                                placeholder="e.g. Aviation Club Meeting">
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Description (optional)</label>
-                            <textarea class="form-textarea" id="eventDesc" placeholder="What's happening?"></textarea>
-                        </div>
-                        <div class="form-row-2">
-                            <div class="form-row" style="margin-bottom:0">
-                                <label class="form-label">Date</label>
-                                <input class="form-input" type="date" id="eventDate">
-                            </div>
-                            <div class="form-row" style="margin-bottom:0">
-                                <label class="form-label">Subject (optional)</label>
-                                <select class="form-select" id="eventSubject" onchange="onSubjectChange('event')">
-                                    <option value="">None</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Schedule / session (optional)</label>
-                            <select class="form-select" id="eventSession">
-                                <option value="">All sessions of this subject</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Reminder fields (bring an item / review-study) -->
-                    <div id="reminderFields" style="display:none">
-                        <div class="form-row">
-                            <label class="form-label">Kind</label>
-                            <select class="form-select" id="reminderKind">
-                                <option value="bring">🎒 Bring an item</option>
-                                <option value="review">📖 Review / Advance study</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Subject</label>
-                            <select class="form-select" id="reminderSubject" onchange="onSubjectChange('reminder')">
-                                <option value="">— Select subject —</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Schedule / session (optional)</label>
-                            <select class="form-select" id="reminderSession">
-                                <option value="">All sessions of this subject</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">What to bring / study</label>
-                            <input class="form-input" type="text" id="reminderName"
-                                placeholder="e.g. Torque wrench set / Ch.4 Hydraulics">
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Notes (optional)</label>
-                            <textarea class="form-textarea" id="reminderDesc" placeholder="Extra details…"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Needed by (date)</label>
-                            <input class="form-input" type="date" id="reminderDeadline">
-                        </div>
-                    </div>
-
-                    <button class="submit-btn add" id="submitBtn" onclick="submitForm()">Add Assignment</button>
-                    <button class="cancel-btn" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Cancel
-                        edit</button>
-                </div>
-            </div>
-
-            <!-- EVENTS LIST -->
-            <div>
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                    <div class="section-label" style="margin-bottom:0">All items <span class="count-badge"
-                            id="totalCount">0</span></div>
-                </div>
-                <div class="filter-bar" style="margin-bottom:10px">
-                    <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
-                    <button class="filter-chip" onclick="setFilter('assignment',this)">Assignments</button>
-                    <button class="filter-chip" onclick="setFilter('event',this)">Events</button>
-                    <button class="filter-chip" onclick="setFilter('reminder',this)">Bring/Review</button>
-                    <button class="filter-chip" onclick="setFilter('upcoming',this)">Upcoming</button>
-                    <button class="filter-chip" onclick="setFilter('overdue',this)">Overdue</button>
-                </div>
-                <div class="events-list" id="eventsList">
-                    <div class="empty-events">Connecting to Firebase…</div>
-                </div>
-            </div>
-
-        </div>
-        <!-- ══════════ /ITEMS PAGE ══════════ -->
-
-        <!-- ══════════ SUBJECTS PAGE ══════════ -->
-        <div id="page-subjects" style="display:none">
-
-            <div>
-                <div class="section-label" id="subjFormLabel">Add / edit subject</div>
-                <div class="form-card">
-                    <div class="form-row">
-                        <label class="form-label">Subject ID</label>
-                        <input class="form-input" type="text" id="subjId"
-                            placeholder="e.g. AMT1105 (must match timetable code, or a new one)">
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label">Description / subject title</label>
-                        <input class="form-input" type="text" id="subjDesc" placeholder="e.g. Aircraft Powerplant 1">
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label">Instructor name</label>
-                        <input class="form-input" type="text" id="subjInstructor"
-                            placeholder="e.g. Engr. Juan Dela Cruz">
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label">Color</label>
-                        <div class="color-swatch-row" id="colorSwatchRow"></div>
-                    </div>
-                    <div class="tba-note">Editing an ID that already exists in the timetable overrides its description,
-                        color and adds the instructor name shown on the schedule. Adding a brand-new ID makes it
-                        available to tag on assignments/events even before it has a timetable slot.</div>
-                    <button class="submit-btn add" id="subjSubmitBtn" onclick="submitSubject()"
-                        style="margin-top:10px">Save Subject</button>
-                    <button class="cancel-btn" id="subjCancelBtn" style="display:none"
-                        onclick="cancelSubjectEdit()">Cancel edit</button>
-                </div>
-            </div>
-
-            <div>
-                <div
-                    style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:8px">
-                    <div class="section-label" style="margin-bottom:0">All subjects <span class="count-badge"
-                            id="subjCount">0</span></div>
-                    <span class="dirty-note" id="subjDirtyNote" style="display:none">● unsaved changes</span>
-                </div>
-
-                <div class="subj-toolbar">
-                    <div class="subj-toolbar-left">
-                        <button class="btn-sm" onclick="migrateBuiltinSubjects()" id="migrateBtn">⇩ Transfer built-ins
-                            to Firebase</button>
-                        <button class="btn-sm" onclick="exportSubjectsJSON()">⬇ Export JSON</button>
-                        <button class="btn-sm" onclick="document.getElementById('importSubjFile').click()">⬆ Import
-                            JSON</button>
-                        <input type="file" id="importSubjFile" accept=".json" style="display:none"
-                            onchange="importSubjectsJSON(event)">
-                    </div>
-                    <button class="btn-sm primary" id="saveAllSubjBtn" onclick="saveAllSubjectEdits()" disabled>💾 Save
-                        all edits</button>
-                </div>
-                <div class="tba-note" style="margin-bottom:8px">"Transfer built-ins to Firebase" creates a real
-                    Firestore document for every built-in timetable subject that doesn't have one yet, using its current
-                    name/color — after that they behave exactly like any other Firestore subject and can be edited
-                    inline below.</div>
-
-                <div class="events-list" id="subjectsList"></div>
-            </div>
-
-        </div>
-        <!-- ══════════ /SUBJECTS PAGE ══════════ -->
-
-        <!-- ══════════ SESSIONS PAGE ══════════ -->
-        <div id="page-sessions" style="display:none">
-
-            <div>
-                <div class="section-label">Add a class session</div>
-                <div class="form-card">
-                    <div class="form-row">
-                        <label class="form-label">Subject</label>
-                        <select class="form-select" id="sessSubject">
-                            <option value="">— Select subject —</option>
-                        </select>
-                    </div>
-                    <div class="form-row-2">
-                        <div class="form-row" style="margin-bottom:0">
-                            <label class="form-label">Day</label>
-                            <select class="form-select" id="sessDay">
-                                <option value="Mon">Mon</option>
-                                <option value="Tue">Tue</option>
-                                <option value="Wed">Wed</option>
-                                <option value="Thu">Thu</option>
-                                <option value="Fri">Fri</option>
-                                <option value="Sat">Sat</option>
-                                <option value="Sun">Sun</option>
-                                <option value="TBA">Time TBA</option>
-                            </select>
-                        </div>
-                        <div class="form-row" style="margin-bottom:0">
-                            <label class="form-label">Room</label>
-                            <input class="form-input" type="text" id="sessRoom" placeholder="e.g. Aero Room">
-                        </div>
-                    </div>
-                    <div class="form-row-2">
-                        <div class="form-row" style="margin-bottom:0">
-                            <label class="form-label">Start time</label>
-                            <input class="form-input" type="time" id="sessStart">
-                        </div>
-                        <div class="form-row" style="margin-bottom:0">
-                            <label class="form-label">End time</label>
-                            <input class="form-input" type="time" id="sessEnd">
-                        </div>
-                    </div>
-                    <div class="tba-note">Leave day as "Time TBA" (and times blank) for a session that has no fixed
-                        slot yet. To change an existing class's day/time/room, edit it directly in the list below
-                        instead of adding a new one.</div>
-                    <button class="submit-btn add" onclick="addCustomSession()" style="margin-top:10px">+ Add
-                        Session</button>
-                </div>
-            </div>
-
-            <div>
-                <div
-                    style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:8px">
-                    <div class="section-label" style="margin-bottom:0">All class sessions <span class="count-badge"
-                            id="sessCount">0</span></div>
-                    <span class="dirty-note" id="sessDirtyNote" style="display:none">● unsaved changes</span>
-                </div>
-                <div class="subj-toolbar">
-                    <div class="subj-toolbar-left"></div>
-                    <button class="btn-sm primary" id="saveAllSessBtn" onclick="saveAllSessionEdits()" disabled>💾 Save
-                        all edits</button>
-                </div>
-                <div class="tba-note" style="margin-bottom:8px">Editing a built-in class here creates an override
-                    (day, time, room) without touching the app's code. "Cancel this session" hides it from the
-                    schedule; the revert (↺) button removes the override and restores the original built-in slot.
-                </div>
-                <div class="events-list" id="sessionsList"></div>
-            </div>
-
-        </div>
-        <!-- ══════════ /SESSIONS PAGE ══════════ -->
-
-    </div>
-
-    <div class="toast" id="toast"></div>
-
-    <!-- ── Firebase SDK (module) ── -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import {
-            getFirestore,
-            collection,
-            addDoc,
-            getDocs,
-            updateDoc,
-            deleteDoc,
-            doc,
-            onSnapshot,
-            query,
-            orderBy,
-            serverTimestamp,
-            writeBatch
-        } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
-        // ── Firebase config ──
-        const firebaseConfig = {
-            apiKey: "AIzaSyBzDOE3BMZ_pPHDbq3i4PLmYYzfur_AgJ0",
-            authDomain: "schedule-9b66c.firebaseapp.com",
-            projectId: "schedule-9b66c",
-            storageBucket: "schedule-9b66c.firebasestorage.app",
-            messagingSenderId: "684107196052",
-            appId: "1:684107196052:web:eaa1d94d5656bf6955b681",
-            measurementId: "G-F1THW9K3WD"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const COLLECTION = "events"; // Firestore collection name
-        const SUBJ_COLLECTION = "subjects";
-        const SESSION_COLLECTION = "sessions";
-
-        // ── Expose db + helpers to global scope so non-module functions can call them ──
-        window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION, SESSION_COLLECTION };
-
-        // ── Real-time listener: update list whenever Firestore changes ──
-        const q = query(collection(db, COLLECTION), orderBy("createdAt", "asc"));
-        onSnapshot(q, (snapshot) => {
-            window._allEvents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            setDbStatus('connected');
-            renderList();
-        }, (err) => {
-            console.error("Firestore error:", err);
-            setDbStatus('error', err.message);
-        });
-
-        // ── Subjects listener ──
-        const qSub = query(collection(db, SUBJ_COLLECTION), orderBy("courseId", "asc"));
-        onSnapshot(qSub, (snapshot) => {
-            window._allSubjects = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            if (typeof populateSubjects === 'function') populateSubjects();
-            if (typeof renderSubjectsList === 'function') renderSubjectsList();
-            if (typeof renderSessionsList === 'function') renderSessionsList();
-        }, (err) => {
-            console.error("Firestore subjects error:", err);
-        });
-
-        // ── Sessions listener (day/time/room overrides + custom sessions) ──
-        const qSess = collection(db, SESSION_COLLECTION);
-        onSnapshot(qSess, (snapshot) => {
-            window._allSessions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            if (typeof renderSessionsList === 'function') renderSessionsList();
-            if (typeof populateSubjects === 'function') populateSubjects();
-        }, (err) => {
-            console.error("Firestore sessions error:", err);
-        });
-
-        function setDbStatus(state, msg) {
-            const el = document.getElementById('dbStatus');
-            const txt = document.getElementById('dbStatusText');
-            el.className = 'db-status ' + state;
-            txt.textContent = state === 'connected' ? 'Live' : state === 'error' ? 'Error: ' + (msg || '') : 'Connecting…';
-        }
-        window.setDbStatus = setDbStatus;
-    </script>
-
-    <!-- ── App logic (non-module, uses window._fb) ── -->
-    <script>
-        // Exposed from module above
-        // window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION, SUBJ_COLLECTION, SESSION_COLLECTION }
-        // window._allEvents / window._allSubjects / window._allSessions — kept in sync by onSnapshot
-
-        window._allEvents = window._allEvents || [];
-        window._allSubjects = window._allSubjects || [];
-        window._allSessions = window._allSessions || [];
-
-        // Full built-in timetable, used to compute per-subject session options
-        // (a subject can meet more than once on the same day, e.g. morning + evening).
-        // Each entry has a stable slotId so Firestore can override its day/time/room
-        // or mark it cancelled, without ever touching this hardcoded array.
-        const scheduleData = {
-            courses: [
-                {"slotId": "s2_0", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_1", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_2", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Chem Lab 1", "days": ["Mon"], "startH": 8, "startM": 30, "endH": 10, "endM": 0},
-                {"slotId": "s2_3", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_4", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Chem Lab 1", "days": ["Wed"], "startH": 8, "startM": 30, "endH": 10, "endM": 0},
-                {"slotId": "s2_5", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Wed"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_6", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Fri"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_7", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 15, "endM": 0},
-                {"slotId": "s2_8", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Mon"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_9", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_10", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Wed"], "startH": 13, "startM": 0, "endH": 15, "endM": 0},
-                {"slotId": "s2_11", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Wed"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_12", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Fri"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_13", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Mon"], "startH": 11, "startM": 0, "endH": 13, "endM": 0},
-                {"slotId": "s2_14", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Wed"], "startH": 11, "startM": 0, "endH": 13, "endM": 0},
-                {"slotId": "s2_15", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Aero Room", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
-                {"slotId": "s2_16", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Thu"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
-                {"slotId": "s2_17", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Simulation Lab", "days": ["Tue"], "startH": 17, "startM": 0, "endH": 20, "endM": 0},
-                {"slotId": "s2_18", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Aero Room", "days": ["Fri"], "startH": 13, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_19", "id": "AMT1211", "desc": "Aircraft Maintenance Organization & Management", "color": "#00bcd4", "room": "Aero Room", "days": ["Mon"], "startH": 19, "startM": 0, "endH": 20, "endM": 0},
-                {"slotId": "s2_20", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Aero Room", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
-                {"slotId": "s2_21", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Tue"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_22", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Thu"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_23", "id": "PATHFIT2", "desc": "Exercise-Based Fitness Activities", "color": "#ff5722", "room": "Covered Court", "days": ["Thu"], "startH": 9, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_24", "id": "NSTP2", "desc": "National Service Training Program II", "color": "#4caf50", "room": "TBA", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0}
-            ]
-        }
-
-        const SWATCHES = ['#3a7bd5', '#e05a9a', '#2ec27e', '#e8702a', '#9c6ade', '#00bcd4', '#ff5722', '#4caf50', '#ffc107', '#556B2F', '#f0a500', '#ff5252', '#7ab3ff', '#8099cc'];
-        const DAY_OPTIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-        let currentType = 'assignment'
-        let editMode = false
-        let activeFilter = 'all'
-        let currentPage = 'items'
-        let subjEditId = null
-        let selectedColor = SWATCHES[0]
-
-        // ── Bulk subject-edit state ──
-        // dirtySubjects[courseId] = { desc, instructor, color, _docId (or null) }
-        let dirtySubjects = {};
-
-        // ── Bulk session-edit state ──
-        // currentSessionRows: merged/effective course list, rendered in sorted order
-        // dirtySessions[idx] = { day, startH, startM, endH, endM, room, hidden }
-        let currentSessionRows = [];
-        let dirtySessions = {};
-
-        function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
-        function fmt12(h, m) { const a = h < 12 ? 'AM' : 'PM'; const h2 = h % 12 === 0 ? 12 : h % 12; return `${h2}:${String(m).padStart(2, '0')} ${a}` }
-        function isTBA(c) { return c.startH === 'TBA' || c.startH === undefined || c.startH === null }
-        function safeToMinsLocal(c) { return isTBA(c) ? 9999 : (c.startH * 60 + c.startM) }
-
-        function showToast(msg, color) {
-            color = color || 'var(--success)';
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.style.borderColor = color + '55';
-            t.style.background = color + '22';
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2200);
-        }
-
-        function showLoading(v, text) {
-            document.getElementById('loadingOverlay').classList.toggle('show', v);
-            if (text) document.getElementById('loadingOverlayText').textContent = text;
-        }
-
-        function switchPage(page) {
-            currentPage = page;
-            document.getElementById('page-items').style.display = page === 'items' ? '' : 'none';
-            document.getElementById('page-subjects').style.display = page === 'subjects' ? '' : 'none';
-            document.getElementById('page-sessions').style.display = page === 'sessions' ? '' : 'none';
-            document.getElementById('pageTab-items').classList.toggle('active', page === 'items');
-            document.getElementById('pageTab-subjects').classList.toggle('active', page === 'subjects');
-            document.getElementById('pageTab-sessions').classList.toggle('active', page === 'sessions');
-            if (page === 'subjects') renderSubjectsList();
-            if (page === 'sessions') renderSessionsList();
-        }
-
-        /* ── Unified subject catalog: built-in timetable ids + Firestore overrides/new subjects ── */
-        function getAllSubjectIds() {
-            const ids = new Set(scheduleData.courses.map(c => c.id));
-            (window._allSubjects || []).forEach(s => ids.add(s.courseId));
-            return Array.from(ids).sort();
-        }
-        function getSubjectOverride(id) { return (window._allSubjects || []).find(s => s.courseId === id) }
-        function getSubjectDesc(id) { const o = getSubjectOverride(id); if (o && o.desc) return o.desc; const c = scheduleData.courses.find(x => x.id === id); return c ? c.desc : '' }
-        function getSubjectColor(id) { const o = getSubjectOverride(id); if (o && o.color) return o.color; const c = scheduleData.courses.find(x => x.id === id); return c ? c.color : '#8099cc' }
-        function getSubjectInstructor(id) { const o = getSubjectOverride(id); return (o && o.instructor) || '' }
-
-        /* ── Merge built-in timetable with Firestore session overrides/custom sessions/cancellations ── */
-        function getEffectiveCourses() {
-            const overridesBySlot = {};
-            const customSessions = [];
-            (window._allSessions || []).forEach(o => {
-                if (o.slotId) overridesBySlot[o.slotId] = o; else customSessions.push(o);
-            });
-            const merged = [];
-            scheduleData.courses.forEach(c => {
-                const o = overridesBySlot[c.slotId];
-                if (!o) { merged.push(c); return; }
-                if (o.hidden) return;
-                const tba = o.day === 'TBA';
-                merged.push({
-                    id: c.id, desc: c.desc, color: c.color, slotId: c.slotId,
-                    room: (o.room !== undefined && o.room !== '') ? o.room : c.room,
-                    days: [o.day || c.days[0]],
-                    startH: tba ? 'TBA' : (o.startH !== undefined && o.startH !== null ? o.startH : c.startH),
-                    startM: tba ? 'TBA' : (o.startM !== undefined && o.startM !== null ? o.startM : c.startM),
-                    endH: tba ? 'TBA' : (o.endH !== undefined && o.endH !== null ? o.endH : c.endH),
-                    endM: tba ? 'TBA' : (o.endM !== undefined && o.endM !== null ? o.endM : c.endM),
-                    _overridden: true, _docId: o.id
-                });
-            });
-            customSessions.forEach(o => {
-                const tba = !o.day || o.day === 'TBA';
-                merged.push({
-                    id: o.courseId, desc: getSubjectDesc(o.courseId), color: getSubjectColor(o.courseId),
-                    slotId: null, room: o.room || 'TBA', days: [tba ? 'TBA' : o.day],
-                    startH: tba ? 'TBA' : o.startH, startM: tba ? 'TBA' : o.startM,
-                    endH: tba ? 'TBA' : o.endH, endM: tba ? 'TBA' : o.endM,
-                    _custom: true, _docId: o.id
-                });
-            });
-            return merged;
-        }
-        window.getEffectiveCourses = getEffectiveCourses;
-
-        function getSubjectSessions(id) {
-            return getEffectiveCourses()
-                .filter(c => c.id === id && !isTBA(c))
-                .map(c => ({
-                    key: `${c.days[0]}|${c.startH}:${c.startM}`,
-                    label: `${c.days[0]} · ${fmt12(c.startH, c.startM)}–${fmt12(c.endH, c.endM)} · ${c.room}`
-                }));
-        }
-
-        function urgencyClassLocal(dl) {
-            if (!dl) return 'ok';
-            const parts = dl.split('-'); const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
-            const now = new Date(); const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const diff = Math.round((d - nowMid) / 86400000);
-            if (diff < 0) return 'overdue'; if (diff <= 3) return 'soon'; if (diff <= 7) return 'later'; return 'ok'
-        }
-        function urgencyLabelLocal(dl) {
-            if (!dl) return '';
-            const parts = dl.split('-'); const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
-            const now = new Date(); const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const diff = Math.round((d - nowMid) / 86400000);
-            if (diff < 0) return 'OVERDUE'; if (diff === 0) return 'DUE TODAY'; if (diff === 1) return 'DUE TOMORROW'; return `Due in ${diff} days`
-        }
-        function urgencyColor(uc) { return uc === 'overdue' ? '#ff5252' : uc === 'soon' ? '#ff8a65' : uc === 'later' ? '#f0a500' : '#2ec27e' }
-
-        function populateSubjects() {
-            const ids = getAllSubjectIds();
-            ['subjectSelect', 'eventSubject', 'reminderSubject', 'sessSubject'].forEach(elId => {
-                const el = document.getElementById(elId);
-                if (!el) return;
-                const isOptional = elId === 'eventSubject';
-                const currentVal = el.value;
-                el.innerHTML = (isOptional ? '<option value="">None</option>' : '<option value="">— Select subject —</option>') +
-                    ids.map(id => `<option value="${id}">${id} — ${esc(getSubjectDesc(id))}</option>`).join('');
-                if (ids.includes(currentVal)) el.value = currentVal;
-            });
-        }
-
-        function populateSessionSelect(selectId, subjectId) {
-            const el = document.getElementById(selectId);
-            if (!el) return;
-            const sessions = subjectId ? getSubjectSessions(subjectId) : [];
-            el.innerHTML = '<option value="">All sessions of this subject</option>' +
-                sessions.map(s => `<option value="${esc(s.key)}">${esc(s.label)}</option>`).join('');
-        }
-
-        function onSubjectChange(kind) {
-            if (kind === 'assign') populateSessionSelect('assignSession', document.getElementById('subjectSelect').value);
-            else if (kind === 'event') populateSessionSelect('eventSession', document.getElementById('eventSubject').value);
-            else if (kind === 'reminder') populateSessionSelect('reminderSession', document.getElementById('reminderSubject').value);
-        }
-
-        function switchType(type) {
-            currentType = type;
-            document.getElementById('assignmentFields').style.display = type === 'assignment' ? '' : 'none';
-            document.getElementById('eventFields').style.display = type === 'event' ? '' : 'none';
-            document.getElementById('reminderFields').style.display = type === 'reminder' ? '' : 'none';
-            document.getElementById('tab-assignment').classList.toggle('active', type === 'assignment');
-            document.getElementById('tab-event').classList.toggle('active', type === 'event');
-            document.getElementById('tab-reminder').classList.toggle('active', type === 'reminder');
-            if (!editMode) document.getElementById('submitBtn').textContent = type === 'assignment' ? 'Add Assignment' : type === 'event' ? 'Add Event' : 'Add Reminder';
-        }
-
-        function setFilter(f, btn) {
-            activeFilter = f;
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            renderList();
-        }
-
-        async function submitForm() {
-            const fb = window._fb;
-            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
-
-            if (currentType === 'assignment') {
-                const subjectId = document.getElementById('subjectSelect').value;
-                const sessionKey = document.getElementById('assignSession').value;
-                const name = document.getElementById('assignName').value.trim();
-                const desc = document.getElementById('assignDesc').value.trim();
-                const deadline = document.getElementById('assignDeadline').value;
-                if (!subjectId) { showToast('Please select a subject', '#ff5252'); return }
-                if (!name) { showToast('Please enter a name', '#ff5252'); return }
-                if (!deadline) { showToast('Please set a deadline', '#ff5252'); return }
-
-                const data = { type: 'assignment', subjectId, sessionKey: sessionKey || null, name, description: desc, deadline };
-                await saveDoc(data, 'Assignment');
-
-            } else if (currentType === 'event') {
-                const name = document.getElementById('eventName').value.trim();
-                const desc = document.getElementById('eventDesc').value.trim();
-                const eventDate = document.getElementById('eventDate').value;
-                const subjectId = document.getElementById('eventSubject').value;
-                const sessionKey = document.getElementById('eventSession').value;
-                if (!name) { showToast('Please enter an event name', '#ff5252'); return }
-                if (!eventDate) { showToast('Please set a date', '#ff5252'); return }
-
-                const data = { type: 'event', subjectId, sessionKey: sessionKey || null, name, description: desc, eventDate };
-                await saveDoc(data, 'Event');
-
-            } else {
-                const kind = document.getElementById('reminderKind').value;
-                const subjectId = document.getElementById('reminderSubject').value;
-                const sessionKey = document.getElementById('reminderSession').value;
-                const name = document.getElementById('reminderName').value.trim();
-                const desc = document.getElementById('reminderDesc').value.trim();
-                const deadline = document.getElementById('reminderDeadline').value;
-                if (!subjectId) { showToast('Please select a subject', '#ff5252'); return }
-                if (!name) { showToast('Please enter what to bring/study', '#ff5252'); return }
-                if (!deadline) { showToast('Please set a date', '#ff5252'); return }
-
-                const data = { type: 'reminder', reminderKind: kind, subjectId, sessionKey: sessionKey || null, name, description: desc, deadline };
-                await saveDoc(data, kind === 'bring' ? 'Bring reminder' : 'Review reminder');
-            }
-        }
-
-        async function saveDoc(data, label) {
-            const fb = window._fb;
-            showLoading(true, 'Saving to Firebase…');
-            try {
-                if (editMode) {
-                    const id = document.getElementById('editId').value;
-                    await fb.updateDoc(fb.doc(fb.db, fb.COLLECTION, id), data);
-                    showToast(label + ' updated ✓');
-                    cancelEdit();
-                } else {
-                    data.createdAt = fb.serverTimestamp();
-                    await fb.addDoc(fb.collection(fb.db, fb.COLLECTION), data);
-                    showToast(label + ' added ✓');
-                    clearForm();
-                }
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-            showLoading(false);
-        }
-
-        function clearForm() {
-            ['subjectSelect', 'assignName', 'assignDesc', 'assignDeadline', 'assignSession',
-                'eventName', 'eventDesc', 'eventDate', 'eventSubject', 'eventSession',
-                'reminderSubject', 'reminderName', 'reminderDesc', 'reminderDeadline', 'reminderSession'].forEach(id => {
-                    const el = document.getElementById(id); if (el) el.value = '';
-                });
-            document.getElementById('reminderKind').value = 'bring';
-            document.getElementById('editId').value = '';
-        }
-
-        function editEvent(id) {
-            const e = (window._allEvents || []).find(x => x.id === id); if (!e) return;
-            editMode = true;
-            document.getElementById('editId').value = id;
-            document.getElementById('formSectionLabel').textContent = 'Editing item';
-            document.getElementById('submitBtn').className = 'submit-btn edit';
-            document.getElementById('cancelEditBtn').style.display = '';
-            switchType(e.type);
-            document.getElementById('submitBtn').textContent = 'Save changes';
-            if (e.type === 'assignment') {
-                document.getElementById('subjectSelect').value = e.subjectId || '';
-                populateSessionSelect('assignSession', e.subjectId || '');
-                document.getElementById('assignSession').value = e.sessionKey || '';
-                document.getElementById('assignName').value = e.name || '';
-                document.getElementById('assignDesc').value = e.description || '';
-                document.getElementById('assignDeadline').value = e.deadline || '';
-            } else if (e.type === 'event') {
-                document.getElementById('eventName').value = e.name || '';
-                document.getElementById('eventDesc').value = e.description || '';
-                document.getElementById('eventDate').value = e.eventDate || '';
-                document.getElementById('eventSubject').value = e.subjectId || '';
-                populateSessionSelect('eventSession', e.subjectId || '');
-                document.getElementById('eventSession').value = e.sessionKey || '';
-            } else {
-                document.getElementById('reminderKind').value = e.reminderKind || 'bring';
-                document.getElementById('reminderSubject').value = e.subjectId || '';
-                populateSessionSelect('reminderSession', e.subjectId || '');
-                document.getElementById('reminderSession').value = e.sessionKey || '';
-                document.getElementById('reminderName').value = e.name || '';
-                document.getElementById('reminderDesc').value = e.description || '';
-                document.getElementById('reminderDeadline').value = e.deadline || '';
-            }
-            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function cancelEdit() {
-            editMode = false; clearForm();
-            document.getElementById('editId').value = '';
-            document.getElementById('formSectionLabel').textContent = 'Add new item';
-            document.getElementById('submitBtn').textContent = currentType === 'assignment' ? 'Add Assignment' : currentType === 'event' ? 'Add Event' : 'Add Reminder';
-            document.getElementById('submitBtn').className = 'submit-btn add';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
-        async function deleteEvent(id) {
-            if (!confirm('Delete this item?')) return;
-            const fb = window._fb;
-            showLoading(true, 'Deleting…');
-            try {
-                await fb.deleteDoc(fb.doc(fb.db, fb.COLLECTION, id));
-                showToast('Deleted', '#ff8080');
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
-            showLoading(false);
-        }
-
-        function typeBadgeLabel(e) {
-            if (e.type === 'assignment') return '📋 assignment';
-            if (e.type === 'reminder') return e.reminderKind === 'bring' ? '🎒 bring' : '📖 review';
-            return '📅 event';
-        }
-
-        function renderList() {
-            const events = window._allEvents || [];
-            const now = new Date();
-            let filtered = [...events];
-            if (activeFilter === 'assignment') filtered = events.filter(e => e.type === 'assignment');
-            else if (activeFilter === 'event') filtered = events.filter(e => e.type === 'event');
-            else if (activeFilter === 'reminder') filtered = events.filter(e => e.type === 'reminder');
-            else if (activeFilter === 'upcoming') filtered = events.filter(e => { const dl = e.deadline || e.eventDate; return dl && new Date(dl + ' 23:59') >= now });
-            else if (activeFilter === 'overdue') filtered = events.filter(e => e.deadline && new Date(e.deadline + ' 23:59') < now);
-
-            filtered.sort((a, b) => {
-                const da = a.deadline || a.eventDate || '9999';
-                const db2 = b.deadline || b.eventDate || '9999';
-                return da < db2 ? -1 : da > db2 ? 1 : 0;
-            });
-
-            document.getElementById('totalCount').textContent = filtered.length;
-            const list = document.getElementById('eventsList');
-
-            if (filtered.length === 0) {
-                list.innerHTML = `<div class="empty-events">${activeFilter === 'overdue' ? 'No overdue items 🎉' :
-                    activeFilter === 'upcoming' ? 'No upcoming items' :
-                        'No items yet — add one above'
-                    }</div>`;
-                return;
-            }
-
-            list.innerHTML = filtered.map(e => {
-                const col = e.subjectId ? getSubjectColor(e.subjectId) : '#8099cc';
-                const dl = e.deadline || e.eventDate;
-                const uc = urgencyClassLocal(e.deadline || '');
-                const ucol = urgencyColor(uc);
-                const deadlineText = dl ? new Date(dl).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                const urgLabel = (e.type === 'assignment' || e.type === 'reminder') ? urgencyLabelLocal(e.deadline || '') : '';
-                const sessionText = e.sessionKey ? e.sessionKey.replace('|', ' · ') : '';
-                return `<div class="event-item">
-  <div class="event-bar" style="background:${col}"></div>
-  <div class="event-body">
-    <div class="event-top">
-      <div class="event-name">${esc(e.name)}</div>
-      ${e.subjectId ? `<div class="event-subject-badge" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
-      <div class="event-type-badge">${typeBadgeLabel(e)}</div>
-    </div>
-    ${e.description ? `<div class="event-desc">${esc(e.description)}</div>` : ''}
-    <div class="event-meta">
-      ${deadlineText ? `<span>${e.type === 'event' ? 'Date' : 'Deadline'}: ${deadlineText}</span>` : ''}
-      ${sessionText ? `<span>Session: ${esc(sessionText)}</span>` : ''}
-      ${urgLabel ? `<span class="event-deadline-chip" style="background:${ucol}22;color:${ucol}">${urgLabel}</span>` : ''}
-    </div>
+<nav class="navbar bg-body border-bottom sticky-top">
+ <div class="container-xl gap-2">
+  <span class="navbar-brand fw-bold d-flex align-items-center gap-2 m-0"><span class="brand-ico"><i class="bi bi-calendar2-check"></i></span>Schedule Admin</span>
+  <div class="d-flex align-items-center gap-2 ms-auto">
+   <div class="spinner-border spinner-border-sm text-primary d-none" id="busy"></div>
+   <select class="form-select form-select-sm w-auto" id="semSel" title="Semester"><option value="1">1st Sem</option><option value="2" selected>2nd Sem</option></select>
+   <span class="badge text-bg-secondary" id="dbStatus"><i class="bi bi-cloud"></i> Connecting</span>
+   <button class="btn btn-sm btn-outline-secondary" id="themeBtn" title="Toggle theme"><i class="bi bi-moon-stars"></i></button>
+   <a class="btn btn-sm btn-primary" href="index.html"><i class="bi bi-box-arrow-up-right"></i><span class="d-none d-sm-inline"> Schedule</span></a>
   </div>
-  <div class="event-actions">
-    <button class="icon-btn edit-btn" onclick="editEvent('${e.id}')" title="Edit">✏</button>
-    <button class="icon-btn del-btn" onclick="deleteEvent('${e.id}')" title="Delete">✕</button>
+ </div>
+</nav>
+
+<main class="container-xl py-3">
+ <div class="row g-3 g-lg-4"><aside class="col-lg-2"><ul class="nav nav-pills side-nav flex-nowrap overflow-auto pb-1 flex-lg-column" id="tabs">
+  <li class="nav-item"><button class="nav-link active" data-page="dash"><i class="bi bi-speedometer2"></i> Dashboard</button></li>
+  <li class="nav-item"><button class="nav-link" data-page="items"><i class="bi bi-journal-check"></i> Tasks &amp; Events</button></li>
+  <li class="nav-item"><button class="nav-link" data-page="subj"><i class="bi bi-mortarboard"></i> Subjects</button></li>
+  <li class="nav-item"><button class="nav-link" data-page="sess"><i class="bi bi-clock-history"></i> Timetable</button></li>
+ </ul></aside><div class="col-lg-10">
+
+ <section id="p-dash">
+  <div class="hero mb-3"><div><div class="small opacity-75" id="heroDate"></div><h4 class="fw-bold m-0">Schedule overview</h4><div class="small opacity-75" id="heroSem"></div></div>
+   <div class="d-flex flex-wrap gap-2"><button class="btn btn-light btn-sm" onclick="openItemForm(null,'assignment')"><i class="bi bi-plus-lg"></i> Assignment</button>
+   <button class="btn btn-outline-light btn-sm" onclick="openItemForm(null,'event')"><i class="bi bi-calendar-plus"></i> Event</button>
+   <button class="btn btn-outline-light btn-sm" onclick="openItemForm(null,'reminder')"><i class="bi bi-bag-plus"></i> Bring / Review</button></div></div>
+  <div class="row g-3 mb-3" id="stats"></div>
+  <div class="card mb-3"><div class="card-body"><div class="small fw-semibold mb-2"><i class="bi bi-calendar-week"></i> Next 7 days</div><div class="row g-2 text-center" id="week"></div></div></div>
+  <div class="row g-3">
+   <div class="col-lg-7"><div class="card h-100"><div class="card-header fw-semibold"><i class="bi bi-exclamation-circle"></i> Needs attention</div><div class="list-group list-group-flush" id="attn"></div></div></div>
+   <div class="col-lg-5 d-flex flex-column gap-3">
+    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-calendar-day"></i> Today's classes</div><div class="list-group list-group-flush" id="todayCls"></div></div>
+    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-bar-chart"></i> Open tasks by subject</div><div class="card-body" id="workload"></div></div>
+   </div>
   </div>
-</div>`;
-            }).join('');
-        }
+ </section>
 
-        /* ══════════ Subjects page logic ══════════ */
-
-        function renderColorSwatches() {
-            const row = document.getElementById('colorSwatchRow');
-            row.innerHTML = SWATCHES.map(c => `<div class="color-swatch ${c === selectedColor ? 'selected' : ''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');
-        }
-        function pickColor(c) { selectedColor = c; renderColorSwatches(); }
-
-        async function submitSubject() {
-            const fb = window._fb;
-            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
-            const courseId = document.getElementById('subjId').value.trim().toUpperCase();
-            const desc = document.getElementById('subjDesc').value.trim();
-            const instructor = document.getElementById('subjInstructor').value.trim();
-            if (!courseId) { showToast('Please enter a subject ID', '#ff5252'); return }
-
-            const data = { courseId, desc, instructor, color: selectedColor };
-            showLoading(true, 'Saving to Firebase…');
-            try {
-                if (subjEditId) {
-                    await fb.updateDoc(fb.doc(fb.db, fb.SUBJ_COLLECTION, subjEditId), data);
-                    showToast('Subject updated ✓');
-                } else {
-                    await fb.addDoc(fb.collection(fb.db, fb.SUBJ_COLLECTION), data);
-                    showToast('Subject added ✓');
-                }
-                cancelSubjectEdit();
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-            showLoading(false);
-        }
-
-        function editSubject(id) {
-            const s = (window._allSubjects || []).find(x => x.id === id); if (!s) return;
-            subjEditId = id;
-            document.getElementById('subjId').value = s.courseId || '';
-            document.getElementById('subjDesc').value = s.desc || '';
-            document.getElementById('subjInstructor').value = s.instructor || '';
-            selectedColor = s.color || SWATCHES[0];
-            renderColorSwatches();
-            document.getElementById('subjFormLabel').textContent = 'Editing subject';
-            document.getElementById('subjSubmitBtn').textContent = 'Save changes';
-            document.getElementById('subjSubmitBtn').className = 'submit-btn edit';
-            document.getElementById('subjCancelBtn').style.display = '';
-            document.getElementById('subjId').closest('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function editBuiltinSubject(courseId) {
-            // Pre-fill the form from the hardcoded timetable so it's easy to add an
-            // instructor name / override color for a subject with no Firestore doc yet.
-            subjEditId = null;
-            document.getElementById('subjId').value = courseId;
-            document.getElementById('subjDesc').value = getSubjectDesc(courseId);
-            document.getElementById('subjInstructor').value = '';
-            selectedColor = getSubjectColor(courseId);
-            renderColorSwatches();
-            document.getElementById('subjFormLabel').textContent = 'Add / edit subject';
-            document.getElementById('subjSubmitBtn').textContent = 'Save Subject';
-            document.getElementById('subjSubmitBtn').className = 'submit-btn add';
-            document.getElementById('subjCancelBtn').style.display = 'none';
-            document.getElementById('subjId').closest('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function cancelSubjectEdit() {
-            subjEditId = null;
-            document.getElementById('subjId').value = '';
-            document.getElementById('subjDesc').value = '';
-            document.getElementById('subjInstructor').value = '';
-            selectedColor = SWATCHES[0];
-            renderColorSwatches();
-            document.getElementById('subjFormLabel').textContent = 'Add / edit subject';
-            document.getElementById('subjSubmitBtn').textContent = 'Save Subject';
-            document.getElementById('subjSubmitBtn').className = 'submit-btn add';
-            document.getElementById('subjCancelBtn').style.display = 'none';
-        }
-
-        async function deleteSubjectOverride(id) {
-            if (!confirm('Remove this subject override? (Built-in timetable subjects will fall back to their default name/color.)')) return;
-            const fb = window._fb;
-            showLoading(true, 'Removing…');
-            try {
-                await fb.deleteDoc(fb.doc(fb.db, fb.SUBJ_COLLECTION, id));
-                showToast('Subject override removed', '#ff8080');
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
-            showLoading(false);
-        }
-
-        /* ── Bulk inline editing helpers ── */
-        function updateSubjDirtyUI() {
-            const n = Object.keys(dirtySubjects).length;
-            document.getElementById('subjDirtyNote').style.display = n ? '' : 'none';
-            document.getElementById('saveAllSubjBtn').disabled = n === 0;
-        }
-
-        function ensureDirtySubject(id) {
-            if (!dirtySubjects[id]) {
-                const override = getSubjectOverride(id);
-                dirtySubjects[id] = {
-                    desc: getSubjectDesc(id),
-                    instructor: getSubjectInstructor(id),
-                    color: getSubjectColor(id),
-                    _docId: override ? override.id : null
-                };
-            }
-            return dirtySubjects[id];
-        }
-
-        function onSubjInlineChange(id, field, value) {
-            const d = ensureDirtySubject(id);
-            d[field] = value;
-            const row = document.querySelector(`[data-subj-row="${id}"]`);
-            if (row) row.classList.add('dirty-row');
-            updateSubjDirtyUI();
-        }
-        window.onSubjInlineChange = onSubjInlineChange;
-
-        function onSubjColorChange(id, value) {
-            const d = ensureDirtySubject(id);
-            d.color = value;
-            const row = document.querySelector(`[data-subj-row="${id}"]`);
-            if (row) {
-                row.classList.add('dirty-row');
-                const bar = row.querySelector('.event-bar'); if (bar) bar.style.background = value;
-                const colorInput = row.querySelector('.subj-color-input'); if (colorInput) colorInput.value = /^#[0-9a-fA-F]{6}$/.test(value) ? value : '#8099cc';
-                const colorText = row.querySelector('.subj-color-text'); if (colorText) colorText.value = value;
-            }
-            updateSubjDirtyUI();
-        }
-        window.onSubjColorChange = onSubjColorChange;
-
-        async function saveAllSubjectEdits() {
-            const fb = window._fb;
-            const ids = Object.keys(dirtySubjects);
-            if (ids.length === 0) return;
-            showLoading(true, `Saving ${ids.length} subject change${ids.length > 1 ? 's' : ''}…`);
-            try {
-                const batch = fb.writeBatch(fb.db);
-                ids.forEach(id => {
-                    const d = dirtySubjects[id];
-                    const payload = { courseId: id, desc: d.desc, instructor: d.instructor, color: d.color };
-                    if (d._docId) {
-                        batch.update(fb.doc(fb.db, fb.SUBJ_COLLECTION, d._docId), payload);
-                    } else {
-                        const newRef = fb.doc(fb.collection(fb.db, fb.SUBJ_COLLECTION));
-                        batch.set(newRef, payload);
-                    }
-                });
-                await batch.commit();
-                dirtySubjects = {};
-                showToast(`Saved ${ids.length} subject change${ids.length > 1 ? 's' : ''} ✓`);
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-            showLoading(false);
-            updateSubjDirtyUI();
-        }
-        window.saveAllSubjectEdits = saveAllSubjectEdits;
-
-        /* ── Transfer / migrate built-in subjects into Firestore ── */
-        async function migrateBuiltinSubjects() {
-            const fb = window._fb;
-            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
-            const builtinIds = Array.from(new Set(scheduleData.courses.map(c => c.id)));
-            const missing = builtinIds.filter(id => !getSubjectOverride(id));
-            if (missing.length === 0) { showToast('All built-in subjects already exist in Firebase'); return; }
-            if (!confirm(`Create ${missing.length} Firestore document${missing.length > 1 ? 's' : ''} for built-in subject${missing.length > 1 ? 's' : ''} (${missing.join(', ')})? This copies their current name/color so you can edit them going forward.`)) return;
-
-            showLoading(true, `Transferring ${missing.length} subject${missing.length > 1 ? 's' : ''}…`);
-            try {
-                const batch = fb.writeBatch(fb.db);
-                missing.forEach(id => {
-                    const newRef = fb.doc(fb.collection(fb.db, fb.SUBJ_COLLECTION));
-                    batch.set(newRef, {
-                        courseId: id,
-                        desc: getSubjectDesc(id),
-                        instructor: '',
-                        color: getSubjectColor(id)
-                    });
-                });
-                await batch.commit();
-                showToast(`Transferred ${missing.length} subject${missing.length > 1 ? 's' : ''} to Firebase ✓`);
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-            showLoading(false);
-        }
-        window.migrateBuiltinSubjects = migrateBuiltinSubjects;
-
-        function exportSubjectsJSON() {
-            const ids = getAllSubjectIds();
-            const data = ids.map(id => ({
-                courseId: id,
-                desc: getSubjectDesc(id),
-                instructor: getSubjectInstructor(id),
-                color: getSubjectColor(id)
-            }));
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'subjects_export.json'; a.click();
-            URL.revokeObjectURL(url);
-            showToast('Exported subjects_export.json');
-        }
-        window.exportSubjectsJSON = exportSubjectsJSON;
-
-        function importSubjectsJSON(evt) {
-            const file = evt.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => {
-                try {
-                    const data = JSON.parse(reader.result);
-                    if (!Array.isArray(data)) throw new Error('JSON must be an array');
-                    data.forEach(item => {
-                        if (!item.courseId) return;
-                        const id = String(item.courseId).trim().toUpperCase();
-                        const override = getSubjectOverride(id);
-                        dirtySubjects[id] = {
-                            desc: item.desc || '',
-                            instructor: item.instructor || '',
-                            color: item.color || '#8099cc',
-                            _docId: override ? override.id : null
-                        };
-                    });
-                    renderSubjectsList();
-                    updateSubjDirtyUI();
-                    showToast(`Loaded ${data.length} rows — review then Save all edits`, '#f0a500');
-                } catch (e) { showToast('Import error: ' + e.message, '#ff5252'); }
-                evt.target.value = '';
-            };
-            reader.readAsText(file);
-        }
-        window.importSubjectsJSON = importSubjectsJSON;
-
-        function renderSubjectsList() {
-            const list = document.getElementById('subjectsList');
-            const ids = getAllSubjectIds();
-            document.getElementById('subjCount').textContent = ids.length;
-            if (ids.length === 0) { list.innerHTML = `<div class="empty-events">No subjects yet</div>`; return; }
-
-            list.innerHTML = ids.map(id => {
-                const override = getSubjectOverride(id);
-                const d = dirtySubjects[id];
-                const col = d ? d.color : getSubjectColor(id);
-                const desc = d ? d.desc : getSubjectDesc(id);
-                const instructor = d ? d.instructor : getSubjectInstructor(id);
-                const sessions = getSubjectSessions(id);
-                const sessionsHtml = sessions.length
-                    ? `<div class="subject-sessions">${sessions.map(s => esc(s.label)).join('<br>')}</div>`
-                    : `<div class="subject-sessions" style="opacity:.5">No timetable slot yet — tag-only subject</div>`;
-                const actions = override
-                    ? `<button class="icon-btn del-btn" onclick="deleteSubjectOverride('${override.id}')" title="Remove override">✕</button>`
-                    : '';
-                const dirtyCls = d ? ' dirty-row' : '';
-                const safeColorHex = /^#[0-9a-fA-F]{6}$/.test(col) ? col : '#8099cc';
-                return `<div class="subject-item${dirtyCls}" data-subj-row="${id}">
-  <div class="event-bar" style="background:${col}"></div>
-  <div class="event-body">
-    <div class="event-top">
-      <div class="event-name">${esc(id)}</div>
-      ${!override ? `<div class="event-type-badge">built-in</div>` : `<div class="event-type-badge">firebase</div>`}
-    </div>
-    <div class="subj-field-row">
-      <div>
-        <input class="subj-inline-input" value="${esc(desc)}" placeholder="Subject title" oninput="onSubjInlineChange('${id}','desc',this.value)">
-      </div>
-      <div>
-        <input class="subj-inline-input" value="${esc(instructor)}" placeholder="Instructor name" oninput="onSubjInlineChange('${id}','instructor',this.value)">
-      </div>
-    </div>
-    <div class="subj-field-row">
-      <div class="subj-color-mini-row">
-        <input type="color" class="subj-color-input" value="${safeColorHex}" oninput="onSubjColorChange('${id}',this.value)">
-        <input class="subj-inline-input subj-color-text" value="${esc(col)}" oninput="onSubjColorChange('${id}',this.value)">
-      </div>
-    </div>
-    ${sessionsHtml}
+ <section id="p-items" class="d-none">
+  <div class="card mb-3"><div class="card-body">
+   <div class="row g-2 align-items-center">
+    <div class="col-12 col-md"><div class="input-group input-group-sm"><span class="input-group-text"><i class="bi bi-search"></i></span><input class="form-control" id="fq" placeholder="Search name or description"></div></div>
+    <div class="col-6 col-md-auto"><select class="form-select form-select-sm" id="ft"><option value="">All types</option><option value="assignment">Assignments</option><option value="event">Events</option><option value="reminder">Bring / Review</option></select></div>
+    <div class="col-6 col-md-auto"><select class="form-select form-select-sm" id="fs"><option value="">Any status</option><option value="upcoming">Upcoming</option><option value="overdue">Overdue</option></select></div>
+    <div class="col-6 col-md-auto"><select class="form-select form-select-sm" id="fsub"></select></div>
+    <div class="col-6 col-md-auto d-flex"><button class="btn btn-primary btn-sm flex-fill" onclick="openItemForm(null)"><i class="bi bi-plus-lg"></i> New</button></div>
+   </div>
+  </div></div>
+  <div class="d-flex align-items-center gap-2 mb-2 small text-secondary">
+   <input type="checkbox" class="form-check-input mt-0" id="selAll"><label for="selAll">Select all</label>
+   <span id="itemCount" class="ms-auto"></span>
+   <button class="btn btn-sm btn-danger d-none" id="bulkDel" onclick="bulkDelete()"><i class="bi bi-trash"></i> Delete <span id="bulkN"></span></button>
   </div>
-  <div class="event-actions">${actions}</div>
-</div>`;
-            }).join('');
-        }
+  <div class="list-group shadow-sm" id="itemList"></div>
+ </section>
 
-        /* ══════════ Sessions (timetable) page logic ══════════ */
-
-        function updateSessDirtyUI() {
-            const n = Object.keys(dirtySessions).length;
-            document.getElementById('sessDirtyNote').style.display = n ? '' : 'none';
-            document.getElementById('saveAllSessBtn').disabled = n === 0;
-        }
-
-        function ensureDirtySessionRow(idx) {
-            if (!dirtySessions[idx]) {
-                const c = currentSessionRows[idx];
-                dirtySessions[idx] = {
-                    day: isTBA(c) ? 'TBA' : c.days[0],
-                    startH: isTBA(c) ? '' : c.startH,
-                    startM: isTBA(c) ? '' : c.startM,
-                    endH: isTBA(c) ? '' : c.endH,
-                    endM: isTBA(c) ? '' : c.endM,
-                    room: c.room || '',
-                    hidden: false
-                };
-            }
-            return dirtySessions[idx];
-        }
-
-        function markSessRowDirty(idx) {
-            const row = document.querySelector(`[data-sess-row="${idx}"]`);
-            if (row) row.classList.add('dirty-row');
-            updateSessDirtyUI();
-        }
-
-        function onSessDayChange(idx, value) {
-            const d = ensureDirtySessionRow(idx);
-            d.day = value;
-            markSessRowDirty(idx);
-            renderSessionsList();
-        }
-        window.onSessDayChange = onSessDayChange;
-
-        function onSessStartChange(idx, value) {
-            const d = ensureDirtySessionRow(idx);
-            if (value) { const [h, m] = value.split(':').map(Number); d.startH = h; d.startM = m; }
-            else { d.startH = ''; d.startM = ''; }
-            markSessRowDirty(idx);
-        }
-        window.onSessStartChange = onSessStartChange;
-
-        function onSessEndChange(idx, value) {
-            const d = ensureDirtySessionRow(idx);
-            if (value) { const [h, m] = value.split(':').map(Number); d.endH = h; d.endM = m; }
-            else { d.endH = ''; d.endM = ''; }
-            markSessRowDirty(idx);
-        }
-        window.onSessEndChange = onSessEndChange;
-
-        function onSessRoomChange(idx, value) {
-            const d = ensureDirtySessionRow(idx);
-            d.room = value;
-            markSessRowDirty(idx);
-        }
-        window.onSessRoomChange = onSessRoomChange;
-
-        function toggleSessHidden(idx, checked) {
-            const d = ensureDirtySessionRow(idx);
-            d.hidden = checked;
-            markSessRowDirty(idx);
-            renderSessionsList();
-        }
-        window.toggleSessHidden = toggleSessHidden;
-
-        async function saveAllSessionEdits() {
-            const fb = window._fb;
-            const idxs = Object.keys(dirtySessions);
-            if (idxs.length === 0) return;
-            showLoading(true, `Saving ${idxs.length} session change${idxs.length > 1 ? 's' : ''}…`);
-            try {
-                const batch = fb.writeBatch(fb.db);
-                idxs.forEach(idxStr => {
-                    const idx = +idxStr;
-                    const c = currentSessionRows[idx];
-                    const d = dirtySessions[idx];
-                    const tba = d.day === 'TBA';
-                    const payload = {
-                        slotId: c.slotId || null,
-                        courseId: c.id,
-                        day: d.day,
-                        room: d.room,
-                        hidden: !!d.hidden,
-                        startH: tba || d.startH === '' ? null : d.startH,
-                        startM: tba || d.startM === '' ? null : d.startM,
-                        endH: tba || d.endH === '' ? null : d.endH,
-                        endM: tba || d.endM === '' ? null : d.endM
-                    };
-                    if (c._docId) {
-                        batch.update(fb.doc(fb.db, fb.SESSION_COLLECTION, c._docId), payload);
-                    } else {
-                        const newRef = fb.doc(fb.collection(fb.db, fb.SESSION_COLLECTION));
-                        batch.set(newRef, payload);
-                    }
-                });
-                await batch.commit();
-                dirtySessions = {};
-                showToast(`Saved ${idxs.length} session change${idxs.length > 1 ? 's' : ''} ✓`);
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); console.error(e); }
-            showLoading(false);
-            updateSessDirtyUI();
-        }
-        window.saveAllSessionEdits = saveAllSessionEdits;
-
-        async function revertSessionOverride(docId) {
-            if (!confirm('Revert to the original built-in day/time/room for this class?')) return;
-            const fb = window._fb;
-            showLoading(true, 'Reverting…');
-            try {
-                await fb.deleteDoc(fb.doc(fb.db, fb.SESSION_COLLECTION, docId));
-                showToast('Reverted to built-in ✓', '#ff8080');
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
-            showLoading(false);
-        }
-        window.revertSessionOverride = revertSessionOverride;
-
-        async function deleteCustomSession(docId) {
-            if (!confirm('Delete this class session?')) return;
-            const fb = window._fb;
-            showLoading(true, 'Deleting…');
-            try {
-                await fb.deleteDoc(fb.doc(fb.db, fb.SESSION_COLLECTION, docId));
-                showToast('Deleted', '#ff8080');
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
-            showLoading(false);
-        }
-        window.deleteCustomSession = deleteCustomSession;
-
-        async function addCustomSession() {
-            const fb = window._fb;
-            if (!fb) { showToast('Firebase not ready yet', '#ff5252'); return; }
-            const courseId = document.getElementById('sessSubject').value;
-            const day = document.getElementById('sessDay').value;
-            const room = document.getElementById('sessRoom').value.trim();
-            const startVal = document.getElementById('sessStart').value;
-            const endVal = document.getElementById('sessEnd').value;
-            if (!courseId) { showToast('Please select a subject', '#ff5252'); return; }
-            const tba = day === 'TBA';
-            if (!tba && (!startVal || !endVal)) { showToast('Please set start and end time (or choose Time TBA)', '#ff5252'); return; }
-            let startH = null, startM = null, endH = null, endM = null;
-            if (!tba) { [startH, startM] = startVal.split(':').map(Number);[endH, endM] = endVal.split(':').map(Number); }
-            const data = { slotId: null, courseId, day, room, startH, startM, endH, endM, hidden: false };
-            showLoading(true, 'Adding session…');
-            try {
-                await fb.addDoc(fb.collection(fb.db, fb.SESSION_COLLECTION), data);
-                showToast('Session added ✓');
-                document.getElementById('sessRoom').value = '';
-                document.getElementById('sessStart').value = '';
-                document.getElementById('sessEnd').value = '';
-            } catch (e) { showToast('Error: ' + e.message, '#ff5252'); }
-            showLoading(false);
-        }
-        window.addCustomSession = addCustomSession;
-
-        function renderSessionsList() {
-            const merged = getEffectiveCourses();
-            const dayOrder = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6, TBA: 7 };
-            merged.sort((a, b) => {
-                const da = dayOrder[a.days[0]] ?? 8, db2 = dayOrder[b.days[0]] ?? 8;
-                if (da !== db2) return da - db2;
-                return safeToMinsLocal(a) - safeToMinsLocal(b);
-            });
-            currentSessionRows = merged;
-            const countEl = document.getElementById('sessCount');
-            if (countEl) countEl.textContent = merged.length;
-            const list = document.getElementById('sessionsList');
-            if (!list) return;
-            if (merged.length === 0) { list.innerHTML = `<div class="empty-events">No class sessions</div>`; return; }
-
-            list.innerHTML = merged.map((c, idx) => {
-                const d = dirtySessions[idx];
-                const dayVal = d ? d.day : (isTBA(c) ? 'TBA' : c.days[0]);
-                const pad2 = n => String(n).padStart(2, '0');
-                const startVal = d
-                    ? (d.startH === '' || d.startH === undefined ? '' : `${pad2(d.startH)}:${pad2(d.startM)}`)
-                    : (isTBA(c) ? '' : `${pad2(c.startH)}:${pad2(c.startM)}`);
-                const endVal = d
-                    ? (d.endH === '' || d.endH === undefined ? '' : `${pad2(d.endH)}:${pad2(d.endM)}`)
-                    : (isTBA(c) ? '' : `${pad2(c.endH)}:${pad2(c.endM)}`);
-                const roomVal = d ? d.room : c.room;
-                const hiddenVal = d ? d.hidden : false;
-                const dirtyCls = d ? ' dirty-row' : '';
-                const badgeLabel = c._custom ? 'custom' : (c._overridden ? 'edited' : 'built-in');
-                const actions = c._overridden
-                    ? `<button class="icon-btn del-btn" onclick="revertSessionOverride('${c._docId}')" title="Revert to built-in">↺</button>`
-                    : c._custom
-                        ? `<button class="icon-btn del-btn" onclick="deleteCustomSession('${c._docId}')" title="Delete">✕</button>`
-                        : '';
-                const dayOptsHtml = DAY_OPTIONS.concat('TBA').map(dd => `<option value="${dd}" ${dd === dayVal ? 'selected' : ''}>${dd === 'TBA' ? 'Time TBA' : dd}</option>`).join('');
-                return `<div class="subject-item${dirtyCls}" data-sess-row="${idx}" style="${hiddenVal ? 'opacity:.45' : ''}">
-  <div class="event-bar" style="background:${c.color}"></div>
-  <div class="event-body">
-    <div class="event-top">
-      <div class="event-name">${esc(c.id)} <span style="color:var(--muted);font-weight:500">— ${esc(c.desc)}</span></div>
-      <div class="event-type-badge">${badgeLabel}</div>
-      ${hiddenVal ? `<div class="event-type-badge" style="color:#ff8080">cancelled</div>` : ''}
-    </div>
-    <div class="subj-field-row">
-      <div>
-        <select class="form-select" style="font-size:10px;padding:5px 7px" onchange="onSessDayChange(${idx},this.value)">${dayOptsHtml}</select>
-      </div>
-      <div>
-        <input class="subj-inline-input" placeholder="Room" value="${esc(roomVal)}" oninput="onSessRoomChange(${idx},this.value)">
-      </div>
-    </div>
-    <div class="subj-field-row">
-      <div>
-        <input type="time" class="subj-inline-input" value="${startVal}" ${dayVal === 'TBA' ? 'disabled' : ''} onchange="onSessStartChange(${idx},this.value)">
-      </div>
-      <div>
-        <input type="time" class="subj-inline-input" value="${endVal}" ${dayVal === 'TBA' ? 'disabled' : ''} onchange="onSessEndChange(${idx},this.value)">
-      </div>
-    </div>
-    <label style="display:flex;align-items:center;gap:5px;margin-top:5px;font-size:9px;color:var(--muted);cursor:pointer">
-      <input type="checkbox" ${hiddenVal ? 'checked' : ''} onchange="toggleSessHidden(${idx},this.checked)"> Cancel this session (hide from schedule)
-    </label>
+ <section id="p-subj" class="d-none">
+  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+   <div class="input-group input-group-sm w-auto"><input class="form-control" id="newSubj" placeholder="New subject code"><button class="btn btn-outline-primary" onclick="newSubject()"><i class="bi bi-plus-lg"></i> Add</button></div>
+   <div class="dropdown"><button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i> More</button>
+    <ul class="dropdown-menu"><li><button class="dropdown-item" onclick="migrate()"><i class="bi bi-cloud-arrow-up"></i> Sync built-ins to Firebase</button></li>
+    <li><button class="dropdown-item" onclick="exportSubj()"><i class="bi bi-download"></i> Export JSON</button></li>
+    <li><button class="dropdown-item" onclick="$('impFile').click()"><i class="bi bi-upload"></i> Import JSON</button></li></ul></div>
+   <input type="file" id="impFile" accept=".json" class="d-none" onchange="importSubj(event)">
+   <span class="text-secondary small ms-auto"><span id="subjCount">0</span> subjects</span>
   </div>
-  <div class="event-actions">${actions}</div>
-</div>`;
-            }).join('');
-        }
-        window.renderSessionsList = renderSessionsList;
+  <div class="row g-3" id="subjList"></div>
+  <div class="sticky-save mt-3 text-end"><button class="btn btn-success shadow" id="saveSubj" disabled onclick="saveSubjects()"><i class="bi bi-check2-circle"></i> Save changes</button></div>
+ </section>
 
-        // ── Init ──
-        populateSubjects();
-        renderColorSwatches();
-        const d = new Date(); d.setDate(d.getDate() + 7);
-        document.getElementById('assignDeadline').value = d.toISOString().split('T')[0];
-        document.getElementById('reminderDeadline').value = d.toISOString().split('T')[0];
-        document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
-    </script>
+ <section id="p-sess" class="d-none">
+  <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-calendar2-x me-1"></i> School day closures</div><div class="card-body">
+   <p class="small text-secondary mb-3">Close the entire school day for a holiday, suspension, or special announcement. This only affects the selected date; your recurring timetable stays unchanged.</p>
+   <div class="row g-2 align-items-end"><div class="col-12 col-md-3"><label class="form-label small">Date</label><input type="date" class="form-control form-control-sm" id="closureDate"></div><div class="col-12 col-md-5"><label class="form-label small">Reason / label</label><input class="form-control form-control-sm" id="closureReason" maxlength="100" placeholder="e.g. National Holiday"></div><div class="col-12 col-md-3"><label class="form-label small">Repeat</label><select class="form-select form-select-sm" id="closureRepeat"><option value="none">Only this date</option><option value="weekly">Same weekday weekly</option></select></div><div class="col-12 col-md-3"><label class="form-label small">Repeat until (optional)</label><input type="date" class="form-control form-control-sm" id="closureUntil"></div><div class="col-12 col-md-3"><button class="btn btn-primary btn-sm w-100" onclick="addDayClosure()"><i class="bi bi-calendar-x me-1"></i> Close day</button></div></div>
+   <div class="mt-3" id="closureList"></div>
+  </div></div>
+  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+   <button class="btn btn-primary btn-sm" onclick="openSessForm()"><i class="bi bi-plus-lg"></i> Add session</button>
+   <span class="text-secondary small ms-auto">Edits create overrides only. Built-in slots can be reverted.</span>
+  </div>
+  <div id="sessList"></div>
+  <div class="sticky-save text-end"><button class="btn btn-success shadow" id="saveSess" disabled onclick="saveSessions()"><i class="bi bi-check2-circle"></i> Save changes</button></div>
+ </section>
+</div></div></main>
 
+<div class="modal fade" id="itemModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">
+ <div class="modal-header"><h6 class="modal-title" id="itemTitle">New item</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+ <div class="modal-body">
+  <div class="btn-group w-100 mb-3" id="typeGrp">
+   <button type="button" class="btn btn-outline-primary" data-t="assignment"><i class="bi bi-journal-text"></i> Assignment</button>
+   <button type="button" class="btn btn-outline-primary" data-t="event"><i class="bi bi-calendar-event"></i> Event</button>
+   <button type="button" class="btn btn-outline-primary" data-t="reminder"><i class="bi bi-bag"></i> Bring / Review</button>
+  </div>
+  <div class="mb-3 d-none" id="kindRow"><label class="form-label small">Kind</label><select class="form-select" id="iKind"><option value="bring">Bring an item</option><option value="review">Review / advance study</option></select></div>
+  <div class="row g-2 mb-3">
+   <div class="col-sm-6"><label class="form-label small">Subject <span id="subOpt" class="text-secondary"></span></label><select class="form-select" id="iSub"></select></div>
+   <div class="col-sm-6"><label class="form-label small">Session</label><select class="form-select" id="iSess"></select></div>
+  </div>
+  <div class="mb-3"><label class="form-label small">Name</label><input class="form-control" id="iName" placeholder="e.g. Lab Report #3"></div>
+  <div class="mb-3"><label class="form-label small">Description</label><textarea class="form-control" id="iDesc" rows="3" placeholder="Details, instructions, links"></textarea></div>
+  <div class="mb-3 d-none" id="checklistRow"><label class="form-label small">Things to bring checklist</label><textarea class="form-control" id="iChecklist" rows="3" placeholder="Notebook&#10;Calculator&#10;Pencil"></textarea><div class="form-text">Enter one item per line. Students can check off each item individually.</div></div>
+  <div class="mb-3"><label class="form-label small">Assignment / Classroom link (optional)</label><input type="url" class="form-control" id="iLink" placeholder="https://classroom.google.com/..."><div class="form-text">Students can open this link directly from the task.</div></div>
+  <div><label class="form-label small" id="dateLbl">Deadline</label>
+   <input type="date" class="form-control" id="iDate">
+   <div class="d-flex gap-1 mt-2"><button class="btn btn-sm btn-outline-secondary" onclick="quickDate(0)">Today</button><button class="btn btn-sm btn-outline-secondary" onclick="quickDate(1)">Tomorrow</button><button class="btn btn-sm btn-outline-secondary" onclick="quickDate(7)">+1 week</button></div></div>
+ </div>
+ <div class="modal-footer"><button class="btn btn-light" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" onclick="saveItem()"><i class="bi bi-check2"></i> Save</button></div>
+</div></div></div>
+
+<div class="modal fade" id="sessModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+ <div class="modal-header"><h6 class="modal-title">Add class session</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+ <div class="modal-body"><div class="row g-2">
+  <div class="col-12"><label class="form-label small">Subject</label><select class="form-select" id="sSub"></select></div>
+  <div class="col-6"><label class="form-label small">Day</label><select class="form-select" id="sDay"></select></div>
+  <div class="col-6"><label class="form-label small">Session type</label><select class="form-select" id="sType"><option value="regular">Regular</option><option value="lecture">Lecture</option><option value="lab">Laboratory</option></select></div>
+  <div class="col-6"><label class="form-label small">Room</label><input class="form-control" id="sRoom"></div>
+  <div class="col-6"><label class="form-label small">Start</label><input type="time" class="form-control" id="sStart"></div>
+  <div class="col-6"><label class="form-label small">End</label><input type="time" class="form-control" id="sEnd"></div>
+  <div class="col-12 small text-secondary">Choose "Time TBA" for a session without a fixed slot.</div>
+ </div></div>
+ <div class="modal-footer"><button class="btn btn-light" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" onclick="addSession()">Add</button></div>
+</div></div></div>
+
+<div class="modal fade" id="askModal" tabindex="-1"><div class="modal-dialog modal-sm modal-dialog-centered"><div class="modal-content">
+ <div class="modal-body" id="askMsg"></div>
+ <div class="modal-footer"><button class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button><button class="btn btn-sm btn-danger" id="askOk">Confirm</button></div>
+</div></div></div>
+
+<div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" id="toasts"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+const app = initializeApp({apiKey: "AIzaSyDk3u5hfhqe-X76lbWqDX-HIJVvrCHW0",authDomain: "schedule-3f07b.firebaseapp.com",projectId: "schedule-3f07b",storageBucket: "schedule-3f07b.firebasestorage.app",messagingSenderId: "1018047030276",appId: "1:1018047030276:web:c88062d54ce42c77c60151",measurementId: "G-KCWEX6G7QF"});
+const db = initializeFirestore(app, {localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});
+window._fb = { db, collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch, COLLECTION:"events", SUBJ_COLLECTION:"subjects", SESSION_COLLECTION:"sessions", CANCEL_COLLECTION:"sessionCancellations", DAY_CLOSURE_COLLECTION:"dayClosures" };
+const status=(s,m)=>{const e=document.getElementById('dbStatus');e.className='badge text-bg-'+(s==='ok'?'success':s==='err'?'danger':'secondary');e.innerHTML=s==='ok'?'<i class="bi bi-cloud-check"></i> Live':s==='err'?'<i class="bi bi-cloud-slash"></i> '+(m||'Error'):'<i class="bi bi-cloud"></i> Connecting'};
+const watch=(q,key,ok)=>onSnapshot(q,s=>{window[key]=s.docs.map(d=>({id:d.id,...d.data()}));try{localStorage.setItem('adminCache_'+key,JSON.stringify(window[key]))}catch(e){}if(ok)status('ok');window.renderAll&&renderAll()},e=>{console.error(e);status('err',e.message)});
+for(const k of ['_allEvents','_allSubjects','_allSessions','_allCancellations','_allDayClosures'])try{window[k]=JSON.parse(localStorage.getItem('adminCache_'+k)||'[]')}catch(e){window[k]=[]}
+watch(query(collection(db,"events"),orderBy("createdAt","asc")),'_allEvents',true);
+watch(query(collection(db,"subjects"),orderBy("courseId","asc")),'_allSubjects');
+watch(collection(db,"sessions"),'_allSessions');
+watch(collection(db,"sessionCancellations"),'_allCancellations');
+watch(collection(db,"dayClosures"),'_allDayClosures');
+</script>
+<script src="schedule-data.js"></script>
+<script src="vendor/bootstrap.bundle.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TYPES={assignment:{i:'bi-journal-text',n:'Assignment'},event:{i:'bi-calendar-event',n:'Event'},bring:{i:'bi-bag',n:'Bring'},review:{i:'bi-book',n:'Review'}};
+const BUILTIN=[...SEM1_DATA.courses.map(c=>({...c,sem:1})),...SEM2_DATA.courses.map(c=>({...c,sem:2}))];
+window._allEvents=[];window._allSubjects=[];window._allSessions=[];window._allCancellations=[];window._allDayClosures=[];
+let page='dash',curType='assignment',editId=null,dirtyS={},dirtyT={},rowsByKey={},selected=new Set(),sem=2;
+
+const M={};const modal=id=>M[id]??=new bootstrap.Modal($(id));
+const pad=n=>String(n).padStart(2,'0'),ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const addD=(dl,n)=>{const [y,m,d]=dl.split('-').map(Number);return ymd(new Date(y,m-1,d+n))};
+const plus=n=>addD(ymd(new Date()),n);
+const dleft=dl=>{if(!dl)return null;const [y,m,d]=dl.split('-').map(Number),n=new Date();return Math.round((new Date(y,m-1,d)-new Date(n.getFullYear(),n.getMonth(),n.getDate()))/864e5)};
+const fdate=dl=>dl?new Date(dl+'T00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}):'';
+const fmt12=(h,m)=>`${h%12||12}:${pad(m)} ${h<12?'AM':'PM'}`;
+const when=e=>e.deadline||e.eventDate||'';
+const tkey=e=>e.type==='reminder'?(e.reminderKind==='bring'?'bring':'review'):e.type;
+const hex=c=>/^#[0-9a-f]{6}$/i.test(c)?c:'#8099cc';
+function urg(e){const n=dleft(when(e));if(n===null)return{c:'secondary',t:''};
+ if(e.type==='event')return n<0?{c:'secondary',t:'Past'}:{c:n<=3?'warning':'info',t:n===0?'Today':n===1?'Tomorrow':n+' days'};
+ if(n<0)return{c:'danger',t:'Overdue '+(-n)+'d'};if(n===0)return{c:'danger',t:'Due today'};if(n===1)return{c:'warning',t:'Tomorrow'};
+ return{c:n<=3?'warning':n<=7?'info':'success',t:n+' days'}}
+function toast(msg,bad){const el=document.createElement('div');el.className='toast align-items-center border-0 text-bg-'+(bad?'danger':'success');
+ el.innerHTML=`<div class="d-flex"><div class="toast-body">${esc(msg)}</div><button class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast"></button></div>`;
+ $('toasts').appendChild(el);el.addEventListener('hidden.bs.toast',()=>el.remove());new bootstrap.Toast(el,{delay:2600}).show()}
+async function run(ok,fn){$('busy').classList.remove('d-none');try{const pending=Promise.resolve().then(fn);let timer;const outcome=await Promise.race([pending.then(()=>({done:true})),new Promise(r=>timer=setTimeout(()=>r({queued:true}),1400))]);clearTimeout(timer);if(outcome.queued){toast((ok||'Changes')+' saved locally; syncing when online');pending.catch(e=>{console.error(e);toast('Sync failed: '+e.message,1)})}else{ok&&toast(ok)}}catch(e){console.error(e);toast(e.message,1)}finally{$('busy').classList.add('d-none')}}
+function ask(msg){return new Promise(r=>{$('askMsg').textContent=msg;const m=modal('askModal');let ok=false;$('askOk').onclick=()=>{ok=true;m.hide()};$('askModal').addEventListener('hidden.bs.modal',()=>r(ok),{once:true});m.show()})}
+
+const inSem=e=>!e.subjectId||!otherIds().has(e.subjectId);
+const evs=()=>_allEvents.filter(inSem);
+const otherIds=()=>new Set(BUILTIN.filter(c=>c.sem!==sem).map(c=>c.id));
+function ids(){const s=new Set(BUILTIN.filter(c=>c.sem===sem).map(c=>c.id)),o=otherIds();_allSubjects.forEach(x=>{if(!o.has(x.courseId)||s.has(x.courseId))s.add(x.courseId)});return[...s].sort()}
+const subOv=id=>_allSubjects.find(s=>s.courseId===id&&!s._tmp);
+const base=id=>BUILTIN.find(c=>c.id===id);
+const subDesc=id=>subOv(id)?.desc||base(id)?.desc||'';
+const subColor=id=>subOv(id)?.color||base(id)?.color||'#8099cc';
+const subInstr=id=>subOv(id)?.instructor||'';
+const sessionTypeFor=c=>{const m=dirtyS[c.id]?.classMode||subOv(c.id)?.classMode;if(m==='standard')return 'regular';if(m==='lecture')return 'lecture';if(m==='lab')return 'lab';return /lab|hangar|workshop|fabrication|simulation/i.test(c.room||'')?'lab':'lecture'};
+const isTBA=c=>c.startH==='TBA'||c.startH==null;
+function effective(){const ov={},custom=[];_allSessions.forEach(o=>o.slotId?ov[o.slotId]=o:custom.push(o));const out=[];
+ BUILTIN.forEach(c=>{const o=ov[c.slotId];if(!o){out.push({...c,key:c.slotId});return}
+  const t=o.day==='TBA',g=(v,d)=>t?'TBA':(v!=null?v:d);
+  out.push({id:c.id,desc:c.desc,color:c.color,sem:c.sem,slotId:c.slotId,key:c.slotId,room:o.room||c.room,sessionType:o.sessionType||null,days:[o.day||c.days[0]],startH:g(o.startH,c.startH),startM:g(o.startM,c.startM),endH:g(o.endH,c.endH),endM:g(o.endM,c.endM),_ov:1,_hidden:!!o.hidden,_doc:o.id})});
+ custom.forEach(o=>{const t=!o.day||o.day==='TBA';out.push({id:o.courseId,desc:subDesc(o.courseId),color:subColor(o.courseId),slotId:null,key:o.id,room:o.room||'TBA',sessionType:o.sessionType||'regular',days:[t?'TBA':o.day],startH:t?'TBA':o.startH,startM:t?'TBA':o.startM,endH:t?'TBA':o.endH,endM:t?'TBA':o.endM,_custom:1,_hidden:!!o.hidden,_doc:o.id})});
+ return out}
+function subSessions(id){return effective().filter(c=>c.id===id&&!c._hidden&&!isTBA(c)).map(c=>({key:`${c.days[0]}|${c.startH}:${c.startM}`,label:`${c.days[0]} ${fmt12(c.startH,c.startM)}-${fmt12(c.endH,c.endM)} / ${c.room}`}))}
+
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b)return;page=b.dataset.page;
+ document.querySelectorAll('#tabs .nav-link').forEach(x=>x.classList.toggle('active',x===b));
+ ['dash','items','subj','sess'].forEach(p=>$('p-'+p).classList.toggle('d-none',p!==page));renderAll()});
+$('semSel').onchange=e=>{sem=+e.target.value;renderAll()};
+function themeIcon(){$('themeBtn').innerHTML='<i class="bi '+(document.documentElement.dataset.bsTheme==='light'?'bi-sun':'bi-moon-stars')+'"></i>'}
+$('themeBtn').onclick=()=>{const t=document.documentElement.dataset.bsTheme==='light'?'dark':'light';document.documentElement.dataset.bsTheme=t;try{localStorage.setItem('theme',t)}catch(e){}themeIcon()};themeIcon();
+window.addEventListener('offline',()=>status('err','Offline · edits queued'));window.addEventListener('online',()=>status('wait'));
+
+function renderDash(){
+ $('heroDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});$('heroSem').textContent=(sem===1?'1st':'2nd')+' Semester';
+ const ev=evs(),tasks=ev.filter(e=>e.type!=='event'),open=tasks.filter(e=>dleft(e.deadline)>=0),over=tasks.filter(e=>dleft(e.deadline)<0),
+  soon=open.filter(e=>dleft(e.deadline)<=3),upc=ev.filter(e=>e.type==='event'&&dleft(e.eventDate)>=0);
+ $('stats').innerHTML=[['Open tasks',open.length,'bi-journal-check','primary'],['Due within 3 days',soon.length,'bi-alarm','warning'],['Overdue',over.length,'bi-exclamation-triangle','danger'],['Upcoming events',upc.length,'bi-calendar-event','info']]
+  .map(s=>`<div class="col-6 col-lg-3"><div class="card stat"><div class="card-body d-flex align-items-center justify-content-between"><div><div class="n">${s[1]}</div><div class="small text-secondary">${s[0]}</div></div><span class="ico bg-${s[3]}-subtle text-${s[3]}"><i class="bi ${s[2]}"></i></span></div></div></div>`).join('');
+ const attn=[...over,...open].filter(e=>dleft(e.deadline)<=7).sort((a,b)=>a.deadline<b.deadline?-1:1).slice(0,6);
+ $('attn').innerHTML=attn.length?attn.map(e=>row(e)).join(''):'<div class="list-group-item text-secondary text-center py-4"><i class="bi bi-check2-circle fs-3 d-block"></i>Nothing due in the next 7 days</div>';
+ const dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date().getDay()],now=new Date().getHours()*60+new Date().getMinutes();
+ const today=effective().filter(c=>!c._hidden&&c.days[0]===dn&&(c._custom&&!otherIds().has(c.id)||c.sem===sem)).sort((a,b)=>(isTBA(a)?9e3:a.startH*60+a.startM)-(isTBA(b)?9e3:b.startH*60+b.startM));
+ $('todayCls').innerHTML=today.length?today.map(c=>{const live=!isTBA(c)&&now>=c.startH*60+c.startM&&now<c.endH*60+c.endM;
+  return `<div class="list-group-item d-flex align-items-center gap-2"><span class="dot" style="background:${c.color}"></span><div class="flex-grow-1"><div class="fw-semibold small">${esc(c.id)} ${live?'<span class="badge text-bg-success">Now</span>':''}</div><div class="small text-secondary">${isTBA(c)?'Time TBA':fmt12(c.startH,c.startM)+' - '+fmt12(c.endH,c.endM)} / ${esc(c.room)}</div></div></div>`}).join(''):'<div class="list-group-item text-secondary small">No classes today</div>';
+ const cnt={};open.forEach(e=>e.subjectId&&(cnt[e.subjectId]=(cnt[e.subjectId]||0)+1));const mx=Math.max(1,...Object.values(cnt));
+ $('workload').innerHTML=Object.keys(cnt).length?Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([id,n])=>`<div class="mb-2"><div class="d-flex justify-content-between small"><span>${esc(id)}</span><span>${n}</span></div><div class="progress" style="height:6px"><div class="progress-bar" style="width:${n/mx*100}%;background:${subColor(id)}"></div></div></div>`).join(''):'<span class="small text-secondary">No open tasks</span>';weekStrip(ev)}
+function weekStrip(ev){$('week').innerHTML=[0,1,2,3,4,5,6].map(n=>{const d=plus(n),c=ev.filter(e=>when(e)===d).length,dt=new Date(d+'T00:00');return `<div class="col"><div class="wk ${n===0?'today':''}"><div class="small text-secondary">${dt.toLocaleDateString('en-US',{weekday:'short'})}</div><div class="c ${c?'text-primary':'text-secondary'}">${c}</div><div class="small text-secondary">${dt.getDate()}</div></div></div>`}).join('')}
+
+function row(e,sel){const c=e.subjectId?subColor(e.subjectId):'#8099cc',u=urg(e),k=TYPES[tkey(e)],rid='r'+(sel?'i':'d')+e.id,past=e.type==='event'&&dleft(when(e))<0;
+ return `<div class="list-group-item p-0 ${past?'opacity-50':''}" style="border-left:4px solid ${c}">
+ <div class="d-flex align-items-center gap-2 p-2">
+  ${sel?`<input type="checkbox" class="form-check-input mt-0 sel" data-id="${e.id}" ${selected.has(e.id)?'checked':''}>`:''}
+  <a class="flex-grow-1 text-decoration-none text-body" style="min-width:0" data-bs-toggle="collapse" href="#${rid}">
+   <div class="d-flex flex-wrap align-items-center gap-1"><i class="bi ${k.i} text-secondary"></i><span class="fw-semibold">${esc(e.name)}</span>${e.subjectId?`<span class="badge" style="background:${c}">${esc(e.subjectId)}</span>`:''}</div>
+   <div class="small text-secondary">${fdate(when(e))}</div></a>
+  <span class="badge text-bg-${u.c}">${u.t}</span>
+  <div class="btn-group btn-group-sm">
+   <button class="btn btn-outline-secondary" title="Edit" onclick="openItemForm('${e.id}')"><i class="bi bi-pencil"></i></button>
+   <button class="btn btn-outline-secondary" title="Move +1 week" onclick="postpone('${e.id}')"><i class="bi bi-calendar-plus"></i></button>
+   <button class="btn btn-outline-secondary d-none d-sm-inline-block" title="Duplicate" onclick="openItemForm('${e.id}',null,1)"><i class="bi bi-copy"></i></button>
+   <button class="btn btn-outline-danger" title="Delete" onclick="delItem('${e.id}')"><i class="bi bi-trash"></i></button>
+  </div></div>
+ <div class="collapse" id="${rid}"><div class="px-3 pb-3 small">
+  <div class="mb-1"><span class="badge text-bg-secondary">${k.n}</span>${e.sessionKey?` <span class="text-secondary">Session: ${esc(e.sessionKey.replace('|',' at '))}</span>`:''}</div>
+  <div class="${e.description?'':'text-secondary'}" style="white-space:pre-wrap">${esc(e.description||'No description')}</div></div></div></div>`}
+function filtered(){const q=$('fq').value.toLowerCase(),t=$('ft').value,s=$('fs').value,sb=$('fsub').value;
+ return evs().filter(e=>{if(t&&e.type!==t)return false;if(sb&&e.subjectId!==sb)return false;const n=dleft(when(e));
+  if(s==='upcoming'&&!(n>=0))return false;if(s==='overdue'&&!(e.type!=='event'&&n<0))return false;
+  return !q||(e.name+' '+(e.description||'')).toLowerCase().includes(q)}).sort((a,b)=>when(a)<when(b)?-1:1)}
+function renderItems(){const l=filtered();$('itemCount').textContent=l.length+' item'+(l.length===1?'':'s');
+ $('itemList').innerHTML=l.length?l.map(e=>row(e,1)).join(''):'<div class="list-group-item text-center text-secondary py-4">No items match</div>';bulkUI()}
+['fq','ft','fs','fsub'].forEach(i=>$(i).addEventListener('input',renderItems));
+document.addEventListener('change',e=>{if(e.target.classList.contains('sel')){e.target.checked?selected.add(e.target.dataset.id):selected.delete(e.target.dataset.id);bulkUI()}
+ if(e.target.id==='selAll'){filtered().forEach(x=>e.target.checked?selected.add(x.id):selected.delete(x.id));renderItems()}});
+function bulkUI(){$('bulkDel').classList.toggle('d-none',!selected.size);$('bulkN').textContent='('+selected.size+')'}
+async function bulkDelete(){if(!await ask(`Delete ${selected.size} selected item(s)?`))return;const f=_fb;
+ await run('Deleted',async()=>{const b=f.writeBatch(f.db);selected.forEach(id=>b.delete(f.doc(f.db,f.COLLECTION,id)));await b.commit();selected.clear()})}
+async function delItem(id){if(!await ask('Delete this item?'))return;const f=_fb;await run('Deleted',()=>f.deleteDoc(f.doc(f.db,f.COLLECTION,id)))}
+async function postpone(id){const e=_allEvents.find(x=>x.id===id),f=_fb,k=e.type==='event'?'eventDate':'deadline';
+ await run('Moved to '+fdate(addD(when(e),7)),()=>f.updateDoc(f.doc(f.db,f.COLLECTION,id),{[k]:addD(when(e),7)}))}
+
+function setType(t){curType=t;document.querySelectorAll('#typeGrp [data-t]').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+ $('kindRow').classList.toggle('d-none',t!=='reminder');$('checklistRow').classList.toggle('d-none',!(t==='reminder' && $('iKind').value==='bring'));$('subOpt').textContent=t==='event'?'(optional)':'';
+ $('dateLbl').textContent=t==='assignment'?'Deadline':t==='event'?'Date':'Needed by'}
+$('typeGrp').onclick=e=>{const b=e.target.closest('[data-t]');if(b)setType(b.dataset.t)};
+$('iSub').onchange=fillSess;$('iKind').onchange=()=>$('checklistRow').classList.toggle('d-none',$('iKind').value!=='bring'||curType!=='reminder');
+function fillSess(){const s=$('iSub').value;$('iSess').innerHTML='<option value="">All sessions of this subject</option>'+(s?subSessions(s).map(x=>`<option value="${esc(x.key)}">${esc(x.label)}</option>`).join(''):'')}
+function subOptions(first){return `<option value="">${first}</option>`+ids().map(id=>`<option value="${id}">${id} - ${esc(subDesc(id))}</option>`).join('')}
+function quickDate(n){$('iDate').value=plus(n)}
+function openItemForm(id,type,dupe){const e=id?_allEvents.find(x=>x.id===id):null;editId=e&&!dupe?e.id:null;
+ setType(e?e.type:type||'assignment');$('iSub').innerHTML=subOptions('Select subject');$('iSub').value=e?.subjectId||'';fillSess();$('iSess').value=e?.sessionKey||'';
+ $('iKind').value=e?.reminderKind||'bring';$('iChecklist').value=(e?.checklist||[]).join('\n');$('checklistRow').classList.toggle('d-none',!( (e?.reminderKind||'bring')==='bring' && (e?.type||type)==='reminder'));$('iLink').value=e?.link||'';$('iName').value=e?(dupe?e.name+' (copy)':e.name):'';$('iDesc').value=e?.description||'';$('iDate').value=e?when(e):plus(7);
+ $('itemTitle').textContent=editId?'Edit item':dupe?'Duplicate item':'New item';modal('itemModal').show()}
+async function saveItem(){const t=curType,sub=$('iSub').value,name=$('iName').value.trim(),date=$('iDate').value;
+ if(t!=='event'&&!sub)return toast('Choose a subject',1);if(!name)return toast('Enter a name',1);if(!date)return toast('Pick a date',1);
+ const d={type:t,subjectId:sub,sessionKey:$('iSess').value||null,name,description:$('iDesc').value.trim(),link:$('iLink').value.trim(),deadline:t==='event'?null:date,eventDate:t==='event'?date:null,reminderKind:t==='reminder'?$('iKind').value:null,checklist:t==='reminder'&&$('iKind').value==='bring'?$('iChecklist').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean):[]},f=_fb;
+ await run(editId?'Item updated':'Item added',async()=>{if(editId)await f.updateDoc(f.doc(f.db,f.COLLECTION,editId),d);else{d.createdAt=f.serverTimestamp();await f.addDoc(f.collection(f.db,f.COLLECTION),d)}modal('itemModal').hide()})}
+
+function renderSubjects(){const l=ids();$('subjCount').textContent=l.length;
+ $('subjList').innerHTML=l.map(id=>{const o=subOv(id),d=dirtyS[id],col=d?d.color:subColor(id),ss=subSessions(id),v=d||{},mode=v.classMode||o?.classMode||(o?.instructorLab?'split':'standard');
+  const prof=v.instructor??o?.instructor??subInstr(id),lec=v.instructorLecture??o?.instructorLecture??o?.lectureInstructor??subInstr(id),lab=v.instructorLab??o?.instructorLab??o?.labInstructor??'';
+  const fields=mode==='split'?`<div class="subject-prof-grid"><div><label class="form-label small mb-1">Lecture professor</label><input class="form-control form-control-sm" placeholder="Lecture professor" value="${esc(lec)}" oninput="subEdit(this,'${id}','instructorLecture')"></div><div><label class="form-label small mb-1">Laboratory professor</label><input class="form-control form-control-sm" placeholder="Laboratory professor" value="${esc(lab)}" oninput="subEdit(this,'${id}','instructorLab')"></div></div>`:mode==='lecture'?`<label class="form-label small mb-1">Lecture professor</label><input class="form-control form-control-sm" placeholder="Lecture professor" value="${esc(lec)}" oninput="subEdit(this,'${id}','instructorLecture')">`:mode==='lab'?`<label class="form-label small mb-1">Laboratory professor</label><input class="form-control form-control-sm" placeholder="Laboratory professor" value="${esc(lab)}" oninput="subEdit(this,'${id}','instructorLab')">`:`<label class="form-label small mb-1">Professor / instructor</label><input class="form-control form-control-sm" placeholder="Professor / instructor" value="${esc(prof)}" oninput="subEdit(this,'${id}','instructor')">`;
+  return `<div class="col-md-6 col-xl-4"><div class="card h-100 ${d?'border-warning':''}"><div class="card-body" style="border-top:4px solid ${col}">
+  <div class="d-flex align-items-center gap-2 mb-3"><input type="color" class="form-control form-control-color" value="${hex(col)}" oninput="subEdit(this,'${id}','color');this.closest('.card-body').style.borderTopColor=this.value"><div class="fw-bold flex-grow-1">${esc(id)}</div><span class="badge text-bg-${o?'primary':'secondary'}">${o?'synced':'built-in'}</span>${o?`<button class="btn btn-sm btn-outline-danger" title="Remove override" onclick="delSub('${o.id}')"><i class="bi bi-trash"></i></button>`:''}</div>
+  <label class="form-label small mb-1">Subject name</label><input class="form-control form-control-sm mb-3" placeholder="Subject title" value="${esc(v.desc??subDesc(id))}" oninput="subEdit(this,'${id}','desc')">
+  <label class="form-label small mb-1">Class structure</label><select class="form-select form-select-sm subject-mode mb-1" onchange="subEdit(this,'${id}','classMode');renderSubjects()"><option value="standard" ${mode==='standard'?'selected':''}>Regular subject (no lecture/lab split)</option><option value="split" ${mode==='split'?'selected':''}>Lecture + Laboratory</option><option value="lecture" ${mode==='lecture'?'selected':''}>Lecture only</option><option value="lab" ${mode==='lab'?'selected':''}>Laboratory only</option></select>
+  <div class="mode-help mb-3">${mode==='split'?'Separate professors are shown for lecture and lab meetings.':mode==='standard'?'One professor is used for every meeting.':mode==='lecture'?'Only lecture sessions and professor are used.':'Only laboratory sessions and professor are used.'}</div>
+  ${fields}
+  <div class="form-check form-switch my-3"><input class="form-check-input" type="checkbox" id="nomore-${id}" ${((v.noMoreClasses??o?.noMoreClasses)?'checked':'')} onchange="subEdit(this,'${id}','noMoreClasses')"><label class="form-check-label small" for="nomore-${id}">No more upcoming classes</label></div>
+  <div class="border-top pt-2 small text-secondary">${ss.length?ss.map(s=>esc(s.label)).join('<br>'):'No timetable slot (tag-only subject)'}</div></div></div></div>`}).join('');
+ $('saveSubj').disabled=!Object.keys(dirtyS).length}
+function ensureS(id){const o=subOv(id)||{};return dirtyS[id]??={desc:subDesc(id),instructor:subInstr(id),instructorLecture:o.instructorLecture||o.lectureInstructor||subInstr(id),instructorLab:o.instructorLab||o.labInstructor||'',classMode:o.classMode||(o.instructorLab?'split':'standard'),noMoreClasses:!!o.noMoreClasses,color:subColor(id)}}
+function subEdit(el,id,f){ensureS(id)[f]=el.type==='checkbox'?el.checked:el.value;el.closest('.card').classList.add('border-warning');$('saveSubj').disabled=false}
+function newSubject(){const id=$('newSubj').value.trim().toUpperCase();if(!id)return;if(ids().includes(id))return toast('That subject already exists',1);dirtyS[id]={desc:'',instructor:'',instructorLecture:'',instructorLab:'',classMode:'standard',noMoreClasses:false,color:'#3a7bd5'};$('newSubj').value='';_allSubjects.push({id:'tmp'+id,courseId:id,desc:'',color:'#3a7bd5',_tmp:1});renderSubjects();toast('New regular subject added. Choose its class structure.')}
+async function saveSubjects(){const f=_fb,k=Object.keys(dirtyS);
+ await run(`Saved ${k.length} subject(s)`,async()=>{const b=f.writeBatch(f.db);k.forEach(id=>{const d=dirtyS[id],p={courseId:id,desc:d.desc,instructor:d.instructor||'',instructorLecture:d.instructorLecture||'',instructorLab:d.instructorLab||'',classMode:d.classMode||'standard',noMoreClasses:!!d.noMoreClasses,color:d.color},real=subOv(id);
+  real?b.update(f.doc(f.db,f.SUBJ_COLLECTION,real.id),p):b.set(f.doc(f.collection(f.db,f.SUBJ_COLLECTION)),p)});await b.commit();dirtyS={};window._allSubjects=_allSubjects.filter(s=>!s._tmp);renderSubjects()})}
+async function delSub(id){if(!await ask('Remove this override? Built-in subjects return to their defaults.'))return;const f=_fb;await run('Removed',()=>f.deleteDoc(f.doc(f.db,f.SUBJ_COLLECTION,id)))}
+async function migrate(){const f=_fb,miss=[...new Set(BUILTIN.map(c=>c.id))].filter(id=>!subOv(id));if(!miss.length)return toast('Everything is already synced');
+ if(!await ask(`Create Firebase records for ${miss.length} built-in subject(s)?`))return;
+ await run('Synced '+miss.length+' subject(s)',async()=>{const b=f.writeBatch(f.db);miss.forEach(id=>b.set(f.doc(f.collection(f.db,f.SUBJ_COLLECTION)),{courseId:id,desc:subDesc(id),instructor:'',color:subColor(id)}));await b.commit()})}
+function exportSubj(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(ids().map(id=>({courseId:id,desc:subDesc(id),instructor:subInstr(id),instructorLecture:subOv(id)?.instructorLecture||subInstr(id),instructorLab:subOv(id)?.instructorLab||'',classMode:subOv(id)?.classMode||'standard',color:subColor(id)})),null,2)],{type:'application/json'}));a.download='subjects_export.json';a.click();URL.revokeObjectURL(a.href)}
+function importSubj(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d))throw Error('JSON must be an array');
+ d.forEach(x=>{if(!x.courseId)return;const id=String(x.courseId).trim().toUpperCase();dirtyS[id]={desc:x.desc||'',instructor:x.instructor||'',color:x.color||'#8099cc'}});renderSubjects();toast(`Loaded ${d.length} rows. Review, then save.`)}catch(e){toast('Import error: '+e.message,1)}ev.target.value=''};r.readAsText(file)}
+
+function renderSess(){const all=effective().filter(c=>c._custom&&!otherIds().has(c.id)||c.sem===sem);rowsByKey={};all.forEach(c=>rowsByKey[c.key]=c);
+ const dayOf=c=>dirtyT[c.key]?dirtyT[c.key].day:c.days[0],tv=(c,k)=>dirtyT[c.key]?dirtyT[c.key][k]:(isTBA(c)?'':`${pad(c[k==='start'?'startH':'endH'])}:${pad(c[k==='start'?'startM':'endM'])}`);
+ const groups={};all.forEach(c=>(groups[dayOf(c)]??=[]).push(c));
+ $('sessList').innerHTML=[...DAYS,'TBA'].filter(d=>groups[d]).map(d=>{const l=groups[d].sort((a,b)=>(tv(a,'start')||'99')<(tv(b,'start')||'99')?-1:1);
+  return `<div class="card mb-3"><div class="card-header fw-semibold d-flex justify-content-between">${d==='TBA'?'Time TBA':d}<span class="badge text-bg-secondary">${l.length}</span></div><div class="list-group list-group-flush">`+l.map(c=>{
+   const dt=dirtyT[c.key],hid=dt?dt.hidden:c._hidden,room=dt?dt.room:c.room,st=dt?.sessionType||c.sessionType||sessionTypeFor(c),tba=dayOf(c)==='TBA',k=c.key, cancelledDates=(_allCancellations||[]).filter(x=>x.sessionKey===sessionIdentity(c)).map(x=>x.date).sort();
+   return `<div class="list-group-item ${dt?'bg-warning-subtle':''} ${hid?'opacity-50':''}" style="border-left:4px solid ${c.color}"><div class="row g-2 align-items-center">
+   <div class="col-12 col-md-3"><div class="fw-semibold">${esc(c.id)} <span class="badge text-bg-${st==='lab'?'info':st==='regular'?'secondary':'primary'} session-type-pill">${st==='lab'?'LABORATORY':st==='regular'?'REGULAR':'LECTURE'}</span> ${c._custom?'<span class="badge text-bg-info">custom</span>':c._ov?'<span class="badge text-bg-primary">edited</span>':''}${hid?' <span class="badge text-bg-danger">cancelled</span>':''}</div><div class="small text-secondary text-truncate">${esc(c.desc)}</div></div>
+   <div class="col-4 col-md-2"><select class="form-select form-select-sm" onchange="sessEdit('${k}','day',this.value,1)">${[...DAYS,'TBA'].map(x=>`<option value="${x}" ${x===dayOf(c)?'selected':''}>${x==='TBA'?'Time TBA':x}</option>`).join('')}</select></div>
+   <div class="col-4 col-md-2"><input type="time" class="form-control form-control-sm" value="${tv(c,'start')}" ${tba?'disabled':''} onchange="sessEdit('${k}','start',this.value)"></div>
+   <div class="col-4 col-md-2"><input type="time" class="form-control form-control-sm" value="${tv(c,'end')}" ${tba?'disabled':''} onchange="sessEdit('${k}','end',this.value)"></div>
+   <div class="col-6 col-md-1"><select class="form-select form-select-sm" title="Session type" onchange="sessEdit('${k}','sessionType',this.value)"><option value="regular" ${st==='regular'?'selected':''}>Regular</option><option value="lecture" ${st==='lecture'?'selected':''}>Lecture</option><option value="lab" ${st==='lab'?'selected':''}>Lab</option></select></div>
+   <div class="col-6 col-md-2"><input class="form-control form-control-sm" placeholder="Room" value="${esc(room)}" oninput="sessEdit('${k}','room',this.value)"></div>
+   <div class="col-12 d-flex flex-wrap align-items-center gap-2 pt-1"><span class="small text-secondary">Cancel this meeting only:</span><input type="date" class="form-control form-control-sm" style="max-width:160px" id="cancelDate-${k}" value="${new Date().toISOString().slice(0,10)}"><button class="btn btn-sm btn-outline-secondary" onclick="cancelOccurrence('${k}')"><i class="bi bi-calendar-x"></i> Cancel date</button><button class="btn btn-sm btn-outline-success" onclick="restoreOccurrence('${k}')">Restore date</button>${hid?`<button class="btn btn-sm btn-outline-warning" onclick="sessEdit('${k}','hidden',false,1)">Restore weekly session</button>`:''}${cancelledDates.length?`<span class="small text-secondary">Cancelled: ${cancelledDates.map(esc).join(', ')}</span>`:''}${c._ov?`<button class="btn btn-sm btn-outline-secondary" title="Revert to built-in" onclick="revertSess('${c._doc}')"><i class="bi bi-arrow-counterclockwise"></i></button>`:c._custom?`<button class="btn btn-sm btn-outline-danger" title="Delete" onclick="delSess('${c._doc}')"><i class="bi bi-trash"></i></button>`:''}</div>
+   </div></div>`}).join('')+'</div></div>'}).join('')||'<div class="text-center text-secondary py-4">No sessions</div>';
+ $('saveSess').disabled=!Object.keys(dirtyT).length}
+function sessEdit(k,f,v,re){const c=rowsByKey[k],t=isTBA(c);dirtyT[k]??={day:c.days[0],start:t?'':`${pad(c.startH)}:${pad(c.startM)}`,end:t?'':`${pad(c.endH)}:${pad(c.endM)}`,room:c.room||'',sessionType:c.sessionType||sessionTypeFor(c),hidden:false};
+ dirtyT[k][f]=v;re?renderSess():$('saveSess').disabled=false}
+async function saveSessions(){const f=_fb,ks=Object.keys(dirtyT);
+ await run(`Saved ${ks.length} change(s)`,async()=>{const b=f.writeBatch(f.db);ks.forEach(k=>{const c=rowsByKey[k],d=dirtyT[k],tba=d.day==='TBA',t=s=>!tba&&s?s.split(':').map(Number):[null,null],[sh,sm]=t(d.start),[eh,em]=t(d.end);
+  const p={slotId:c.slotId||null,courseId:c.id,day:d.day,room:d.room,sessionType:d.sessionType||'lecture',hidden:false,startH:sh,startM:sm,endH:eh,endM:em};
+  c._doc?b.update(f.doc(f.db,f.SESSION_COLLECTION,c._doc),p):b.set(f.doc(f.collection(f.db,f.SESSION_COLLECTION)),p)});await b.commit();dirtyT={}})}
+async function revertSess(id){if(!await ask('Revert this class to its original built-in day, time and room?'))return;const f=_fb,k=Object.keys(rowsByKey).find(k=>rowsByKey[k]._doc===id);delete dirtyT[k];await run('Reverted',()=>f.deleteDoc(f.doc(f.db,f.SESSION_COLLECTION,id)))}
+async function delSess(id){if(!await ask('Delete this class session?'))return;const f=_fb;await run('Deleted',()=>f.deleteDoc(f.doc(f.db,f.SESSION_COLLECTION,id)))}
+function sessionIdentity(c){return c.slotId||c._doc||c.key}
+async function cancelOccurrence(k){const c=rowsByKey[k],date=$('cancelDate-'+k)?.value;if(!c||!date)return toast('Choose a date first',1);const key=sessionIdentity(c);if((_allCancellations||[]).some(x=>x.sessionKey===key&&x.date===date))return toast('This meeting is already cancelled for that date');const f=_fb;await run('Cancellation saved for '+date,()=>f.addDoc(f.collection(f.db,f.CANCEL_COLLECTION),{sessionKey:key,courseId:c.id,date,createdAt:f.serverTimestamp()}))}
+async function restoreOccurrence(k){const c=rowsByKey[k],date=$('cancelDate-'+k)?.value;if(!c||!date)return toast('Choose a date first',1);const matches=(_allCancellations||[]).filter(x=>x.sessionKey===sessionIdentity(c)&&x.date===date);if(!matches.length)return toast('No cancellation exists for that date',1);const f=_fb;await run('Class restored for '+date,async()=>{for(const x of matches)await f.deleteDoc(f.doc(f.db,f.CANCEL_COLLECTION,x.id))})}
+function openSessForm(){$('sSub').innerHTML=subOptions('Select subject');$('sDay').innerHTML=[...DAYS,'TBA'].map(d=>`<option value="${d}">${d==='TBA'?'Time TBA':d}</option>`).join('');modal('sessModal').show()}
+async function addSession(){const c=$('sSub').value,day=$('sDay').value,s=$('sStart').value,e=$('sEnd').value,tba=day==='TBA';
+ if(!c)return toast('Choose a subject',1);if(!tba&&(!s||!e))return toast('Set start and end time',1);
+ const [sh,sm]=tba?[null,null]:s.split(':').map(Number),[eh,em]=tba?[null,null]:e.split(':').map(Number),f=_fb;
+ await run('Session added',async()=>{await f.addDoc(f.collection(f.db,f.SESSION_COLLECTION),{slotId:null,courseId:c,day,room:$('sRoom').value.trim(),sessionType:$('sType').value,startH:sh,startM:sm,endH:eh,endM:em,hidden:false});modal('sessModal').hide();$('sRoom').value=$('sStart').value=$('sEnd').value='';$('sType').value='regular'})}
+
+async function addDayClosure(){const date=$('closureDate').value,reason=$('closureReason').value.trim()||'No classes',repeat=$('closureRepeat').value,repeatUntil=$('closureUntil').value;if(!date)return toast('Choose a date first',1);if(repeatUntil&&repeatUntil<date)return toast('Repeat-until date must be on or after the start date',1);if((_allDayClosures||[]).some(x=>x.date===date&&x.repeat===(repeat==='weekly'?'weekly':'none')))return toast('A matching closure already starts on that date');const f=_fb;await run('No-classes schedule saved for '+date,()=>f.addDoc(f.collection(f.db,f.DAY_CLOSURE_COLLECTION),{date,reason,repeat:repeat==='weekly'?'weekly':'none',repeatUntil:repeat==='weekly'?(repeatUntil||null):null,createdAt:f.serverTimestamp()}));$('closureReason').value='';$('closureUntil').value='';$('closureRepeat').value='none'}
+async function removeDayClosure(id){if(!await ask('Restore the normal timetable for this date?'))return;const f=_fb;await run('School day restored',()=>f.deleteDoc(f.doc(f.db,f.DAY_CLOSURE_COLLECTION,id)))}
+function renderClosures(){const list=$('closureList');if(!list)return;const rows=[...(_allDayClosures||[])].sort((a,b)=>(a.date||'').localeCompare(b.date||''));list.innerHTML=rows.length?rows.map(x=>`<div class="d-flex flex-wrap align-items-center gap-2 border rounded-3 p-2 mb-2"><span class="badge text-bg-secondary">${esc(x.date)}</span><span class="badge text-bg-${x.repeat==='weekly'?'info':'light'}">${x.repeat==='weekly'?'Weekly'+(x.repeatUntil?' until '+esc(x.repeatUntil):''):'One-time'}</span><span class="flex-grow-1 small fw-semibold">${esc(x.reason||'No classes')}</span><button class="btn btn-sm btn-outline-success" onclick="removeDayClosure('${x.id}')"><i class="bi bi-arrow-counterclockwise"></i> Restore day</button></div>`).join(''):'<div class="small text-secondary">No whole-day closures scheduled.</div>'}
+function renderAll(){const cur=$('fsub').value;$('fsub').innerHTML=subOptions('All subjects');$('fsub').value=cur;
+ if(page==='dash')renderDash();else if(page==='items')renderItems();else if(page==='subj')renderSubjects();else {renderClosures();renderSess()}}
+renderAll();
+</script>
 </body>
-
 </html>

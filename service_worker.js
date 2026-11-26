@@ -1,20 +1,31 @@
 /* Offline support for index.html + admin.html.
    Pages, icons, fonts and the Firebase SDK are cached so the site opens with no internet. */
-const CACHE_NAME = "aamt-v6";
+const CACHE_NAME = "aamt-v15";
 
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./admin.html",
+  "./schedule-data.js",
+  "./service_worker.js",
 
   "./manifest_index.json",
   "./manifest_admin.json",
 
-  "./new_main_icon_RAW.png",
-  "./index-icon-192.png",
-  "./index-icon-512.png",
-  "./admin-icon-192.png",
-  "./admin-icon-512.png"
+  "./vendor/bootstrap.min.css",
+  "./vendor/bootstrap.bundle.min.js",
+  "./vendor/bootstrap-icons.min.css",
+  "./vendor/fonts/bootstrap-icons.woff2",
+  "./vendor/fonts/bootstrap-icons.woff",
+  "./index_icon_192.png",
+  "./index_icon_512.png",
+
+  "./new_main_icon-RAW.png",
+  "./new_admin_icon-RAW.png",
+  "./index_icon_192.png",
+  "./index_icon_512.png",
+  "./admin_icon_192.png",
+  "./admin_icon_512.png"
 ];
 
 self.addEventListener("install", event => {

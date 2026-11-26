@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script>(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
+    <script>(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;document.documentElement.dataset.bsTheme=t}catch(e){document.documentElement.dataset.theme='dark';document.documentElement.dataset.bsTheme='dark'}})();</script>
     <title>Naap Schedule</title>
-    <link rel="icon" type="image/png" href="new_main_icon_RAW.png">
+    <link rel="icon" type="image/png" href="new_main_icon-RAW.png">
     <link rel="manifest" href="manifest_index.json">
     <meta name="theme-color" content="#2563eb">
     <meta name="mobile-web-app-capable" content="yes">
@@ -16,6 +16,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap-icons.min.css">
     <style>
         *,
         *::before,
@@ -41,12 +43,12 @@
 
         :root[data-theme="light"] {
             color-scheme: light;
-            --bg: #eef2f9;
+            --bg: #f1f5fb;
             --header: #ffffff;
-            --accent: #2563eb;
-            --text: #0f1d38;
-            --muted: #5b6b8c;
-            --grid: #c3cee4;
+            --accent: #1749b5;
+            --text: #101b32;
+            --muted: #52627d;
+            --grid: #aab9d0;
             --cell: #ffffff;
             --card: #ffffff;
             --ov: 15, 29, 56;
@@ -55,79 +57,6 @@
 
         :root[data-theme="light"] .widget {
             box-shadow: 0 8px 32px rgba(15, 29, 56, .15), inset 0 0 0 1px rgba(15, 29, 56, .08)
-        }
-
-        .theme-switch {
-            position: relative;
-            width: 48px;
-            height: 24px;
-            border-radius: 999px;
-            border: 1px solid rgba(var(--ov), .18);
-            background: linear-gradient(135deg, #1b2a5c, #0b1430);
-            cursor: pointer;
-            flex-shrink: 0;
-            padding: 0;
-            transition: background .35s, border-color .35s
-        }
-
-        .theme-switch::before,
-        .theme-switch::after {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 9px;
-            line-height: 1;
-            opacity: .75
-        }
-
-        .theme-switch::before {
-            content: "✦";
-            right: 8px;
-            color: #cfe0ff
-        }
-
-        .theme-switch::after {
-            content: "";
-        }
-
-        :root[data-theme="light"] .theme-switch {
-            background: linear-gradient(135deg, #8ccbff, #dff0ff);
-            border-color: rgba(37, 99, 235, .35)
-        }
-
-        :root[data-theme="light"] .theme-switch::before {
-            content: "☁";
-            color: #fff
-        }
-
-        .ts-knob {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #e8f0ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            line-height: 1;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
-            transition: transform .35s cubic-bezier(.4, 1.4, .5, 1), background .35s
-        }
-
-        :root[data-theme="light"] .ts-knob {
-            transform: translateX(24px);
-            background: #fff
-        }
-
-        .theme-switch:active .ts-knob {
-            width: 22px
-        }
-
-        :root[data-theme="light"] .theme-switch:active .ts-knob {
-            transform: translateX(20px)
         }
 
         .offline-pill {
@@ -975,11 +904,9 @@
         }
 
         .cal-days-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            flex: 1;
-            min-height: 0
+            display: grid; grid-template-columns: repeat(7, minmax(0,1fr));
+            grid-template-rows: repeat(6, minmax(34px, 1fr)); gap: 3px;
+            flex: 1; min-height: 0; overflow: auto; align-content: stretch
         }
 
         .cal-day {
@@ -993,7 +920,7 @@
             cursor: pointer;
             transition: background .12s, border-color .12s;
             position: relative;
-            min-height: 0
+            min-height: 34px; overflow: hidden
         }
 
         .cal-day:hover {
@@ -1001,6 +928,11 @@
             border-color: rgba(var(--ov), .15)
         }
 
+        .grid-closed-day { background:rgba(130,136,146,.18)!important; color:var(--muted)!important; }
+        .grid-closure-label { display:block; font-size:6px; line-height:1.1; color:var(--muted); font-weight:800; }
+        .grid-class-closed { filter:grayscale(1); opacity:.48; }
+        .cal-day.day-closed { background: rgba(130,136,146,.22); color: var(--muted); }
+        .cal-day.day-closed .cal-day-num { text-decoration: line-through; opacity:.75; }
         .cal-day.today {
             border-color: var(--accent);
             background: rgba(var(--ov), .08)
@@ -1026,6 +958,11 @@
             line-height: 1
         }
 
+        .grid-closed-day { background:rgba(130,136,146,.18)!important; color:var(--muted)!important; }
+        .grid-closure-label { display:block; font-size:6px; line-height:1.1; color:var(--muted); font-weight:800; }
+        .grid-class-closed { filter:grayscale(1); opacity:.48; }
+        .cal-day.day-closed { background: rgba(130,136,146,.22); color: var(--muted); }
+        .cal-day.day-closed .cal-day-num { text-decoration: line-through; opacity:.75; }
         .cal-day.today .cal-day-num {
             color: var(--accent)
         }
@@ -1174,6 +1111,42 @@
             border: 1px dashed rgba(128, 153, 204, .35);
             flex-shrink: 0
         }
+
+        .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid rgba(var(--ov),.18);background:rgba(var(--ov),.06);color:var(--text);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+        .class-card{cursor:pointer}.class-card:active{transform:scale(.99)}
+        .card-dur .bi{font-size:9px;opacity:.6;margin-left:3px}
+        .grid-class{cursor:pointer}
+        .modal{--bs-modal-bg:var(--card);--bs-modal-color:var(--text);--bs-modal-border-color:rgba(var(--ov),.12);font-family:'Inter',sans-serif}
+        .modal-header,.modal-footer{border-color:rgba(var(--ov),.1)}
+        .btn-close{filter:var(--close-f,invert(1))}:root[data-theme="light"] .btn-close{filter:none}
+        .dm-code{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px}
+        .dm-row{display:flex;gap:10px;align-items:center;padding:7px 0;font-size:12px;border-bottom:1px solid rgba(var(--ov),.07)}
+        .dm-row .bi{width:18px;text-align:center;color:var(--muted);font-size:14px}.dm-row .k{color:var(--muted);width:78px;flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+        .dm-h{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+        .dm-item{border:1px solid rgba(var(--ov),.1);border-radius:10px;margin-bottom:6px;overflow:hidden;border-left:3px solid var(--c,#888)}
+        .dm-item-head{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:var(--text);padding:8px 10px;text-align:left;font:inherit;font-size:12px;cursor:pointer}
+        .dm-item-head .t{flex:1;min-width:0;font-weight:600}.dm-item-head .s{font-size:10px;color:var(--muted);font-weight:500;display:block}
+        .dm-item-head .chev{transition:transform .2s;font-size:11px;color:var(--muted)}.dm-item-head:not(.collapsed) .chev{transform:rotate(180deg)}
+        .dm-item-body{padding:0 10px 10px 36px;font-size:12px;color:var(--muted);white-space:pre-wrap}
+        .u-chip{font-size:9px;font-weight:700;border-radius:4px;padding:2px 6px;white-space:nowrap}
+        .u-due-soon{background:#ff525233;color:#ff6b6b}.u-due-later{background:#f0a50033;color:#f0a500}.u-due-ok{background:#2ec27e33;color:#2ec27e}
+        .done-item{opacity:.45}.done-item .t{text-decoration:line-through}
+        .done-btn{font:inherit;font-size:11px;font-weight:600;border:1px solid rgba(var(--ov),.2);background:none;color:var(--text);border-radius:6px;padding:4px 9px;cursor:pointer;margin-top:8px}
+        .tasks-scroll{flex:1;overflow-y:auto;min-height:0;padding:6px 10px 10px}
+        .tasks-scroll::-webkit-scrollbar{display:none}
+
+        .stat-chip{font:inherit;font-size:10px;font-weight:700;border-radius:999px;padding:3px 8px;margin:4px 4px 0 0;cursor:pointer;border:1px solid}
+        .stat-chip.c-red{background:#ff525222;color:#ff6b6b;border-color:#ff525255}.stat-chip.c-amber{background:#f0a50022;color:#f0a500;border-color:#f0a50055}
+        .task-chips{display:flex;gap:5px;overflow-x:auto;padding:2px 0 4px;position:sticky;top:0;z-index:2;background:var(--bg)}.task-chips::-webkit-scrollbar{display:none}
+        .task-chips button{font:inherit;font-size:10px;font-weight:700;white-space:nowrap;border-radius:999px;padding:4px 10px;border:1px solid rgba(var(--ov),.18);background:none;color:var(--muted);cursor:pointer}
+        .task-chips button.on{background:var(--accent);color:var(--on-accent);border-color:transparent}
+        .widget-header{background:linear-gradient(160deg,var(--header),var(--bg));border-bottom-width:3px}
+        .class-card{border-radius:14px;box-shadow:0 2px 10px -6px rgba(0,0,0,.5);transition:transform .12s,box-shadow .12s}
+        .class-card:hover{box-shadow:0 8px 20px -10px rgba(0,0,0,.6)}
+        .current-banner{border-radius:14px}
+        .day-tab{border-radius:10px;padding:7px 2px}
+        .sem-btn{padding:3px 10px;font-size:10px}
+        .dm-item{border-radius:12px}
     </style>
 </head>
 
@@ -1187,6 +1160,7 @@
                 <div class="day-label" id="hdrDay"></div>
                 <div class="date-label" id="hdrDate"></div>
                 <div id="hdrBadge"></div>
+                <div id="hdrStats"></div>
             </div>
             <div class="time-now" id="hdrTime">
                 <span class="time-main" id="timeMain"></span>
@@ -1199,7 +1173,7 @@
         <div class="day-tabs" id="dayTabs"></div>
         <div id="viewingBanner" style="display:none" class="viewing-banner">
             <span id="viewingLabel"></span>
-            <button onclick="returnToToday()">← back to today</button>
+            <button onclick="returnToToday()"><i class="bi bi-arrow-left"></i> back to today</button>
         </div>
 
         <div class="classes-label" id="listLabel">Today's Classes</div>
@@ -1207,9 +1181,9 @@
 
         <div id="calendarView" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
             <div class="cal-header">
-                <button class="cal-nav-btn" onclick="calPrev()">&#8249;</button>
+                <button class="cal-nav-btn" onclick="calPrev()"><i class="bi bi-chevron-left"></i></button>
                 <div class="cal-month-label" id="calMonthLabel"></div>
-                <button class="cal-nav-btn" onclick="calNext()">&#8250;</button>
+                <button class="cal-nav-btn" onclick="calNext()"><i class="bi bi-chevron-right"></i></button>
             </div>
             <div class="cal-grid-wrap">
                 <div class="cal-dow-row">
@@ -1239,6 +1213,7 @@
                             onclick="setBottomView('timetable')">Timetable</button>
                         <button class="view-toggle-btn" id="calendarToggle"
                             onclick="setBottomView('calendar')">Calendar</button>
+                        <button class="view-toggle-btn" id="tasksToggle" onclick="setBottomView('tasks')">Tasks</button>
                     </div>
                 </div>
             </div>
@@ -1246,11 +1221,12 @@
                 <div class="week-grid-scroll" id="weekGridScroll" style="flex:1;min-height:0">
                     <div id="weekGrid" class="week-grid"></div>
                 </div>
+                <div id="tasksInner" class="tasks-scroll" style="display:none"></div>
                 <div id="calendarInner" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
                     <div class="cal-header" style="padding:4px 4px 4px">
-                        <button class="cal-nav-btn" onclick="calPrev()">&#8249;</button>
+                        <button class="cal-nav-btn" onclick="calPrev()"><i class="bi bi-chevron-left"></i></button>
                         <div class="cal-month-label" id="calMonthLabel2"></div>
-                        <button class="cal-nav-btn" onclick="calNext()">&#8250;</button>
+                        <button class="cal-nav-btn" onclick="calNext()"><i class="bi bi-chevron-right"></i></button>
                     </div>
                     <div
                         style="padding:0 4px 4px;flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden">
@@ -1277,83 +1253,27 @@
             <div class="footer-title" id="footerTitle"></div>
             <div style="display:flex;gap:8px;align-items:center">
                 <span class="offline-pill" id="offlinePill">OFFLINE</span>
-                <button class="theme-switch" id="themeBtn" role="switch" aria-label="Toggle light/dark mode" title="Toggle light/dark mode"><span class="ts-knob" id="themeKnob"></span></button>
-                <button class="reload-btn" onclick="manualRefresh()">↻ refresh</button>
+                <button class="icon-btn" id="themeBtn" aria-label="Toggle light/dark mode" title="Toggle light/dark mode"><i class="bi bi-moon-stars"></i></button>
+                <button class="reload-btn" onclick="manualRefresh()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
             </div>
         </div>
     </div>
 
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content"><div class="modal-header" id="dmHead"></div><div class="modal-body" id="dmBody"></div></div></div></div>
+    <script src="vendor/bootstrap.bundle.min.js"></script>
+    <script src="schedule-data.js"></script>
     <script>
-        const SEM2_DATA = {
-            "title": "AAMT 1-3 SCHEDULE", "subtitle": "2nd Semester · A.Y. 2026 – 2027",
-            "courses": [
-                {"slotId": "s2_0", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_1", "id": "MATH1202", "desc": "Aviation Mathematics", "color": "#3a7bd5", "room": "Aero Room", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_2", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Chem Lab 1", "days": ["Mon"], "startH": 8, "startM": 30, "endH": 10, "endM": 0},
-                {"slotId": "s2_3", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_4", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Chem Lab 1", "days": ["Wed"], "startH": 8, "startM": 30, "endH": 10, "endM": 0},
-                {"slotId": "s2_5", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Wed"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_6", "id": "CHEM1201", "desc": "Chemistry for Engineering Technologist", "color": "#2ec27e", "room": "Aero Room", "days": ["Fri"], "startH": 10, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_7", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 15, "endM": 0},
-                {"slotId": "s2_8", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Mon"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_9", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_10", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "P/P Lab", "days": ["Wed"], "startH": 13, "startM": 0, "endH": 15, "endM": 0},
-                {"slotId": "s2_11", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Wed"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_12", "id": "AMT1210", "desc": "Aircraft Powerplant II", "color": "#e05a9a", "room": "Aero Room", "days": ["Fri"], "startH": 16, "startM": 0, "endH": 17, "endM": 0},
-                {"slotId": "s2_13", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Mon"], "startH": 11, "startM": 0, "endH": 13, "endM": 0},
-                {"slotId": "s2_14", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Wed"], "startH": 11, "startM": 0, "endH": 13, "endM": 0},
-                {"slotId": "s2_15", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Aero Room", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
-                {"slotId": "s2_16", "id": "AMT1209", "desc": "Aircraft Materials Construction and Repair I", "color": "#e8702a", "room": "Fabrication Lab", "days": ["Thu"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
-                {"slotId": "s2_17", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Simulation Lab", "days": ["Tue"], "startH": 17, "startM": 0, "endH": 20, "endM": 0},
-                {"slotId": "s2_18", "id": "AMT1208", "desc": "Aircraft Landing Gear System", "color": "#9c6ade", "room": "Aero Room", "days": ["Fri"], "startH": 13, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_19", "id": "AMT1211", "desc": "Aircraft Maintenance Organization & Management", "color": "#00bcd4", "room": "Aero Room", "days": ["Mon"], "startH": 19, "startM": 0, "endH": 20, "endM": 0},
-                {"slotId": "s2_20", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Aero Room", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 19, "endM": 0},
-                {"slotId": "s2_21", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Tue"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_22", "id": "AMT1207", "desc": "Aircraft System", "color": "#ffc107", "room": "Simulation Lab", "days": ["Thu"], "startH": 11, "startM": 0, "endH": 14, "endM": 0},
-                {"slotId": "s2_23", "id": "PATHFIT2", "desc": "Exercise-Based Fitness Activities", "color": "#ff5722", "room": "Covered Court", "days": ["Thu"], "startH": 9, "startM": 0, "endH": 11, "endM": 0},
-                {"slotId": "s2_24", "id": "NSTP2", "desc": "National Service Training Program II", "color": "#4caf50", "room": "TBA", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0}
-            ]
-        }
-
-        const SEM1_DATA = {
-            "title": "AAMT 1-3 SCHEDULE", "subtitle": "1st Semester · A.Y. 2026 – 2027",
-            "courses": [
-                { "slotId": "s0", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Simulation Lab", "color": "#3a7bd5", "days": ["Mon"], "startH": 13, "startM": 0, "endH": 16, "endM": 0 },
-                { "slotId": "s1", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Mon"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
-                { "slotId": "s2", "id": "AMT1106", "desc": "Maintenance Forms and Publications", "room": "Aero Room", "color": "#3a7bd5", "days": ["Wed"], "startH": 18, "startM": 30, "endH": 20, "endM": 0 },
-                { "slotId": "s3", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Mon"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
-                { "slotId": "s4", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Tue"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
-                { "slotId": "s5", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "PP Lab", "color": "#e05a9a", "days": ["Wed"], "startH": 14, "startM": 0, "endH": 17, "endM": 0 },
-                { "slotId": "s6", "id": "AMT1105", "desc": "Aircraft Powerplant 1", "room": "Aero Room", "color": "#e05a9a", "days": ["Thu"], "startH": 16, "startM": 0, "endH": 17, "endM": 30 },
-                { "slotId": "s7", "id": "DRAW1101", "desc": "Aircraft Drawing", "room": "DR1", "color": "#2ec27e", "days": ["Tue"], "startH": 9, "startM": 0, "endH": 12, "endM": 0 },
-                { "slotId": "s8", "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Aero Room", "color": "#e8702a", "days": ["Tue"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
-                { "slotId": "s9", "id": "AMT1104", "desc": "Aircraft Handtools and Equipment", "room": "Fabrication Lab", "color": "#e8702a", "days": ["Thu"], "startH": 10, "startM": 0, "endH": 13, "endM": 0 },
-                { "slotId": "s10", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Tue"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
-                { "slotId": "s11", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "Aero Room", "color": "#9c6ade", "days": ["Thu"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
-                { "slotId": "s12", "id": "AMT1103", "desc": "Aircraft Propeller", "room": "P/P Lab", "color": "#9c6ade", "days": ["Thu"], "startH": 13, "startM": 30, "endH": 15, "endM": 0 },
-                { "slotId": "s13", "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Tue"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
-                { "slotId": "s14", "id": "AMT1101", "desc": "Aviation Safety", "room": "Aero Room", "color": "#00bcd4", "days": ["Thu"], "startH": 15, "startM": 0, "endH": 16, "endM": 0 },
-                { "slotId": "s15", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Tue"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
-                { "slotId": "s16", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Hangar Table 1", "color": "#ff5722", "days": ["Thu"], "startH": 19, "startM": 0, "endH": 20, "endM": 30 },
-                { "slotId": "s17", "id": "AMT1102", "desc": "Aircraft Flight Control", "room": "Aero Room", "color": "#ff5722", "days": ["Fri"], "startH": 18, "startM": 0, "endH": 19, "endM": 0 },
-                { "slotId": "s18", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Mon"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "slotId": "s19", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Wed"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "slotId": "s20", "id": "GEC1106", "desc": "Mathematics in the Modern World", "room": "Aero Room", "color": "#4caf50", "days": ["Fri"], "startH": 17, "startM": 0, "endH": 18, "endM": 0 },
-                { "slotId": "s21", "id": "PATHFIT1", "desc": "Movement Competency Training", "room": "Gymnasium", "color": "#ffc107", "days": ["Wed"], "startH": 12, "startM": 0, "endH": 14, "endM": 0 },
-                { "slotId": "s22", "id": "ROTC", "desc": "Reserve Officers' Training Corps", "room": "Covered Court", "color": "#556B2F", "days": ["Sat"], "startH": 7, "startM": 0, "endH": 12, "endM": 0 }
-            ]
-        }
-
         /* Semester switcher: 2nd sem is the default every time the app opens */
         const SEMESTERS = { 1: SEM1_DATA, 2: SEM2_DATA };
         let currentSem = 2;
         let scheduleData = SEMESTERS[currentSem];
+        try { window._fbEvents = JSON.parse(localStorage.getItem('cachedEvents') || '[]'); window._fbSubjects = JSON.parse(localStorage.getItem('cachedSubjects') || '[]'); window._fbSessions = JSON.parse(localStorage.getItem('cachedSessions') || '[]'); window._fbCancellations = JSON.parse(localStorage.getItem('cachedCancellations') || '[]'); window._fbDayClosures = JSON.parse(localStorage.getItem('cachedDayClosures') || '[]'); } catch(e) {}
         function setSemester(n) {
             if (!SEMESTERS[n] || n === currentSem) return;
             currentSem = n; scheduleData = SEMESTERS[n];
             document.querySelectorAll('.sem-btn').forEach(b => b.classList.toggle('active', +b.dataset.sem === n));
             buildTabs(); refresh(); renderWeekGrid();
-            if (bottomView !== 'timetable') renderCalendar2();
+            if (bottomView === 'calendar') renderCalendar2(); renderTasks();
             requestAnimationFrame(() => scrollToNow(true));
         }
 
@@ -1376,11 +1296,13 @@
         function fmtTime(c) { return isTBA(c) ? 'Time TBA' : `${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}` }
         function fmtDur(c) { return isTBA(c) ? 'TBA' : durStr(c.startH, c.startM, c.endH, c.endM) }
 
-        function loadEvents() { return window._fbEvents || [] }
-        function loadSessions() { return window._fbSessions || [] }
+        function semIds(n) { return new Set(SEMESTERS[n].courses.map(c => c.id)) }
+        function inSem(e) { return !e.subjectId || !semIds(currentSem === 1 ? 2 : 1).has(e.subjectId) }
+        function loadEvents() { return (window._fbEvents || JSON.parse(localStorage.getItem('cachedEvents') || '[]')).filter(inSem) }
+        function loadSessions() { return window._fbSessions || JSON.parse(localStorage.getItem('cachedSessions') || '[]') }
 
         /* ── Merge built-in timetable with Firestore session overrides/custom sessions/cancellations ── */
-        function getEffectiveCourses() {
+        function getEffectiveCourses(forDate = null) {
             const overridesBySlot = {};
             const customSessions = [];
             loadSessions().forEach(o => {
@@ -1389,11 +1311,11 @@
             const merged = [];
             scheduleData.courses.forEach(c => {
                 const o = overridesBySlot[c.slotId];
-                if (!o) { merged.push(c); return; }
+                if (!o) { merged.push({...c,_sessionKey:c.slotId}); return; }
                 if (o.hidden) return;
                 const tba = o.day === 'TBA';
                 merged.push({
-                    id: c.id, desc: c.desc, color: c.color, slotId: c.slotId,
+                    id: c.id, desc: c.desc, color: c.color, slotId: c.slotId, _sessionKey:c.slotId, sessionType: o.sessionType || (/lab|hangar|workshop|fabrication|simulation/i.test(o.room || c.room || '') ? 'lab' : 'lecture'),
                     room: (o.room !== undefined && o.room !== '') ? o.room : c.room,
                     days: [o.day || c.days[0]],
                     startH: tba ? 'TBA' : (o.startH !== undefined && o.startH !== null ? o.startH : c.startH),
@@ -1403,16 +1325,22 @@
                 });
             });
             customSessions.forEach(o => {
+                if (semIds(currentSem === 1 ? 2 : 1).has(o.courseId)) return;
                 const tba = !o.day || o.day === 'TBA';
                 const meta = getSubjectMeta(o.courseId);
                 merged.push({
-                    id: o.courseId, desc: meta.desc, color: meta.color, room: o.room || 'TBA',
+                    id: o.courseId, desc: meta.desc, color: meta.color, _sessionKey:o.id, room: o.room || 'TBA', sessionType:o.sessionType || (/lab|hangar|workshop|fabrication|simulation/i.test(o.room||'')?'lab':'lecture'),
                     days: [tba ? 'TBA' : o.day],
                     startH: tba ? 'TBA' : o.startH, startM: tba ? 'TBA' : o.startM,
                     endH: tba ? 'TBA' : o.endH, endM: tba ? 'TBA' : o.endM
                 });
             });
-            return merged;
+            const visible = merged.filter(c => !getSubjectMeta(c.id).noMoreClasses);
+            if (!forDate) return visible;
+            // A whole-day closure hides every class for this date only.
+            if (getClosure(forDate)) return [];
+            const cancelled = new Set((window._fbCancellations || []).filter(x=>x.date===forDate).map(x=>x.sessionKey));
+            return visible.filter(c=>!cancelled.has(c._sessionKey));
         }
 
         function todayKey() { return DAY_MAP[new Date().getDay()] }
@@ -1433,11 +1361,17 @@
             return {
                 desc: (override && override.desc) || (base && base.desc) || subjectId,
                 color: (override && override.color) || (base && base.color) || '#8099cc',
-                instructor: (override && override.instructor) || ''
+                instructor: (override && override.instructor) || '',
+                instructorLecture: (override && (override.instructorLecture || override.lectureInstructor)) || (override && override.instructor) || '',
+                instructorLab: (override && (override.instructorLab || override.labInstructor)) || '',
+                classMode: (override && override.classMode) || 'legacy',
+                noMoreClasses: !!(override && override.noMoreClasses)
             }
         }
         function getSubjectColor(subjectId) { return getSubjectMeta(subjectId).color }
         function getEventsForDate(dk) { return loadEvents().filter(e => e.deadline === dk || e.eventDate === dk) }
+        function closureApplies(x, dk) { if (x.date === dk) return true; if (x.repeat === 'weekly' && x.date && dk >= x.date && (!x.repeatUntil || dk <= x.repeatUntil)) { const a=new Date(x.date+'T00:00:00'), b=new Date(dk+'T00:00:00'); return a.getDay()===b.getDay(); } return false; }
+        function getClosure(dk) { return (window._fbDayClosures || []).find(x => closureApplies(x, dk)); }
         /* sessionKey identifies one specific class meeting, e.g. "Thu|13:30", so
            that a subject meeting twice on the same day (morning + evening) can
            have an assignment/reminder tagged to just one of the sessions.
@@ -1448,7 +1382,7 @@
             return events.filter(e =>
                 e.subjectId === subjectId &&
                 (e.type === 'assignment' || e.type === 'reminder') &&
-                e.deadline && new Date(e.deadline + ' 23:59') >= now &&
+                e.deadline && new Date(e.deadline + ' 23:59') >= now && !doneSet().has(e.id) &&
                 (!e.sessionKey || e.sessionKey === sessionKey)
             )
         }
@@ -1483,12 +1417,10 @@
 
         function setBottomView(v) {
             bottomView = v;
-            const ws = document.getElementById('weekGridScroll');
-            const ci = document.getElementById('calendarInner');
-            const tt = document.getElementById('timetableToggle');
-            const ct = document.getElementById('calendarToggle');
-            if (v === 'timetable') { ws.style.display = ''; ci.style.display = 'none'; tt.classList.add('active'); ct.classList.remove('active'); }
-            else { ws.style.display = 'none'; ci.style.display = 'flex'; tt.classList.remove('active'); ct.classList.add('active'); renderCalendar2(); }
+            const disp = { timetable: '', calendar: 'flex', tasks: 'block' }, ids = { timetable: 'weekGridScroll', calendar: 'calendarInner', tasks: 'tasksInner' };
+            Object.keys(ids).forEach(k => { document.getElementById(ids[k]).style.display = k === v ? disp[k] : 'none'; document.getElementById(k + 'Toggle').classList.toggle('active', k === v); });
+            if (v === 'calendar') renderCalendar2();
+            if (v === 'tasks') renderTasks();
         }
 
         function buildTabs() {
@@ -1557,8 +1489,9 @@
                 const isSelected = dk === calSelectedDate;
                 const dayEvents = events.filter(e => e.deadline === dk || e.eventDate === dk);
                 const shortDay = DAY_MAP[new Date(y2, m2, d).getDay()];
-                const hasCls = effectiveCourses.some(c => c.days.includes(shortDay));
-                let dots = '';
+                const closure = getClosure(dk);
+                const hasCls = getEffectiveCourses(dk).some(c => c.days.includes(shortDay));
+                let dots = closure ? `<div class="cal-assign-dot" title="${esc(closure.reason || 'No classes')}" style="background:#9299a3"></div>` : '';
                 const seen = new Set();
                 dayEvents.forEach(e => {
                     const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
@@ -1566,7 +1499,7 @@
                     if (!seen.has(key)) { seen.add(key); dots += `<div class="cal-assign-dot" style="color:${col};background:${col}"></div>`; }
                 });
                 if (hasCls && !other && !dots) { dots = `<div class="cal-dot" style="background:rgba(255,255,255,.25)"></div>`; }
-                const cls = ['cal-day', isToday ? 'today' : '', isSelected ? 'selected' : '', other ? 'other-month' : '', hasCls && !other ? 'has-class' : ''].filter(Boolean).join(' ');
+                const cls = ['cal-day', isToday ? 'today' : '', isSelected ? 'selected' : '', other ? 'other-month' : '', hasCls && !other ? 'has-class' : '', closure ? 'day-closed' : ''].filter(Boolean).join(' ');
                 html += `<div class="${cls}" onclick="(${onSelect.toString()})('${dk}')"><span class="cal-day-num">${d}</span><div class="cal-day-dots">${dots}</div></div>`;
             }
             grid.innerHTML = html;
@@ -1578,18 +1511,20 @@
             const dayName = DAY_FULL[d.getDay()]; const monthName = MONTH_FULL[d.getMonth()];
             const dayEvents = loadEvents().filter(e => e.deadline === dk || e.eventDate === dk);
             const shortDay = DAY_MAP[d.getDay()];
-            const dayClasses = getEffectiveCourses().filter(c => c.days.includes(shortDay)).sort((a, b) => safeToMins(a) - safeToMins(b));
+            const dayClasses = getEffectiveCourses(dk).filter(c => c.days.includes(shortDay)).sort((a, b) => safeToMins(a) - safeToMins(b));
+            const dayClosure = getClosure(dk);
             let html = `<div class="cal-panel-header">${dayName}, ${monthName} ${d.getDate()}</div>`;
+            if (dayClosure) html += `<div class="p-2 mb-2 rounded-3" style="background:var(--surface-2,rgba(128,128,128,.12));border:1px solid var(--border-color,rgba(128,128,128,.2))"><div class="fw-bold"><i class="bi bi-calendar2-x me-1"></i> No classes</div><div class="small">${esc(dayClosure.reason || 'School day closed')}</div></div>`;
             if (dayEvents.length === 0 && dayClasses.length === 0) { html += `<div style="font-size:10px;color:var(--muted);opacity:.5;padding:6px 0">No events or classes</div>`; panel.innerHTML = html; return; }
             dayEvents.forEach(e => {
                 const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500';
                 const hasDeadline = e.type === 'assignment' || e.type === 'reminder';
                 const urg = hasDeadline ? urgencyClass(e.deadline) : '';
                 const label = hasDeadline ? urgencyLabel(e.deadline) : '';
-                const typeLabel = e.type === 'assignment' ? '📋 Assignment' : e.type === 'reminder' ? (e.reminderKind === 'bring' ? '🎒 Bring' : '📖 Review/Study') : '📅 Event';
-                html += `<div class="cal-event-item" style="border-left:3px solid ${col}">
+                
+                html += `<div class="cal-event-item" style="border-left:3px solid ${col};cursor:pointer" onclick="openItem('${e.id}')">
       ${e.subjectId ? `<div class="cal-event-subject" style="background:${col}22;color:${col}">${esc(e.subjectId)}</div>` : ''}
-      <div class="cal-event-type" style="color:${col}">${esc(typeLabel)}</div>
+      <div class="cal-event-type" style="color:${col}"><i class="bi ${typeIcon(e)}"></i> ${typeName(e)}</div>
       <div class="cal-event-name">${esc(e.name)}</div>
       ${e.description ? `<div class="cal-event-desc">${esc(e.description)}</div>` : ''}
       ${label ? `<div class="cal-event-deadline" style="color:${urg === 'due-soon' ? '#ff6b6b' : urg === 'due-later' ? '#f0a500' : '#2ec27e'}">${label}</div>` : ''}
@@ -1607,6 +1542,7 @@
 
         /* ── Week grid ── */
         let gridSlotCount = 28;
+        function weekDateForIndex(index) { const n=new Date(), day=(n.getDay()+6)%7; const monday=new Date(n.getFullYear(),n.getMonth(),n.getDate()-day); monday.setDate(monday.getDate()+index); return dateKey(monday.getFullYear(),monday.getMonth(),monday.getDate()); }
         function renderWeekGrid() {
             const grid = document.getElementById('weekGrid'); const today = todayKey(); const activeDay = selectedDay || today;
             const effectiveCourses = getEffectiveCourses();
@@ -1617,10 +1553,10 @@
             grid.style.gridTemplateRows = `20px repeat(${gridSlotCount}, 16px)`;
             let html = '';
             html += `<div class="grid-cell grid-head" style="grid-row:1;grid-column:1"></div>`;
-            WEEKDAYS.forEach((day, dIdx) => { const isToday = day === today; const isSelected = day === activeDay; const cls = isSelected ? 'grid-cell grid-head grid-selected-day' : (isToday ? 'grid-cell grid-head grid-today' : 'grid-cell grid-head'); html += `<div class="${cls}" style="grid-row:1;grid-column:${dIdx + 2};cursor:pointer" onclick="selectDay('${day}')" title="View ${day}">${day}</div>`; });
+            WEEKDAYS.forEach((day, dIdx) => { const isToday = day === today; const isSelected = day === activeDay; const closure=getClosure(weekDateForIndex(dIdx)); const cls = (isSelected ? 'grid-cell grid-head grid-selected-day' : (isToday ? 'grid-cell grid-head grid-today' : 'grid-cell grid-head'))+(closure?' grid-closed-day':''); html += `<div class="${cls}" style="grid-row:1;grid-column:${dIdx + 2};cursor:pointer" onclick="selectDay('${day}')" title="${closure?esc(closure.reason||'No classes'): 'View '+day}">${day}${closure?`<small class="grid-closure-label">NO CLASSES</small>`:''}</div>`; });
             slots.forEach((slot, sIdx) => { html += `<div class="grid-cell grid-time" data-slot="${sIdx}" style="grid-row:${sIdx + 2};grid-column:1">${fmt12(slot.h, slot.m)}</div>`; });
             WEEKDAYS.forEach((day, dIdx) => {
-                const isToday = day === today; const covered = new Array(slots.length).fill(false);
+                const isToday = day === today; const closure=getClosure(weekDateForIndex(dIdx)); const covered = new Array(slots.length).fill(false);
                 /* Only include non-TBA courses in the grid */
                 const dayCourses = effectiveCourses.filter(c => c.days.includes(day) && !isTBA(c)).sort((a, b) => toMins(a.startH, a.startM) - toMins(b.startH, b.startM));
                 /* TBA courses for this day — show as a special label in the last row */
@@ -1643,7 +1579,7 @@
                     const countHtml = tall && subjectEvents.length > 0
                         ? `<span class="grid-assign-count" style="color:${dotColor}">${subjectEvents.length}</span>`
                         : '';
-                    html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''}" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color};flex-direction:column;gap:1px" title="${esc(c.id)}${subjectEvents.length > 0 ? ` · ${subjectEvents.length} task${subjectEvents.length > 1 ? 's' : ''}` : ''}">${esc(c.id)}${dotHtml}${countHtml}</div>`;
+                    html += `<div class="grid-cell grid-class ${isToday ? 'grid-today' : ''} ${closure ? 'grid-class-closed' : ''}" onclick="openClass('${esc(c.id)}','${day}','${c.startH}:${c.startM}')" data-day="${day}" data-start="${startMin}" data-end="${endMin}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2};background:${c.color};flex-direction:column;gap:1px" title="${esc(c.id)}${subjectEvents.length > 0 ? ` · ${subjectEvents.length} task${subjectEvents.length > 1 ? 's' : ''}` : ''}">${esc(c.id)}${dotHtml}${countHtml}</div>`;
                 });
                 for (let i = 0; i < dayCourses.length - 1; i++) { const gapStart = toMins(dayCourses[i].endH, dayCourses[i].endM), gapEnd = toMins(dayCourses[i + 1].startH, dayCourses[i + 1].startM); if (gapEnd <= gapStart) continue; const startSlot = Math.round((gapStart - 420) / 30), span = Math.round((gapEnd - gapStart) / 30); if (startSlot < 0 || startSlot >= slots.length || span <= 0) continue; const rowStart = startSlot + 2, rowEnd = Math.min(rowStart + span, slots.length + 2); for (let s = startSlot; s < startSlot + span && s < slots.length; s++)covered[s] = true; html += `<div class="grid-cell grid-vacant ${isToday ? 'grid-today' : ''}" style="grid-row:${rowStart}/${rowEnd};grid-column:${dIdx + 2}" title="Vacant">Vacant</div>`; }
                 slots.forEach((_, sIdx) => { if (covered[sIdx]) return; html += `<div class="grid-cell ${isToday ? 'grid-today' : ''}" style="grid-row:${sIdx + 2};grid-column:${dIdx + 2}"></div>`; });
@@ -1677,19 +1613,21 @@
             wrap.scrollTo({ top: Math.max(0, cellEl.offsetTop - (wrap.clientHeight / 2) + (cellEl.offsetHeight / 2)), behavior: instant ? 'auto' : 'smooth' });
         }
 
-        function manualRefresh() { refresh(); renderWeekGrid(); if (bottomView === 'calendar') renderCalendar2(); requestAnimationFrame(() => scrollToNow(false)); }
+        function manualRefresh() { refresh(); renderWeekGrid(); renderTasks(); if (bottomView === 'calendar') renderCalendar2(); requestAnimationFrame(() => scrollToNow(false)); }
 
         /* ── Main refresh ── */
         function refresh() {
+            updateStats();
             const now = new Date(), dow = now.getDay(), todayShort = DAY_MAP[dow], nowM = toMins(now.getHours(), now.getMinutes());
             const viewDay = selectedDay || todayShort; const isViewingToday = viewDay === todayShort;
+            const viewDate = new Date(now.getFullYear(),now.getMonth(),now.getDate()); if(viewDay!==todayShort){const target=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(viewDay);viewDate.setDate(viewDate.getDate()+((target-viewDate.getDay()+7)%7));} const viewDateKey=dateKey(viewDate.getFullYear(),viewDate.getMonth(),viewDate.getDate());
             document.getElementById('hdrDay').textContent = DAY_FULL[dow].toUpperCase();
             document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
             document.getElementById('scheduleTitle').textContent = scheduleData.title || 'Schedule';
             document.getElementById('scheduleSubtitle').textContent = scheduleData.subtitle || '';
 
             /* Sort: TBA courses go to the bottom */
-            const allDayCourses = getEffectiveCourses()
+            const allDayCourses = getEffectiveCourses(viewDateKey)
                 .filter(c => c.days && c.days.includes(viewDay))
                 .sort((a, b) => safeToMins(a) - safeToMins(b));
 
@@ -1702,7 +1640,7 @@
                 for (let i = 0; i < nonTBA.length - 1; i++) { const gs = toMins(nonTBA[i].endH, nonTBA[i].endM), ge = toMins(nonTBA[i + 1].startH, nonTBA[i + 1].startM); if (ge > gs && nowM >= gs && nowM < ge) { vacantNow = { startMin: gs, endMin: ge }; break; } }
             }
             const badge = document.getElementById('hdrBadge');
-            if (current) { badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55">● IN CLASS</span>`; }
+            if (current) { badge.innerHTML = `<span class="next-badge" style="color:${current.color};background:${current.color}22;border-color:${current.color}55"><i class="bi bi-record-fill"></i> IN CLASS</span>`; }
             else if (upcoming && isViewingToday) { const mu = toMins(upcoming.startH, upcoming.startM) - nowM, h2 = Math.floor(mu / 60), m2 = mu % 60; badge.innerHTML = `<span class="next-badge">Next in ${h2 > 0 ? `${h2}h ${m2}m` : `${m2}m`}</span>`; }
             else { badge.innerHTML = ''; }
             const wrap = document.getElementById('currentWrap');
@@ -1724,7 +1662,7 @@
                 remaining = nonTBACourses.filter(c => toMins(c.endH, c.endM) > nowM);
                 past = nonTBACourses.filter(c => toMins(c.endH, c.endM) <= nowM);
                 const totalRemaining = remaining.length + tbaCourses.length;
-                listLabel.textContent = totalRemaining > 0 ? `${totalRemaining} class${totalRemaining > 1 ? 'es' : ''} remaining` : 'All done for today ✓';
+                listLabel.textContent = totalRemaining > 0 ? `${totalRemaining} class${totalRemaining > 1 ? 'es' : ''} remaining` : 'All done for today';
             } else {
                 remaining = nonTBACourses; past = [];
                 listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`;
@@ -1750,25 +1688,113 @@
                 let badges = '';
                 assigns.forEach(e => {
                     const uc = urgencyClass(e.deadline); const ul = urgencyLabel(e.deadline);
-                    const icon = e.type === 'reminder' ? (e.reminderKind === 'bring' ? '🎒' : '📖') : '📋';
+                    const icon = `<i class="bi ${typeIcon(e)}"></i>`;
                     badges += `<span class="assign-badge ${uc}" title="${esc(e.name)} — ${ul}"><span class="assign-dot"></span>${icon} ${esc(e.name.length > 12 ? e.name.slice(0, 11) + '…' : e.name)}</span>`;
                 });
                 const assignRow = badges ? `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${badges}</div>` : '';
                 /* TBA-specific time display */
                 const timeDisplay = isTBA(c)
-                    ? `<span class="tba-badge">⏳ Time TBA</span>`
+                    ? `<span class="tba-badge"><i class="bi bi-hourglass-split"></i> Time TBA</span>`
                     : `<div class="card-time">${fmt12(c.startH, c.startM)} – ${fmt12(c.endH, c.endM)}</div>`;
                 const durDisplay = fmtDur(c);
-                const instructorHtml = meta.instructor ? `<div class="card-instructor"><span style="font-weight:bold">Instructor: </span>${esc(meta.instructor)}</div>` : '';
-                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta" style="flex-wrap:wrap;row-gap:2px"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div>${instructorHtml}<div class="card-dur">${durDisplay}</div></div>${assignRow}</div></div>`;
+                const inferredType = c.sessionType || (/lab|hangar|workshop|fabrication|simulation/i.test(c.room||'')?'lab':'lecture');
+                const isLabSession = inferredType === 'lab';
+                const mode = meta.classMode || 'legacy';
+                const isSplit = mode === 'split' || mode === 'lecture' || mode === 'lab' || mode === 'legacy';
+                const instructorName = mode === 'standard' || inferredType === 'regular' ? (meta.instructor || '') : isLabSession ? (meta.instructorLab || '') : (meta.instructorLecture || meta.instructor || '');
+                const instructorLabel = mode === 'standard' || inferredType === 'regular' ? 'Professor: ' : isLabSession ? 'Lab professor: ' : 'Lecture professor: ';
+                const instructorHtml = instructorName ? `<div class="card-instructor"><span style="font-weight:bold">${instructorLabel}</span>${esc(instructorName)}</div>` : '';
+                const sessionBadge = !isSplit || inferredType === 'regular' ? '' : `<span class="badge rounded-pill" style="font-size:9px;background:${isLabSession?'#087f8c':'#3157a5'};color:#fff;margin-left:5px">${isLabSession?'LAB':'LECTURE'}</span>`;
+                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}" onclick="openClass('${esc(c.id)}','${viewDay}','${isTBA(c) ? '' : c.startH + ':' + c.startM}')"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}${sessionBadge}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta" style="flex-wrap:wrap;row-gap:2px"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div>${instructorHtml}<div class="card-dur">${durDisplay}<i class="bi bi-chevron-right"></i></div></div>${assignRow}</div></div>`;
             }).join('');
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule';
+        }
+
+
+        /* ── Details modal, tasks view, done-tracking ── */
+        const TYPE_META = { assignment: ['bi-journal-text', 'Assignment'], event: ['bi-calendar-event', 'Event'], bring: ['bi-bag', 'Bring'], review: ['bi-book', 'Review / Study'] };
+        function tk(e) { return e.type === 'reminder' ? (e.reminderKind === 'bring' ? 'bring' : 'review') : e.type }
+        function typeIcon(e) { return TYPE_META[tk(e)][0] }
+        function typeName(e) { return TYPE_META[tk(e)][1] }
+        function doneSet() { try { return new Set(JSON.parse(localStorage.getItem('doneItems') || '[]')) } catch (e) { return new Set() } }
+        function bringChecks(){try{return new Set(JSON.parse(localStorage.getItem('bringChecks')||'[]'))}catch(e){return new Set()}}
+        function toggleBring(id,i,checked,box){const set=bringChecks(),key=`bring_${id}_${i}`;checked?set.add(key):set.delete(key);try{localStorage.setItem('bringChecks',JSON.stringify([...set]))}catch(e){};const label=box?.closest('label');const span=label?.querySelector('span');if(span){span.style.textDecoration=checked?'line-through':'none';span.style.opacity=checked?'.55':'1';}renderTasks();if(bottomView==='calendar')renderCalendar2();}
+        function toggleDone(id) {
+            const d = doneSet(); d.has(id) ? d.delete(id) : d.add(id);
+            try { localStorage.setItem('doneItems', JSON.stringify([...d])) } catch (e) { }
+            refresh(); renderWeekGrid(); renderTasks(); if (bottomView === 'calendar') renderCalendar2();
+            const m = bootstrap.Modal.getInstance(document.getElementById('detailModal')); if (m) m.hide();
+        }
+        function fmtDate(dk) { if (!dk) return ''; const p = dk.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) }
+        function chip(e) {
+            if (e.type === 'event') { const n = daysUntil(e.eventDate); return n < 0 ? '' : `<span class="u-chip u-due-ok">${n === 0 ? 'TODAY' : n === 1 ? 'TOMORROW' : n + 'D'}</span>` }
+            return `<span class="u-chip u-${urgencyClass(e.deadline)}">${urgencyLabel(e.deadline)}</span>`;
+        }
+        function itemRow(e, pre) {
+            const col = e.subjectId ? getSubjectColor(e.subjectId) : '#f0a500', done = doneSet().has(e.id), dk = e.deadline || e.eventDate, rid = `${pre}_${e.id}`;
+            const sess = e.sessionKey ? `<div class="dm-row" style="border:0;padding:3px 0"><i class="bi bi-clock"></i>Session: ${esc(e.sessionKey.replace('|', ' at '))}</div>` : '';
+            const checklist = (e.checklist || []).length ? `<div class="bring-checklist mt-2"><div class="small fw-bold mb-1">Things to bring</div>${e.checklist.map((item,i)=>{const key=`bring_${e.id}_${i}`,checked=bringChecks().has(key);return `<label class="d-flex align-items-center gap-2 small py-1"><input type="checkbox" ${checked?'checked':''} onchange="toggleBring('${e.id}',${i},this.checked,this)"><span style="${checked?'text-decoration:line-through;opacity:.55':''}">${esc(item)}</span></label>`}).join('')}</div>` : '';
+            return `<div class="dm-item ${done ? 'done-item' : ''}" style="--c:${col}">
+              <button class="dm-item-head collapsed" data-bs-toggle="collapse" data-bs-target="#${rid}"><i class="bi ${typeIcon(e)}" style="color:${col}"></i><span class="t">${esc(e.name)}<span class="s">${e.subjectId ? esc(e.subjectId) + ' · ' : ''}${typeName(e)} · ${fmtDate(dk)}</span></span>${done ? '' : chip(e)}<i class="bi bi-chevron-down chev"></i></button>
+              <div class="collapse" id="${rid}"><div class="dm-item-body">${esc(e.description || 'No extra details.')}${checklist}${e.link && /^https?:\/\//i.test(e.link) ? `<div class="mt-2"><a href="${esc(e.link)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right"></i> Open assignment link</a></div>` : ''}${sess}${e.type !== 'event' ? `<div><button class="done-btn" onclick="toggleDone('${e.id}')"><i class="bi ${done ? 'bi-arrow-counterclockwise' : 'bi-check2-circle'}"></i> ${done ? 'Mark as not done' : 'Mark as done'}</button></div>` : ''}</div></div></div>`;
+        }
+        function showModal(head, body) {
+            document.getElementById('dmHead').innerHTML = head + '<button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>';
+            document.getElementById('dmBody').innerHTML = body;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal')).show();
+        }
+        function openItem(id) {
+            const e = loadEvents().find(x => x.id === id); if (!e) return;
+            showModal(`<div><div class="dm-h" style="margin:0">${typeName(e)}</div><div style="font-weight:800;font-size:16px">${esc(e.name)}</div></div>`, itemRow(e, 'one').replace('collapsed"', '"').replace('class="collapse"', 'class="collapse show"'));
+        }
+        function openClass(id, day, key) {
+            const all = getEffectiveCourses().filter(c => c.id === id);
+            const c = all.find(x => x.days.includes(day) && (key === '' ? isTBA(x) : `${x.startH}:${x.startM}` === key)) || all[0]; if (!c) return;
+            const meta = getSubjectMeta(id), tba = isTBA(c), now = new Date(), nowM = toMins(now.getHours(), now.getMinutes());
+            let status = '';
+            if (!tba && day === todayKey()) { const s = toMins(c.startH, c.startM), en = toMins(c.endH, c.endM); status = nowM >= s && nowM < en ? `In progress, ${minsToWords(en - nowM)} left` : nowM < s ? `Starts in ${minsToWords(s - nowM)}` : 'Finished for today' }
+            const sessKey = tba ? null : `${day}|${c.startH}:${c.startM}`;
+            const tasks = getEventsForSubject(id, sessKey), doneList = loadEvents().filter(e => e.subjectId === id && e.type !== 'event' && doneSet().has(e.id));
+            const evs = loadEvents().filter(e => e.subjectId === id && e.type === 'event' && e.eventDate && daysUntil(e.eventDate) >= 0);
+            const others = all.filter(x => x !== c).sort((a, b) => WEEKDAYS.indexOf(a.days[0]) - WEEKDAYS.indexOf(b.days[0]) || safeToMins(a) - safeToMins(b));
+            const row = (ic, k, v) => v ? `<div class="dm-row"><i class="bi ${ic}"></i><span class="k">${k}</span><span>${v}</span></div>` : '';
+            const detailType = c.sessionType || (c.room && /lab|hangar|workshop|fabrication|simulation/i.test(c.room) ? 'lab' : 'lecture');
+            const detailProfessorLabel = (meta.classMode === 'standard' || detailType === 'regular') ? 'Professor' : (detailType === 'lab' ? 'Laboratory professor' : 'Lecture professor');
+            const detailProfessor = (meta.classMode === 'standard' || detailType === 'regular') ? meta.instructor : (detailType === 'lab' ? (meta.instructorLab || '') : (meta.instructorLecture || meta.instructor || ''));
+            const body = `<div style="height:4px;border-radius:4px;background:${c.color};margin-bottom:8px"></div>
+              ${row('bi-clock', 'Time', fmtTime(c))}${row('bi-calendar3', 'Day', DAY_FULL[Object.keys(DAY_MAP).find(k => DAY_MAP[k] === day)] || day)}${row('bi-geo-alt', 'Room', esc(c.room))}${row('bi-person', detailProfessorLabel, esc(detailProfessor))}${row('bi-hourglass-split', 'Duration', fmtDur(c))}${row('bi-broadcast', 'Status', status)}
+              <div class="dm-h">Tasks for this class (${tasks.length})</div>${tasks.map(e => itemRow(e, 'c')).join('') || '<div style="font-size:12px;color:var(--muted)">Nothing pending.</div>'}
+              ${evs.length ? `<div class="dm-h">Events</div>${evs.map(e => itemRow(e, 'v')).join('')}` : ''}
+              ${doneList.length ? `<div class="dm-h">Completed (${doneList.length})</div>${doneList.map(e => itemRow(e, 'd')).join('')}` : ''}
+              ${others.length ? `<div class="dm-h">Other meetings</div>${others.map(x => `<div class="dm-row"><i class="bi bi-arrow-return-right"></i><span class="k">${isTBA(x) ? 'TBA' : x.days[0]}</span><span>${isTBA(x) ? 'Time TBA' : fmtTime(x)} · ${esc(x.room)}</span></div>`).join('')}` : ''}`;
+            showModal(`<div style="min-width:0"><div class="dm-code" style="color:${c.color}">${esc(id)}</div><div style="font-size:12px;color:var(--muted)">${esc(meta.desc)}</div></div>`, body);
+        }
+        function updateStats() {
+            const el = document.getElementById('hdrStats'); if (!el) return;
+            const done = doneSet(), t = loadEvents().filter(e => e.type !== 'event' && e.deadline && !done.has(e.id));
+            const over = t.filter(e => daysUntil(e.deadline) < 0).length, soon = t.filter(e => { const n = daysUntil(e.deadline); return n >= 0 && n <= 1 }).length;
+            const h = (over ? `<button class="stat-chip c-red" onclick="setBottomView('tasks')"><i class="bi bi-exclamation-triangle"></i> ${over} overdue</button>` : '') + (soon ? `<button class="stat-chip c-amber" onclick="setBottomView('tasks')"><i class="bi bi-alarm"></i> ${soon} due soon</button>` : '');
+            if (el.dataset.h !== h) { el.dataset.h = h; el.innerHTML = h }
+        }
+        let taskFilter = 'all';
+        function setTaskFilter(f) { taskFilter = f; renderTasks() }
+        function renderTasks() {
+            const box = document.getElementById('tasksInner'); if (!box) return;
+            const done = doneSet(), all = loadEvents().filter(e => taskFilter === 'all' || e.type === taskFilter);
+            const chips = `<div class="task-chips">${[['all', 'All'], ['assignment', 'Assignments'], ['reminder', 'Bring / Review'], ['event', 'Events']].map(c => `<button class="${taskFilter === c[0] ? 'on' : ''}" onclick="setTaskFilter('${c[0]}')">${c[1]}</button>`).join('')}</div>`;
+            const tasks = all.filter(e => e.type !== 'event' && e.deadline && !done.has(e.id)).sort((a, b) => a.deadline < b.deadline ? -1 : 1);
+            const groups = [['Overdue', tasks.filter(e => daysUntil(e.deadline) < 0)], ['Today', tasks.filter(e => daysUntil(e.deadline) === 0)], ['This week', tasks.filter(e => { const n = daysUntil(e.deadline); return n > 0 && n <= 7 })], ['Later', tasks.filter(e => daysUntil(e.deadline) > 7)],
+                ['Upcoming events', all.filter(e => e.type === 'event' && e.eventDate && daysUntil(e.eventDate) >= 0).sort((a, b) => a.eventDate < b.eventDate ? -1 : 1)], ['Completed', all.filter(e => e.type !== 'event' && done.has(e.id))]];
+            const html = groups.filter(g => g[1].length).map(g => `<div class="dm-h" style="margin-top:8px">${g[0]} (${g[1].length})</div>${g[1].map(e => itemRow(e, 't')).join('')}`).join('');
+            const open = box.querySelector('.collapse.show'), openId = open ? open.id : null;
+            box.innerHTML = chips + (html || '<div style="text-align:center;color:var(--muted);font-size:12px;padding:24px 0"><i class="bi bi-check2-circle" style="font-size:26px;display:block"></i>No tasks or events here</div>');
+            if (openId) { const el = document.getElementById(openId); if (el) { el.classList.add('show'); const h = box.querySelector(`[data-bs-target="#${openId}"]`); if (h) h.classList.remove('collapsed') } }
         }
 
         /* ── Theme + offline indicator ── */
         function applyTheme(t) {
             document.documentElement.dataset.theme = t;
-            const b = document.getElementById('themeBtn'), k = document.getElementById('themeKnob'); if (k) k.textContent = t === 'light' ? '☀️' : '🌙'; if (b) b.setAttribute('aria-checked', t === 'light');
+            document.documentElement.dataset.bsTheme = t; const b = document.getElementById('themeBtn'); if (b) b.innerHTML = `<i class="bi ${t === 'light' ? 'bi-sun' : 'bi-moon-stars'}"></i>`;
             const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'light' ? '#ffffff' : '#0f1d38';
         }
         applyTheme(document.documentElement.dataset.theme || 'dark');
@@ -1807,13 +1833,13 @@
         import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBzDOE3BMZ_pPHDbq3i4PLmYYzfur_AgJ0",
-            authDomain: "schedule-9b66c.firebaseapp.com",
-            projectId: "schedule-9b66c",
-            storageBucket: "schedule-9b66c.firebasestorage.app",
-            messagingSenderId: "684107196052",
-            appId: "1:684107196052:web:eaa1d94d5656bf6955b681",
-            measurementId: "G-F1THW9K3WD"
+            apiKey: "AIzaSyDk3u5hfhqe-X76lbWqDX-HIJVvrCHW0",
+            authDomain: "schedule-3f07b.firebaseapp.com",
+            projectId: "schedule-3f07b",
+            storageBucket: "schedule-3f07b.firebasestorage.app",
+            messagingSenderId: "1018047030276",
+            appId: "1:1018047030276:web:c88062d54ce42c77c60151",
+            measurementId: "G-KCWEX6G7QF"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -1821,15 +1847,15 @@
         const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
 
         // Keep a live-synced copy of all events in window._fbEvents
-        window._fbEvents = [];
-        window._fbSubjects = [];
-        window._fbSessions = [];
+        try { window._fbEvents = JSON.parse(localStorage.getItem('cachedEvents') || '[]'); window._fbSubjects = JSON.parse(localStorage.getItem('cachedSubjects') || '[]'); window._fbSessions = JSON.parse(localStorage.getItem('cachedSessions') || '[]'); window._fbCancellations = JSON.parse(localStorage.getItem('cachedCancellations') || '[]'); window._fbDayClosures = JSON.parse(localStorage.getItem('cachedDayClosures') || '[]'); } catch(e) { window._fbEvents=[]; window._fbSubjects=[]; window._fbSessions=[]; window._fbCancellations=[]; window._fbDayClosures=[]; }
 
         const q = query(collection(db, "events"), orderBy("createdAt", "asc"));
         onSnapshot(q, (snapshot) => {
             window._fbEvents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             // Re-render the schedule list whenever Firestore data changes
             if (typeof refresh === 'function') refresh();
+            try { localStorage.setItem('cachedEvents', JSON.stringify(window._fbEvents || [])); } catch(e) {}
+            if (typeof renderTasks === 'function') renderTasks();
             if (typeof renderWeekGrid === 'function') renderWeekGrid();
             if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
         }, (err) => {
@@ -1840,7 +1866,9 @@
         const qSub = query(collection(db, "subjects"), orderBy("courseId", "asc"));
         onSnapshot(qSub, (snapshot) => {
             window._fbSubjects = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            try { localStorage.setItem('cachedSubjects', JSON.stringify(window._fbSubjects || [])); } catch(e) {}
             if (typeof refresh === 'function') refresh();
+            if (typeof renderTasks === 'function') renderTasks();
             if (typeof renderWeekGrid === 'function') renderWeekGrid();
         }, (err) => {
             console.warn("Firestore subjects sync error:", err.message);
@@ -1851,12 +1879,32 @@
         const qSess = collection(db, "sessions");
         onSnapshot(qSess, (snapshot) => {
             window._fbSessions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            try { localStorage.setItem('cachedSessions', JSON.stringify(window._fbSessions || [])); } catch(e) {}
             if (typeof refresh === 'function') refresh();
+            if (typeof renderTasks === 'function') renderTasks();
             if (typeof renderWeekGrid === 'function') renderWeekGrid();
             if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
         }, (err) => {
             console.warn("Firestore sessions sync error:", err.message);
         });
+
+        // Date-specific class cancellations. These never disable the recurring weekly session.
+        onSnapshot(collection(db, "sessionCancellations"), (snapshot) => {
+            window._fbCancellations = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+            try { localStorage.setItem('cachedCancellations', JSON.stringify(window._fbCancellations || [])); } catch(e) {}
+            if (typeof refresh === 'function') refresh();
+            if (typeof renderWeekGrid === 'function') renderWeekGrid();
+            if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
+        }, (err) => console.warn("Firestore cancellation sync error:", err.message));
+
+        // Whole-day closures (holidays / suspensions), date-scoped and non-recurring.
+        onSnapshot(collection(db, "dayClosures"), (snapshot) => {
+            window._fbDayClosures = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+            try { localStorage.setItem('cachedDayClosures', JSON.stringify(window._fbDayClosures || [])); } catch(e) {}
+            if (typeof refresh === 'function') refresh();
+            if (typeof renderWeekGrid === 'function') renderWeekGrid();
+            if (typeof renderCalendar2 === 'function' && typeof bottomView !== 'undefined' && bottomView === 'calendar') renderCalendar2();
+        }, (err) => console.warn("Firestore day-closure sync error:", err.message));
     </script>
 </body>
 
