@@ -930,7 +930,8 @@
 
         .grid-closed-day { background:rgba(130,136,146,.18)!important; color:var(--muted)!important; }
         .grid-closure-label { display:block; font-size:6px; line-height:1.1; color:var(--muted); font-weight:800; }
-        .grid-class-closed { filter:grayscale(1); opacity:.48; }
+        .grid-class-closed { filter:grayscale(1); opacity:.38; }
+        .class-card.day-closure-class { opacity:.38; }
         .cal-day.day-closed { background: rgba(130,136,146,.22); color: var(--muted); }
         .cal-day.day-closed .cal-day-num { text-decoration: line-through; opacity:.75; }
         .cal-day.today {
@@ -960,7 +961,8 @@
 
         .grid-closed-day { background:rgba(130,136,146,.18)!important; color:var(--muted)!important; }
         .grid-closure-label { display:block; font-size:6px; line-height:1.1; color:var(--muted); font-weight:800; }
-        .grid-class-closed { filter:grayscale(1); opacity:.48; }
+        .grid-class-closed { filter:grayscale(1); opacity:.38; }
+        .class-card.day-closure-class { opacity:.38; }
         .cal-day.day-closed { background: rgba(130,136,146,.22); color: var(--muted); }
         .cal-day.day-closed .cal-day-num { text-decoration: line-through; opacity:.75; }
         .cal-day.today .cal-day-num {
@@ -1337,8 +1339,7 @@
             });
             const visible = merged.filter(c => !getSubjectMeta(c.id).noMoreClasses);
             if (!forDate) return visible;
-            // A whole-day closure hides every class for this date only.
-            if (getClosure(forDate)) return [];
+            // Keep timetable classes visible on closed days; the UI greys them out.
             const cancelled = new Set((window._fbCancellations || []).filter(x=>x.date===forDate).map(x=>x.sessionKey));
             return visible.filter(c=>!cancelled.has(c._sessionKey));
         }
@@ -1370,7 +1371,7 @@
         }
         function getSubjectColor(subjectId) { return getSubjectMeta(subjectId).color }
         function getEventsForDate(dk) { return loadEvents().filter(e => e.deadline === dk || e.eventDate === dk) }
-        function closureApplies(x, dk) { if (x.date === dk) return true; if (x.repeat === 'weekly' && x.date && dk >= x.date && (!x.repeatUntil || dk <= x.repeatUntil)) { const a=new Date(x.date+'T00:00:00'), b=new Date(dk+'T00:00:00'); return a.getDay()===b.getDay(); } return false; }
+        function closureApplies(x, dk) { if (!x || !dk || !x.date) return false; if (x.repeat === 'range' && x.endDate) return dk >= x.date && dk <= x.endDate; if (x.date === dk) return true; if (x.repeat === 'weekly' && dk >= x.date && (!x.repeatUntil || dk <= x.repeatUntil)) { const a=new Date(x.date+'T00:00:00'), b=new Date(dk+'T00:00:00'); return a.getDay()===b.getDay(); } return false; }
         function getClosure(dk) { return (window._fbDayClosures || []).find(x => closureApplies(x, dk)); }
         /* sessionKey identifies one specific class meeting, e.g. "Thu|13:30", so
            that a subject meeting twice on the same day (morning + evening) can
@@ -1621,15 +1622,17 @@
             const now = new Date(), dow = now.getDay(), todayShort = DAY_MAP[dow], nowM = toMins(now.getHours(), now.getMinutes());
             const viewDay = selectedDay || todayShort; const isViewingToday = viewDay === todayShort;
             const viewDate = new Date(now.getFullYear(),now.getMonth(),now.getDate()); if(viewDay!==todayShort){const target=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(viewDay);viewDate.setDate(viewDate.getDate()+((target-viewDate.getDay()+7)%7));} const viewDateKey=dateKey(viewDate.getFullYear(),viewDate.getMonth(),viewDate.getDate());
-            document.getElementById('hdrDay').textContent = DAY_FULL[dow].toUpperCase();
-            document.getElementById('hdrDate').textContent = `${MONTH[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            document.getElementById('hdrDay').textContent = DAY_FULL[viewDate.getDay()].toUpperCase();
+            document.getElementById('hdrDate').textContent = `${MONTH[viewDate.getMonth()]} ${viewDate.getDate()}, ${viewDate.getFullYear()}`;
             document.getElementById('scheduleTitle').textContent = scheduleData.title || 'Schedule';
             document.getElementById('scheduleSubtitle').textContent = scheduleData.subtitle || '';
 
-            /* Sort: TBA courses go to the bottom */
+            /* Keep the selected weekday's timetable sessions visible, even on closed days. */
             const allDayCourses = getEffectiveCourses(viewDateKey)
-                .filter(c => c.days && c.days.includes(viewDay))
+                .filter(c => Array.isArray(c.days) && c.days.includes(viewDay))
                 .sort((a, b) => safeToMins(a) - safeToMins(b));
+            /* A closure is one record, not a course array. It only changes presentation. */
+            const dayClosure = getClosure(viewDateKey);
 
             /* current/upcoming only applies to non-TBA courses */
             const current = isViewingToday ? allDayCourses.find(c => !isTBA(c) && nowM >= toMins(c.startH, c.startM) && nowM < toMins(c.endH, c.endM)) : null;
@@ -1650,7 +1653,7 @@
             else { wrap.innerHTML = ''; }
 
             const listLabel = document.getElementById('listLabel'), list = document.getElementById('classesList');
-            if (allDayCourses.length === 0) { listLabel.style.display = 'none'; list.innerHTML = `<div class="empty-state"><div class="msg">No classes on ${viewDay}!</div><div class="sub">Nothing scheduled</div></div>`; document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'; return; }
+            if (allDayCourses.length === 0) { listLabel.style.display = 'block'; listLabel.textContent = `${DAY_FULL[viewDate.getDay()]} · ${MONTH_FULL[viewDate.getMonth()]} ${viewDate.getDate()}, ${viewDate.getFullYear()}`; list.innerHTML = `<div class="empty-state"><div class="msg">No classes on ${viewDay}!</div><div class="sub">Nothing scheduled</div></div>`; document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule'; return; }
             listLabel.style.display = 'block';
 
             /* Separate TBA and non-TBA for list rendering */
@@ -1662,10 +1665,10 @@
                 remaining = nonTBACourses.filter(c => toMins(c.endH, c.endM) > nowM);
                 past = nonTBACourses.filter(c => toMins(c.endH, c.endM) <= nowM);
                 const totalRemaining = remaining.length + tbaCourses.length;
-                listLabel.textContent = totalRemaining > 0 ? `${totalRemaining} class${totalRemaining > 1 ? 'es' : ''} remaining` : 'All done for today';
+                listLabel.textContent = dayClosure ? `${dayClosure.reason || 'No classes'} · ${MONTH_FULL[viewDate.getMonth()]} ${viewDate.getDate()}, ${viewDate.getFullYear()} · ${allDayCourses.length} scheduled (cancelled)` : (totalRemaining > 0 ? `${totalRemaining} class${totalRemaining > 1 ? 'es' : ''} remaining · ${MONTH_FULL[viewDate.getMonth()]} ${viewDate.getDate()}` : `All done for today · ${MONTH_FULL[viewDate.getMonth()]} ${viewDate.getDate()}`);
             } else {
                 remaining = nonTBACourses; past = [];
-                listLabel.textContent = `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay}`;
+                listLabel.textContent = dayClosure ? `${dayClosure.reason || 'No classes'} · ${MONTH_FULL[viewDate.getMonth()]} ${viewDate.getDate()}, ${viewDate.getFullYear()} · ${allDayCourses.length} scheduled (cancelled)` : `${allDayCourses.length} class${allDayCourses.length > 1 ? 'es' : ''} on ${viewDay} · ${MONTH_FULL[viewDate.getMonth()]} ${viewDate.getDate()}`;
             }
 
             const orderedItems = [];
@@ -1677,7 +1680,7 @@
             list.innerHTML = orderedItems.map(item => {
                 if (item.isVacant) {
                     const dur = durStr(Math.floor(item.startMin / 60), item.startMin % 60, Math.floor(item.endMin / 60), item.endMin % 60);
-                    return `<div class="class-card vacant-card"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`;
+                    return `<div class="class-card vacant-card ${dayClosure ? 'day-closure-class' : ''}"><div class="card-bar vacant-bar"></div><div class="card-body"><div class="card-top"><div class="card-id vacant-id">VACANT</div><div class="card-time">${fmt12(Math.floor(item.startMin / 60), item.startMin % 60)} – ${fmt12(Math.floor(item.endMin / 60), item.endMin % 60)}</div></div><div class="card-desc" style="color:var(--muted)">No class scheduled</div><div class="card-meta"><div class="card-room" style="color:var(--muted)">Free period</div><div class="card-dur">${dur}</div></div></div></div>`;
                 }
                 const c = item;
                 const isNow = current && c === current;
@@ -1705,7 +1708,7 @@
                 const instructorLabel = mode === 'standard' || inferredType === 'regular' ? 'Professor: ' : isLabSession ? 'Lab professor: ' : 'Lecture professor: ';
                 const instructorHtml = instructorName ? `<div class="card-instructor"><span style="font-weight:bold">${instructorLabel}</span>${esc(instructorName)}</div>` : '';
                 const sessionBadge = !isSplit || inferredType === 'regular' ? '' : `<span class="badge rounded-pill" style="font-size:9px;background:${isLabSession?'#087f8c':'#3157a5'};color:#fff;margin-left:5px">${isLabSession?'LAB':'LECTURE'}</span>`;
-                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}" style="--color:${c.color}" onclick="openClass('${esc(c.id)}','${viewDay}','${isTBA(c) ? '' : c.startH + ':' + c.startM}')"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}${sessionBadge}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta" style="flex-wrap:wrap;row-gap:2px"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div>${instructorHtml}<div class="card-dur">${durDisplay}<i class="bi bi-chevron-right"></i></div></div>${assignRow}</div></div>`;
+                return `<div class="class-card ${isNow ? 'now' : ''} ${isPast || dayClosure ? 'past' : ''} ${dayClosure ? 'day-closure-class' : ''}" style="--color:${c.color}" onclick="openClass('${esc(c.id)}','${viewDay}','${isTBA(c) ? '' : c.startH + ':' + c.startM}')"><div class="card-bar" style="background:${c.color}"></div><div class="card-body"><div class="card-top"><div class="card-id" style="color:${c.color}">${esc(c.id)}${sessionBadge}</div>${timeDisplay}</div><div class="card-desc">${esc(c.desc)}</div><div class="card-meta" style="flex-wrap:wrap;row-gap:2px"><div class="card-room"><span style="font-weight:bold">Room: </span>${esc(c.room)}</div>${instructorHtml}<div class="card-dur">${durDisplay}<i class="bi bi-chevron-right"></i></div></div>${assignRow}</div></div>`;
             }).join('');
             document.getElementById('footerTitle').textContent = scheduleData.title || 'Schedule';
         }

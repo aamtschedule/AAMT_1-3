@@ -1,6 +1,6 @@
 /* Offline support for index.html + admin.html.
    Pages, icons, fonts and the Firebase SDK are cached so the site opens with no internet. */
-const CACHE_NAME = "aamt-v15";
+const CACHE_NAME = "aamt-v18";
 
 const FILES_TO_CACHE = [
   "./",
